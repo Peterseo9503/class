@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>임이의 숫자 : <input id="inputNum" type="number"><button id="resultBtn">확인</button></div>
+    <div>최대 공약수 : <input id="result" readonly></div>
+    <script>
+        class GreatestCommonDivisor {
+            constructor(id) {
+                this.id = id;
+                this.inputNum = 0;
+                this.gcd = 0;
+            }
+
+            setValue() {
+                this.inputNum = document.getElementById("inputNum").value;
+            }
+            //GCD == GreatCommonDivisor
+            calcGCD() {
+                for (let i = 0; i < this.inputNum; i++) {
+                    console.log(i);
+                    if (this.inputNum % i === 0) {
+                        this.gcd = i;
+                    }
+                    // ((this.inputNum % i) === 0) && this.gcd = i;
+                }
+            }
+            
+            event() {
+                window.addEventListener('click', (e) => {
+                    switch (e.target.id) {
+                        case "resultBtn":
+                            this.setValue();
+                            this.calcGCD();
+                            this.display();
+                    }
+                })
+            }
+
+            display() {
+                document.getElementById("result").value = this.gcd;
+            }
+
+            run() {
+                this.event();
+            }
+        }
+
+        const greatestCommonDivisor = new GreatestCommonDivisor("gcd");
+
+        greatestCommonDivisor.run();
+    </script>
+</body>
+
+</html>
