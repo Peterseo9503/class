@@ -1,0 +1,58 @@
+<style>
+	*{ margin:0; padding:0; }
+	.cA{ border: 1px solid red; }
+	body{ padding: 20px; }
+</style>
+	
+	<canvas id="cA" class="cA" width="300" height="300" > canvas is not supported your browser </canvas>
+
+<script>
+	
+	let canvas = document.getElementById("cA");
+	let myPen = canvas.getContext("2d");
+	const canvasWidth = parseInt(canvas.getAttribute("width"));
+	const canvasHeight = parseInt(canvas.getAttribute("height"));
+	function printDot(xV, yV){
+		myPen.fillRect(xV ,yV ,1 ,1);
+	}
+	
+	function modiDot(xV, yV){
+		myPen.fillRect(canvasWidth/2 + xV, canvasHeight/2 - yV, 1, 1 );
+	}
+	function init(){
+		for(let x=0; x<canvasWidth; x++){
+			printDot(x, canvasHeight/2 );
+		}
+
+		for(let y=0; y<canvasHeight; y++){
+			printDot(canvasWidth/2, y );
+		}
+	}
+	
+	init();
+	//1차방정식 3x + 4 을 시각화해보자. 
+	function linearEquation(sX,eX,xV,yV){
+		for(let x=sX; x<eX; x++){
+			let y= xV*x + yV;
+			modiDot( x,y );
+		}
+	}
+	//linearEquation( (canvasWidth/2) * -1 , canvasWidth/2 ,3,4);
+	//2방정식 0.05x^2 + 5 * x + 9 을 시각화 해보자
+
+	function quadraticEquation(xV2,xV,yV){
+		for(let x=(canvasWidth/2)*-1; x<canvasWidth/2; x=x+0.1){
+			let y= xV2 * x**2 + xV * x + yV;
+			modiDot(x,y);
+		}
+	}
+	// quadraticEquation(0.05,5,9);
+	// linearEquation(-30,80,-(16/11),-(40/11));
+	//A->B 줄긋기
+	linearEquation(10,20,1/2,0);
+	//B->C 줄긋기
+	linearEquation(20,30,3,-50);
+	//C->A 줄긋기 
+	linearEquation(10,30,7/4,(50/4)*-1 );
+
+</script>

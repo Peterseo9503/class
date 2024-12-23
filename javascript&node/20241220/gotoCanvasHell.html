@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas{
+            border:1px solid red;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="400" height="200" class="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const myPen = document.getElementById("canvas").getContext("2d");
+        
+        const canvasWidth = parseInt(canvas.getAttribute("width"));
+        const canvasHeight = parseInt(canvas.getAttribute("height"));
+        const halfWidth = canvasWidth /2 ;
+        const halfHeight = canvasHeight /2 ;
+   
+        const init = ()=>{
+            //x 축
+            for(let i =10; i<canvasWidth;i++){
+                myPen.fillRect(i,canvasHeight-10,1,1);
+            }
+
+            //y축
+            for(let y=0;y<canvasHeight-10;y++){
+                myPen.fillRect(10,y,1,1);
+            }
+        }
+
+        const printDot = (x,y)=>{
+            myPen.fillRect( 10+x, ( (canvasHeight-10) -y),1,1 )
+        }
+
+        // const printVerticalLine = (x,y)=>{
+        //     for()
+        // }
+
+        init();
+        printDot(100,100);
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="300" height="300" class="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const myPen = document.getElementById("canvas").getContext("2d");
+
+        const scaleFactor = 20;
+
+        const canvasWidth = parseInt(canvas.getAttribute("width"));
+        const canvasHeight = parseInt(canvas.getAttribute("height"));
+        const halfWidth = canvasWidth / 2;
+        const halfHeight = canvasHeight / 2;
+
+        myPen.font = "10px Arial";
+        myPen.textAlign = "center";
+
+
+        const init = () => {
+            //x 축
+            for (let i = 0; i < canvasWidth; i++) {
+                myPen.fillRect(i, halfHeight, 1, 1);
+            }
+
+            //y축
+            for (let y = 0; y < canvasHeight; y++) {
+                myPen.fillRect(halfWidth, y, 1, 1);
+            }
+        }
+
+        const printDot = (x, y) => {
+            myPen.fillRect(halfWidth + (x * scaleFactor), (halfHeight) - (y * scaleFactor), 1, 1)
+        }
+
+        const printDotWithoutScale = (x, y) => {
+            myPen.fillRect(halfWidth + x, halfHeight - y, 1, 1)
+        }
+
+        const printScaleFactor = () => {
+            //x축먼저 
+            for(let i=0; i<halfWidth; i=i+scaleFactor){
+                console.log(i);
+                for(let y=-5; y<5; y++){
+                    printDotWithoutScale(i,y);
+                    printDotWithoutScale(-i,y);
+                }
+                myPen.fillText(i , i + halfHeight,halfWidth+15)
+                myPen.fillText(-i , -i + halfHeight,halfWidth+15)
+
+                for(let x=-5; x<5; x++){
+                    printDotWithoutScale(x,i);
+                    printDotWithoutScale(x,-i);
+                }
+
+                myPen.fillText(i ,  halfWidth+15, 150-i +3)
+                myPen.fillText(-i ,  halfWidth+15, 150+i +3)
+
+
+            }
+
+            // for (let i = 0; i < canvasWidth; i = i + scaleFactor) {
+                
+
+            //     for (let y = -5; y <= 5; y++) {
+            //         myPen.fillRect(i, halfHeight + y, 1, 1);
+            //     }
+
+            //     for (let x = -5; x <= 5; x++) {
+            //         myPen.fillRect(halfWidth+x, i, 1, 1);
+            //     }
+            // }
+        }
+
+        const printText = ()=>{
+            for(let i =0; i<halfWidth; i = i+scaleFactor){
+                myPen.fillText(i , i + halfWidth-10,150+15)
+            }
+            
+
+        }
+        //(5,3) (7,5) 두점 선긋기 ! 
+
+        const drawLine= ()=>{
+            for(let x = 5; x<=7; x = x=x+0.01){
+                const y = (1 * x) + (-2)
+                printDot(x,y)
+            }
+        }
+
+       
+
+        // const printVerticalLine = (x,y)=>{
+        //     for(let i=0; i<y; i++){
+        //         printDot(x,i)
+        //     }
+        // }
+
+        // const printHorizonLine = (x,y)=>{
+        //     for(let i=0; i<x; i++){
+        //         printDot(i,y)
+        //     }
+        // }
+
+        init();
+        printDot(1, 1)
+        printDot(2, 2)
+        printDot(-1, -1)
+        printDot(-2, -2)
+
+        printScaleFactor();
+
+        drawLine();
+        // printText();
+    </script>
+</body>
+
+</html>

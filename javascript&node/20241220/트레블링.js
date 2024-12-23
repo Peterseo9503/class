@@ -13,4 +13,34 @@ const myA = {
     }
 }
 
-console.log( Array.isArray(myA) );
+
+const isObject = (value)=>{
+    if(typeof value === 'object'){
+        if( Array.isArray(value) ){ return 'array' }else{ return 'object' }
+    }else{
+        return 'primitive'
+    }
+}
+
+const travling = (object) => {
+    const result = isObject(object);
+    // console.log(result);
+
+    if( result === 'primitive' ){
+        console.log(object)
+    }else if(result === "array"){
+        object.forEach( v=>{
+            travling(v);
+        } )
+    }else if(result === "object"){
+        for(let key in object){
+            travling(object[key]);
+        }
+    }
+}
+
+// for(let key in myA){
+//     console.log(typeof myA[key] );
+// }
+
+travling(myA);

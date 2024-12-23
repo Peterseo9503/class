@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>drawLine</title>
+    <style>
+        canvas {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="300" height="300"></canvas>
+    <script>
+        class DrawLineCanvas {
+            constructor(id) {
+                this.id = id;
+                this.canvas = null;
+                this.canvasWidth = 0;
+                this.canvasHeight = 0;
+                this.halfWidth = 0;
+                this.halfHeight = 0;
+                this.pen = null;
+                this.scaleFactor = 20;
+            }
+            init() {
+                this.canvas = document.getElementById("canvas");
+                this.canvasWidth = canvas.getAttribute("width");
+                this.canvasHeight = canvas.getAttribute("height");
+                this.pen = canvas.getContext('2d');
+                this.halfWidth = this.canvasWidth / 2;
+                this.halfHeight = this.canvasHeight / 2;
+
+                this.initLine();
+            }
+
+            initLine() {
+                for (let x = 0; x < this.canvasHeight; x++) {
+                    this.pen.fillRect(x, this.halfHeight, 1, 1)
+                }
+                for (let y = 0; y < this.canvasHeight; y++) {
+                    this.pen.fillRect(this.halfWidth, y, 1, 1)
+                }
+                //scaleFactor
+
+                // for (let x = (this.halfWidth * -1); x < this.halfWidth; x = x + this.scaleFactor) {
+                //     for (let y = -5; y <= 5; y++) {
+                //         this.printDot(x, y);
+                //     }
+                // }
+
+                // for(let y = (this.halfHeight * -1)+this.scaleFactor; y < this.halfHeight; y = y + this.scaleFactor){
+                //     for(let x = -5; x<=5; x++){
+                //         this.printDot(x,y);
+                //     }
+                // }
+
+
+                this.initScale();
+            }
+
+            printDot(x, y) {
+                this.pen.fillRect(this.halfWidth + x, this.halfHeight + (y * -1), 1, 1);
+            }
+
+            printScaleDot(x, y) {
+                this.pen.fillRect(this.halfWidth + (x * this.scaleFactor), this.halfHeight + ((y * this.scaleFactor) * -1), 1, 1);
+            }
+
+            initScale(){
+                for(let x = 0; x<=this.halfWidth; x = x+this.scaleFactor){
+                    for (let y = -5; y <= 5; y++) {
+                        this.printDot(x, y);
+                        this.printDot(-x, y);
+                    }
+                    //x축 오른쪽 
+                    this.pen.fillText((x/this.scaleFactor),x+this.halfWidth,this.halfHeight+ 10);
+                    //x축 왼쪽 
+                    this.pen.fillText(-x/this.scaleFactor,-x+this.halfWidth,this.halfHeight+ 10);
+                }
+
+                for(let y= 0; y<=this.halfHeight; y = y+this.scaleFactor){
+                    for (let x = -5; x <= 5; x++) {
+                        this.printDot(x, y);
+                        this.printDot(x, -y);
+
+                    }
+                    //y축 위
+                    this.pen.fillText((-y/this.scaleFactor) === 0 ? "": (-y/this.scaleFactor),this.halfWidth+10,this.halfHeight+y+5);
+                    //y축 아래 
+                    this.pen.fillText((y/this.scaleFactor) === 0 ? "": (y/this.scaleFactor),this.halfWidth+10,this.halfHeight-y+5);
+                }
+            }
+
+            //2개 의 점을 받아서 선으로 그리기 
+            printLineWithTwoDot(firstX, firstY, secondX, secondY) {
+                if (firstX != secondX) {
+                    const small = firstX <= secondX ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+                    const big = firstX >= secondX ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+
+                    
+                    //1. 기울기를 구합니다.
+                    const slope = (big.y - small.y) / (big.x - small.x);
+                    console.log("slope : " + slope)
+
+                    //2. y절편을 구합니다다.
+                    const plusY = ( (slope * small.x) * -1) + small.y
+                    console.log("plusY : " + plusY)
+
+                    for (let x = small.x; x <= big.x; x = x + 0.01) {
+                        const y = (slope===0 ? 1 : slope * x) + plusY;
+                        this.printScaleDot(x, y)
+                    }
+                } else if (firstX === secondX) {
+                    const small = firstY <= secondY ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+                    const big = firstY >= secondY ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+
+                    for (let y = small.y; y <= big.y; y = y + 0.01) {
+                        this.printScaleDot(small.x, y);
+                    }
+                }
+            } 
+        }
+
+        const drawLineCanvas = new DrawLineCanvas();
+        drawLineCanvas.init();
+        drawLineCanvas.printLineWithTwoDot(3, -2, 4, 0);
+
+        drawLineCanvas.printLineWithTwoDot(2, 1, 2, 2);
+        drawLineCanvas.printLineWithTwoDot(1, 1, 2, 1);
+        // drawLineCanvas.printScaleDot(3,3);
+    </script>
+</body>
+
+</html>

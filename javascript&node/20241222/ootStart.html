@@ -1,0 +1,25 @@
+<script>
+    class Person{
+        constructor(name, gender, ages){
+            this.name = name;
+            this.gender = gender;
+            this.ages = ages;
+        }
+        speak(){
+            document.write(`My Name is ${this.name}.<br>`)
+        }
+        run(){
+            document.write(`Running...<br>`)
+        }
+    }
+
+    const cdrP = new Person("CDR", "man", 23);
+    const zardP = new Person("Zard", "woman", 22);
+
+    cdrP.speak();
+    cdrP.run();
+    zardP.speak();
+    zardP.run();
+    console.log( cdrP.__proto__ );
+    console.log(cdrP.prototype.hasPwnProperty("name"))
+</script>

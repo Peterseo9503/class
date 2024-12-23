@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>팩토리얼 숫자 입력 : <input id = "inputNum" type="number" > <button id="resultBtn">결과출력</button></div>
+    <div>결과 : <input id="result" type="number" readonly></div>
+    <script>
+        class Factorial{
+            constructor(id){
+                this.id = id;
+                this.inputNum = 0;
+                this.factorial = 1;
+            }
+            setInputNum(){
+                this.inputNum = document.getElementById("inputNum").value;
+                console.log(this.inputNum)
+            }
+            calcFactorial(inputNum){
+                this.Factorial = 0;
+                for( let i =1; i<= inputNum;i++){
+                    this.factorial *= i;
+                    console.log(this.factorial)
+                }
+                return this.factorial;
+            }
+            display(){
+                document.getElementById("result").value= this.factorial;
+            }
+            event(){
+                window.addEventListener("click",(e)=>{
+                    switch(e.target.id){
+                        case "resultBtn":
+                            this.setInputNum();
+                            this.calcFactorial( this.inputNum );
+                            this.display();
+                    }
+                })
+            }
+            run(){
+                this.event();
+            }
+        }
+
+        const factorial = new Factorial();
+        factorial.run();
+    </script>
+</body>
+</html>
+
