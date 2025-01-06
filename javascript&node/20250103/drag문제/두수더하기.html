@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #numBoxArea {
+            display: flex;
+
+        }
+
+        .numBox {
+            width: 50px;
+            height: 50px;
+            border: 1px solid black;
+            text-align: center;
+            line-height: 50px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="numBoxArea" class="numBoxArea" draggable="false">
+
+    </div>
+    <div id="inputArea"> <input class="numBox" id="numV1"> + <input class="numBox" id="numV2"> = <input class="numBox"
+            id="result">
+        <div><button id="resultBtn">plus</button></div>
+    </div>
+
+    <script>
+        class Drag {
+            constructor(id) {
+                this.id = id;
+            }
+            getValues() {
+                const values = {
+                    numV1: Number(document.getElementById("numV1").value),
+                    numV2: Number(document.getElementById("numV2").value)
+                }
+                return values;
+            }
+
+            init() {
+                const inputArea = document.querySelector("#numBoxArea");
+                for (let i = 1; i <= 10; i++) {
+                    inputArea.innerHTML += `<div id="${"numBox" + i}"class="numBox" draggable="true">${i}</div>`
+                }
+            }
+            event() {
+                window.addEventListener("dragstart", (e) => {
+                    e.dataTransfer.setData('data', e.target.innerText)
+                    // console.log(e);
+                    // console.log(e.srcElement.innerHTML);
+
+                });
+
+                window.addEventListener('dragover', (e) => {
+                    if (e.target.id == "numV1" || e.target.id == "numV2") {
+                        e.preventDefault();
+                        // console.log(e);
+                    }
+                })
+
+                window.addEventListener('drop', (e) => {
+                    if (e.target.id == "numV1" || e.target.id == "numV2") {
+                        e.preventDefault();
+                        console.log(e.srcElement.innerHTML);
+                        console.log("droped")
+                        console.log(e.dataTransfer.getData('data'));
+                        e.target.value = e.dataTransfer.getData('data');
+                    }
+                })
+                
+                window.addEventListener('click', (e) => {
+                    switch (e.target.id) {
+                        case "resultBtn":   
+                        const values = this.getValues();
+                        document.getElementById("result").value = values.numV1 + values.numV2;
+
+                    }
+                })
+
+            }
+            run() {
+                this.init();
+                this.event();
+            }
+        }
+
+        const drag = new Drag("id");
+        drag.run();
+    </script>
+</body>
+
+</html>

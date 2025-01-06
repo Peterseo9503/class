@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAMA,MAAM;EALL,iBAAiB,EAAE,aAAS;EAC5B,aAAa,EAAE,aAAS;EACxB,SAAS,EAAE,aAAS",
+"sources": ["../prefix.scss"],
+"names": [],
+"file": "prefix.css"
+}

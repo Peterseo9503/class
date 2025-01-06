@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        class Person{
+            constructor(name,bloodType,job){
+                this._name = name;
+                this._job = job;
+                this._bloodType = bloodType;
+            }
+            get name(){
+                return this._name;
+            }
+            set name(name){
+                this._name = name;
+            }
+            get job(){
+                return this._job;
+            }
+            set job(selected){
+                this._job = selected;
+            }
+        }
+    </script>
+</body>
+</html>

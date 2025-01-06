@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <p>Hour : <input id ="hour" type="number" > Minute : <input id="minute" type="number"> Second : <input id="second" type="number"></p>
+    <script>
+        class Canvas {
+            constructor(id) {
+                this.id = id;
+                this.canvas = document.getElementById("canvas");
+                this.pen = this.canvas.getContext("2d");
+                this.width = this.canvas.getAttribute("width");
+                this.height = this.canvas.getAttribute("height");
+            }
+
+            printDot(x, y) {
+                this.pen.fillRect(x + 250, (y * -1) + 250, 1, 1)
+            }
+
+            init() {
+                this.pen.clearRect(0, 0, this.width, this.height);
+                this.drawCircle(100, 0, 0);
+            }
+
+            drawCircle(radius, x, y) {
+                for (let i = 0; i < 360; i++) {
+                    const radian = (Math.PI / 180 * i);
+                    const x = Math.cos(radian) * radius;
+                    const y = Math.sin(radian) * radius;
+                    this.printDot(x, y);
+                    // if(i%30 === 0){
+                    //     // this.printDot(x-5, y-5);
+                    // }
+                }
+
+                for (let i = 0; i < 360; i++) {
+                    const radian = (Math.PI / 180 * i);
+                    const x1 = Math.cos(radian) * (radius-10);
+                    const y1 = Math.sin(radian) * (radius-10);
+                    //90, 0, 270 일때 사인의 값을 알아보자 
+                    
+                    const x2 = Math.cos(radian) * (radius);
+                    const y2 = Math.sin(radian) * (radius);
+
+                    this.printLineWithTwoDot(x1,y1,x2,y2);
+                    // if(i%30 === 0){
+                    //     // this.printDot(x-5, y-5);
+                    // }
+                }
+            }
+
+            clock() {     
+                const startSecond = new Date();
+
+                    let degree = 90-startSecond.getSeconds() * 6;
+                    // let degree = 90;                                                                                                                                                                                            
+                    setInterval(() => {
+                        const date = new Date();
+                        this.init();
+                        const radian = (Math.PI / 180 * degree);
+                        if(degree === -90 || degree === -270 || degree === 90){
+                            this.printLineWithTwoDot(0, 0, 0, Math.sin(radian) * 70)
+                        }
+                        this.printLineWithTwoDot(0, 0, Math.cos(radian) * 70, Math.sin(radian) * 70)
+                        degree = degree - 6;
+                        console.log(degree % 360);
+                        document.getElementById("second").value = date.getSeconds();
+                    },1000)
+                }
+
+            printLineWithTwoDot(firstX, firstY, secondX, secondY) {
+                if (firstX != secondX) {
+                    const small = firstX <= secondX ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+                    const big = firstX >= secondX ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+
+
+                    //1. 기울기를 구합니다.
+                    const slope = (big.y - small.y) / (big.x - small.x);
+                    console.log("slope : " + slope)
+
+                    //2. y절편을 구합니다다.
+                    const plusY = ((slope * small.x) * -1) + small.y
+                    console.log("plusY : " + plusY)
+
+                    for (let x = small.x; x <= big.x; x = x + 0.01) {
+                        const y = (slope === 0 ? 1 : slope * x) + plusY;
+                        this.printDot(x, y)
+                    }
+                } else if (firstX === secondX) {
+                    const small = firstY <= secondY ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+                    const big = firstY >= secondY ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+
+                    for (let y = small.y; y <= big.y; y = y + 0.01) {
+                        this.printDot(small.x, y);
+                    }
+                }
+            }
+        }
+        const canvas = new Canvas("id");
+        // canvas.printMiddleDot(1,1);
+        canvas.init();
+        canvas.drawCircle(100, 0, 0);
+        canvas.printDot(0, 0);
+        canvas.clock();
+    </script>
+</body>
+
+</html>

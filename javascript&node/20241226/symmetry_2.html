@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        main {
+            width: 1000px;
+            height: 1000px;
+            display: flex;
+            flex-direction: column;
+            justify-content: start;
+            align-items: center;
+        }
+
+        canvas {
+            border: 1px solid red;
+        }
+
+        .buttonArea {
+            display: flex;
+            justify-content: center;
+        }
+
+        .buttonArea button {
+            margin: 10px;
+            height: 50px;
+            border: 2px solid #333;
+            outline: none;
+            background-color: white;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .buttonArea button:hover {
+            background-color: lightgray;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>Canvas</h1>
+        <canvas id="canvas" width="500" height="500"></canvas>
+        <div id="" class="buttonArea">
+            <button id="xSymmetryBtn">X축 대칭</button>
+            <button id="ySymmetryBtn">Y축 대칭</button>
+            <button id="rotationBtn">회전</button>
+
+        </div>
+    </main>
+    <script>
+        class Canvas {
+            constructor(id, canvas, firstX, firstY, secondX, secondY) {
+                this.id = id;
+                this.canvas = canvas;
+                this.pen = this.canvas.getContext("2d");
+                this.width = this.canvas.getAttribute("width");
+                this.height = this.canvas.getAttribute("height");
+                this.firstX = firstX;
+                this.firstY = firstY;
+                this.secondX = secondX;
+                this.secondY = secondY;
+                this.scale = 20;
+                this.coordinateArray = [];
+            }
+            init() {
+                const halfWidth = this.width / 2;
+                const halfHeight = this.height / 2;
+                //x축
+                for (let x = 0; x < this.width; x++) {
+                    this.pen.fillRect(x, halfHeight, 1, 1);
+                }
+                for (let y = 0; y < this.height; y++) {
+                    this.pen.fillRect(halfWidth, y, 1, 1);
+                }
+            }
+            printScale() {
+                //y축
+                const halfWidth = this.width / 2;
+                const halfHeight = this.height / 2;
+                for (let x = 0; x < halfWidth; x = x + this.scale) {
+                    for (let y = -5; y < 5; y++) {
+                        this.printMiddleDot(x, y)
+                        this.printMiddleDot(-x, y)
+                    }
+                }
+
+                for (let y = 0; y < halfHeight; y = y + this.scale) {
+                    for (let x = -5; x < 5; x++) {
+                        this.printMiddleDot(x, y)
+                        this.printMiddleDot(x, -y)
+                    }
+                }
+                // text
+                for (let x = 0; x < halfWidth; x = x + this.scale) {
+                    this.pen.fillText(x / this.scale, x + halfWidth, halfHeight + this.scale / 2);
+                    this.pen.fillText(-x / this.scale, (halfWidth) + (-1 * x), halfHeight + this.scale / 2);
+                }
+
+                for (let y = 0; y < halfHeight; y = y + this.scale) {
+                    this.pen.fillText((-y / this.scale) == 0 ? "" : (-y / this.scale), halfWidth + 10, (halfHeight + y) + 4);
+                    this.pen.fillText((+y / this.scale) == 0 ? "" : (+y / this.scale), halfWidth + 10, (halfHeight + y * -1)) + 4;
+
+                    // this.pen.fillText(-x / this.scale, (halfWidth) + (-1 * x), halfHeight +this.scale);
+                }
+
+            }
+            printMiddleDot(x, y) {
+                const halfWidth = this.width / 2;
+                const halfHeight = this.height / 2;
+                this.pen.fillRect(x + halfWidth, (y * -1) + halfHeight, 1, 1)
+            }
+
+            printMiddleDotWithScale(x, y) {
+                const halfWidth = this.width / 2;
+                const halfHeight = this.height / 2;
+                this.pen.fillRect((x * this.scale) + halfWidth - 5, (y * this.scale * -1) + halfHeight - 5, 10, 10)
+            }
+
+            drawLine(firstX, firstY, secondX, secondY) {
+                if (firstX > secondX) {
+                    [firstX, firstY, secondX, secondY] = [secondX, secondY, firstX, firstY];
+                }
+
+                //수식 계산
+                const slope = (firstY - secondY) / (firstX - secondY);
+                const yConst = (-1 * slope * firstX) + firstY;
+
+                for (let x = firstX; x <= secondX; x++) {
+                    const y = x * slope + yConst;
+                    // console.log(x, y)
+                    this.printMiddleDotWithScale(x, y);
+                }
+            }
+            makeCoordinateArray(firstX, firstY, secondX, secondY) {
+                console.log(firstX, firstY, secondX, secondY)
+                if (firstX > secondX) {
+                    [firstX, firstY, secondX, secondY] = [secondX, secondY, firstX, firstY];
+                }
+                //수식 계산
+                const slope = (firstY - secondY) / (firstX - secondY);
+                const yConst = (-1 * slope * firstX) + firstY;
+
+                for (let x = firstX; x <= secondX; x++) {
+                    const y = x * slope + yConst;
+                    this.coordinateArray.push([x, y, 0]);
+                }
+
+                // console.log(this.coordinateArray)
+            }
+
+            // <button id="xSymmetryBtn">X축 대칭</button>
+            // <button id="ySymmetryBtn">Y축 대칭</button>
+            // <button id="rotationBtn">회전</button>
+            event() {
+                window.addEventListener("click", (e) => {
+                    switch (e.target.id) {
+                        case "xSymmetryBtn":
+                            this.drawLineWithEvent("xSymmetry")
+                            break;
+                        case "ySymmetryBtn":
+                            this.drawLineWithEvent("ySymmetry")
+                            break;
+                        case "rotationBtn":
+                            this.drawLineWithEvent("rotation")
+                            break;
+                    }
+                })
+            }
+
+            calcTwoMatrix(arrayA, arrayB) {
+                const resultArray = [];
+                for (let row = 0; row < arrayA.length; row++) {
+                    console.log("row : " + row)
+                    resultArray.push([]);
+                    for (let column = 0; column < arrayB[0].length; column++) {
+                        // console.log("column : " + column)
+                        resultArray[row][column] = 0;
+                        for (let bColumn = 0; bColumn < arrayB.length; bColumn++) {
+                            // console.log("bColumn : " + bColumn)
+
+                            // console.log("3중 :" + arrayA[row][bColumn] + ":" + arrayB[bColumn][column])
+                            resultArray[row][column] += Number(arrayA[row][bColumn]) * Number(arrayB[bColumn][column]);
+                        }
+                    }
+                }
+                return resultArray;
+            }
+
+            drawLineWithEvent(eventName, arrayA) {
+                const calArrays = {
+                    x: [[1, 0, 0], [0, -1, 0], [0, 0, 0]],
+                    y: [[-1, 0, 0], [0, 1, 0], [0, 0, 0]],
+                    rotation: [[-1, 0, 0], [0, -1, 0], [0, 0, 0]],
+                }
+                switch (eventName) {
+                    case "xSymmetry":
+                        this.clearCanvas();
+                        this.coordinateArray.forEach(array => {
+                            let symmetryArray = (this.calcTwoMatrix([array], calArrays.x))
+                            this.printMiddleDotWithScale(symmetryArray[0][0], symmetryArray[0][1])
+                        })
+                        break;
+                    case "ySymmetry":
+                        this.clearCanvas();
+                        this.coordinateArray.forEach(array => {
+                            let symmetryArray = (this.calcTwoMatrix([array], calArrays.y))
+                            this.printMiddleDotWithScale(symmetryArray[0][0], symmetryArray[0][1])
+                        })
+                        break;
+                    case "rotation":
+                        this.clearCanvas();
+                        this.coordinateArray.forEach(array => {
+                            let symmetryArray = (this.calcTwoMatrix([array], calArrays.rotation))
+                            this.printMiddleDotWithScale(symmetryArray[0][0], symmetryArray[0][1])
+                        })
+                        break;
+                }
+            }
+
+            clearCanvas() {
+                this.pen.clearRect(0, 0, this.width, this.height);
+                this.init();
+                this.printScale();
+            }
+
+            run() {
+                this.init();
+                this.printScale();
+                this.drawLine(this.firstX, this.firstY, this.secondX, this.secondY);
+                this.makeCoordinateArray(this.firstX, this.firstY, this.secondX, this.secondY);
+                this.event();
+            }
+        }
+
+        const canvas = new Canvas("canvas", document.getElementById("canvas"), -1, -1, 1, 1);
+        canvas.run();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,100 @@
+<!-- 아래 코드는 스크롤 위치에 따라 버튼이 작동하도록 구현한 예제입니다. 버튼을 클릭했을 때 스크롤의 위치에 따라 동작이 달라집니다.
+
+맨 아래일 때: 클릭 시 맨 위로 이동.
+맨 위일 때: 클릭 시 맨 아래로 이동.
+중간일 때: 클릭 시 맨 위로 이동.
+html
+코드 복사 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scroll Button</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            height: 200vh;
+        }
+        main {
+            position: relative;
+            height: 100vh;
+        }
+        main button {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            /* animation: pulse 1.5s infinite */
+        }
+        @keyframes pulse{
+            0%, 100%{
+                transform: scale(1);
+            }
+            50%{
+                transform: scale(1.2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="buttonArea">
+            <button id="scrollButton">아래</button>
+        </div>
+    </main>
+    <script>
+        const button = document.getElementById('scrollButton');
+
+        window.addEventListener('scroll',()=>{
+            const scrollTop = window.scrollY; // 현재 스크롤 위치
+            const windowHeight = window.innerHeight; // 뷰포트 높이
+            const documentHeight = document.body.scrollHeight; // 전체 문서 높이
+            console.log( scrollTop,windowHeight,documentHeight );
+            if(scrollTop===0){
+                document.getElementById('scrollButton').innerHTML = '아래'
+            }else{
+                document.getElementById('scrollButton').innerHTML = '위'
+            }
+            if(scrollTop+2 + windowHeight >= documentHeight){
+                // document.getElementById('scrollButton').style.cssText = 
+                // "padding: 20px 0; color: hotpink; background-color: beige";
+                // console.log("너 동작해?")
+                document.getElementById('scrollButton').style = "animation: pulse 1.5s infinite"
+            }else{
+                document.getElementById('scrollButton').style = "animation: none"
+            }
+            
+            // (scrollTop === 0) && (document.getElementById('scrollButton').value('아래') )
+            // (scrollTop === 0) || (document.getElementById('scrollButton').value('위') )
+
+        })
+
+        button.addEventListener('click', () => {
+            const scrollTop = window.scrollY; // 현재 스크롤 위치
+            const windowHeight = window.innerHeight; // 뷰포트 높이
+            const documentHeight = document.body.scrollHeight; // 전체 문서 높이
+
+            if (scrollTop + windowHeight >= documentHeight) {
+                // 스크롤이 맨 아래일 때
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else if (scrollTop === 0) {
+                // 스크롤이 맨 위일 때
+                window.scrollTo({ top: documentHeight - windowHeight, behavior: 'smooth' });
+            } else {
+                // 중간일 때
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+</html>
+<!-- 설명
+window.scrollY: 현재 스크롤 위치를 확인.
+window.innerHeight: 현재 화면의 높이를 계산.
+document.body.scrollHeight: 전체 문서 높이를 확인.
+window.scrollTo: 스크롤을 원하는 위치로 부드럽게 이동시키는 함수 (behavior: 'smooth' 사용).
+이 코드로 버튼을 클릭할 때 상황에 맞게 스크롤이 이동합니다. -->

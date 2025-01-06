@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAIA,UAAU;EAHT,MAAM,EAAE,cAAmB;;AAO5B,QAAQ;EAPP,MAAM,EAAE,aAAmB",
+"sources": ["../mixinGiveParam.scss"],
+"names": [],
+"file": "mixinGiveParam.css"
+}

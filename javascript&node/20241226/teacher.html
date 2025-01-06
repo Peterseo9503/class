@@ -1,0 +1,43 @@
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .myBox {
+        width: 100px;
+        height: 200px;
+        background-image: url(https://i.namu.wiki/i/1TKhICJY551woFdHg4kBfuBmtuA16SHW1C7Q1gw_6QLr8lVcV16dlubPiaIHn-NWHyQzCcytxYEeMnUB0obZTfA_gH0mZojs_ebnfN-YkIsb3LEeYNgBhSYSmwWVsGE-PLiz1yoSXBe9l4BBLemmQw.webp);
+        background-position: 50% 40%;
+        background-size: cover;
+        display: inline-block;
+        float: left;
+    }
+    .myBox:first-child{
+        border-radius: 10px 0 0 10px;
+    }
+    .myBox:last-child{
+        border-radius: 0 10px 10px 0;
+    }
+</style>
+<div id="imgList" class="imgList">
+  
+</div>
+    <script>
+        class PicBox{
+            constructor(id, picInfo){
+                this.id = id;
+                this.picInfo = picInfo;
+            }
+            init(targetDom){
+                let html = `
+                    <div id="${this.id}" class="myBox"></div>
+                `
+                document.getElementById( targetDom ).innerHTML += html;
+                document.getElementById(`${this.id}`).style.backgroundImage = `url( ${this.picInfo} )`;
+            }
+        }
+
+        const picBox1 = new PicBox("picBox1" ,"https://i.namu.wiki/i/1TKhICJY551woFdHg4kBfuBmtuA16SHW1C7Q1gw_6QLr8lVcV16dlubPiaIHn-NWHyQzCcytxYEeMnUB0obZTfA_gH0mZojs_ebnfN-YkIsb3LEeYNgBhSYSmwWVsGE-PLiz1yoSXBe9l4BBLemmQw.webp");
+        picBox1.init("imgList" )
+    </script>

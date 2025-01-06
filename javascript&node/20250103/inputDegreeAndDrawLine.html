@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>drawLine</title>
+    <style>
+        canvas {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    Amplitude : <input id="amplitudeV" type="number"> Period : <input id="periodV" type="number"> <button id="resultBtn">Draw</button> 
+    <canvas id="canvas" width="500" height="500"></canvas>
+    
+    <script>
+        class DrawLineCanvas {
+            constructor(id) {
+                this.id = id;
+                this.canvas = null;
+                this.canvasWidth = 0;
+                this.canvasHeight = 0;
+                this.halfWidth = 0;
+                this.halfHeight = 0;
+                this.pen = null;
+                this.scaleFactor = 20; //얘도 설정할수 있게 해줘야함. 
+            }
+            getValue(){
+                return { 
+                    amplitude : Number(document.getElementById("amplitudeV").value),
+                    period: Number( document.getElementById("periodV").value )
+                 }
+            }
+            event(){
+                window.addEventListener( "click",(e)=>{
+                    switch(e.target.id ){
+                        case "resultBtn":
+                            this.clear();
+                            const values = this.getValue();
+                            this.sinGraph( values.amplitude,values.period );
+                            break;
+                    }
+                } )
+            }
+            clear(){
+                this.pen.clearRect(0,0,this.canvasWidth,this.canvasHeight);
+                this.init();
+            }
+            init() {
+                this.canvas = document.getElementById("canvas");
+                this.canvasWidth = canvas.getAttribute("width");
+                this.canvasHeight = canvas.getAttribute("height");
+                this.pen = canvas.getContext('2d');
+                this.halfWidth = this.canvasWidth / 2;
+                this.halfHeight = this.canvasHeight / 2;
+
+                this.initLine();
+                this.event();
+            }
+
+            drawCircle() {
+                for (let x = 0; x < 180; x++) {
+                    let radius = 2;
+                    const radian = (x / 180) * radius;
+                    console.log(radian);
+                    this.printScaleDot(x, radian)
+                }
+            }
+
+            initLine() {
+                for (let x = 0; x < this.canvasHeight; x++) {
+                    this.pen.fillRect(x, this.halfHeight, 1, 1)
+                }
+                for (let y = 0; y < this.canvasHeight; y++) {
+                    this.pen.fillRect(this.halfWidth, y, 1, 1)
+                }
+                //scaleFactor
+
+                // for (let x = (this.halfWidth * -1); x < this.halfWidth; x = x + this.scaleFactor) {
+                //     for (let y = -5; y <= 5; y++) {
+                //         this.printDot(x, y);
+                //     }
+                // }
+
+                // for(let y = (this.halfHeight * -1)+this.scaleFactor; y < this.halfHeight; y = y + this.scaleFactor){
+                //     for(let x = -5; x<=5; x++){
+                //         this.printDot(x,y);
+                //     }
+                // }
+
+
+                // this.initScale();
+            }
+
+            printDot(x, y) {
+                this.pen.fillRect(this.halfWidth + x, this.halfHeight + (y * -1), 1, 1);
+            }
+
+            printScaleDot(x, y) {
+                this.pen.fillRect(this.halfWidth + (x * this.scaleFactor), this.halfHeight + ((y * this.scaleFactor) * -1), 1, 1);
+            }
+
+            initScale() {
+                for (let x = 0; x <= this.halfWidth; x = x + this.scaleFactor) {
+                    for (let y = -5; y <= 5; y++) {
+                        this.printDot(x, y);
+                        this.printDot(-x, y);
+                    }
+                    //x축 오른쪽 
+                    this.pen.fillText((x / this.scaleFactor), x + this.halfWidth, this.halfHeight + 10);
+                    //x축 왼쪽 
+                    this.pen.fillText(-x / this.scaleFactor, -x + this.halfWidth, this.halfHeight + 10);
+                }
+
+                for (let y = 0; y <= this.halfHeight; y = y + this.scaleFactor) {
+                    for (let x = -5; x <= 5; x++) {
+                        this.printDot(x, y);
+                        this.printDot(x, -y);
+
+                    }
+                    //y축 위
+                    this.pen.fillText((-y / this.scaleFactor) === 0 ? "" : (-y / this.scaleFactor), this.halfWidth + 10, this.halfHeight + y + 5);
+                    //y축 아래 
+                    this.pen.fillText((y / this.scaleFactor) === 0 ? "" : (y / this.scaleFactor), this.halfWidth + 10, this.halfHeight - y + 5);
+                }
+            }
+
+            //2개 의 점을 받아서 선으로 그리기 
+            printLineWithTwoDot(firstX, firstY, secondX, secondY, xPlue, yPlus) {
+                if (firstX != secondX) {
+                    const small = firstX <= secondX ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+                    const big = firstX >= secondX ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+
+                    //1. 기울기를 구합니다.
+                    const slope = (big.y - small.y) / (big.x - small.x);
+                    console.log("slope : " + slope)
+
+                    //2. y절편을 구합니다다.
+                    const plusY = ((slope * small.x) * -1) + small.y
+                    console.log("plusY : " + plusY)
+
+                    for (let x = small.x; x <= big.x; x = x + 0.01) {
+                        const y = (slope === 0 ? 1 : slope * x) + plusY;
+                        this.printDot(x, y)
+                    }
+                } else if (firstX === secondX) {
+                    const small = firstY <= secondY ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+                    const big = firstY >= secondY ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+
+                    for (let y = small.y; y <= big.y; y = y + 0.01) {
+                        this.printDot(small.x + xPlue, y + yPlue);
+                    }
+                }
+            }
+
+            degreeToLine(degree, input = 100) {
+
+                for (let x = 0; x <= input; x++) {
+                    const y = Math.sin((Math.PI / 180) * degree) * x;
+                    this.printLineWithTwoDot(0, 0, x, y, 0, 0);
+                }
+
+                // for( let x =0; x<=input;x++ ){
+                //     const y = Math.sin( (Math.PI / 180) * degree )*x;
+                //     // this.printLineWithTwoDot( 0,0,x,y,0,300 );
+                // }
+            }
+
+            sinGraph(amplitude=1, period=1){
+                this.clear();
+
+                /* SIN GRAPH */
+
+                this.pen.fillStyle = "green";
+                for(let x=0; x<=360 ;x++){
+                    const xValue = x*(250/360);
+                    const yValue = Math.sin( Math.PI/180 * x *period )*50 * amplitude;
+                    this.printDot(xValue,yValue);
+                    // console.log( x*(250/360) );
+                    const sin = Math.sin( Math.PI/180 * x *period );
+                    if( Number(sin.toFixed(3)) === 0 ||  Math.abs(sin) === 1){
+                        this.pen.fillText( (x *period)%360,xValue+this.halfWidth-7,-yValue+this.halfHeight )
+                    }
+                    console.log(Number(sin.toFixed(3)) ) 
+                }
+
+                /* COS GRAPH */
+
+                this.pen.fillStyle="blue"
+                for(let x=0; x<=360 ;x++){
+
+                    const xValue = x*(250/360);
+                    const yValue = Math.sin( Math.PI/180 * x *period )*50 * amplitude;
+
+                    this.printDot(Math.cos( Math.PI/180 * x*period)*50 * amplitude ,-x*(250/360));
+                }
+
+
+                
+
+                //원 그리기 
+                // this.pen.fillStyle="red"
+                // for(let degree=0; degree<=360; degree++){
+                //     this.printDot( Math.cos( Math.PI/180 * degree ) *50, Math.sin( Math.PI/180 * degree )*50 )
+                // }
+
+                // for(let x=0; x<=this.canvasWidth ;x++){
+                //     if(x%5 !=0){
+                //         this.pen.fillRect(x,50+this.halfHeight,1,1);
+                //         this.pen.fillRect(x,-50+this.halfHeight,1,1);
+                //         this.pen.fillRect(this.halfWidth+50,x,1,1);
+                //         this.pen.fillRect(this.halfWidth-50,x,1,1);
+                //     }
+                    
+                // }
+                
+            }
+
+            tanGraph(){
+                /* TAN GRAPH */
+                for(let x=0; x<=360 ;x++){
+                    const xValue = x*(250/360);
+                    const yValue = Math.tan( Math.PI/180 * x  )*50 ;
+                    this.printDot(xValue,yValue);
+                    // console.log( x*(250/360) );
+                }
+            }
+
+        }
+
+        const drawLineCanvas = new DrawLineCanvas();
+        drawLineCanvas.init();
+
+        const degree = 30;
+
+        const y = Math.sin(Math.PI / 180 * degree) * 80;
+        const x = Math.cos(Math.PI / 180 * degree) * 80;
+
+        // drawLineCanvas.printLineWithTwoDot(0,0,x,y);
+        // drawLineCanvas.printLineWithTwoDot(0,50,x,y);
+        //                     진폭, 주기 
+        // drawLineCanvas.sinGraph(0.5,5);
+        drawLineCanvas.tanGraph();
+    </script>
+</body>
+
+</html>

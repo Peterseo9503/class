@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let myV1 = 1008;
+        let myV2 = 2008;
+
+        [myV1 , myV2] = [myV2, myV1];
+
+        document.write(myV1 + " / " + myV2);
+
+
+        //Swallow Copy 
+        const testObject = {name : "donghyun", age:"30",aaa:[1,2,3,5]}
+        const copy = {...testObject};
+
+        copy.aaa[0] = 100;
+        testObject.name="ljm";
+        console.log(copy);
+        console.log(testObject);
+
+        //Deep Copy
+        const copy2 = JSON.parse(JSON.stringify(testObject))
+        copy2.aaa[0] = 200;
+        console.log( copy2 );
+        console.log(copy);
+
+    </script>
+</body>
+</html>

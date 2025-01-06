@@ -24,7 +24,7 @@
                 this.halfWidth = 0;
                 this.halfHeight = 0;
                 this.pen = null;
-                this.scaleFactor = 20;
+                this.scaleFactor = 20; //얘도 설정할수 있게 해줘야함. 
             }
             init() {
                 this.canvas = document.getElementById("canvas");
@@ -35,6 +35,15 @@
                 this.halfHeight = this.canvasHeight / 2;
 
                 this.initLine();
+            }
+
+            drawCircle(){
+                for(let x=0; x<180; x++){
+                    let radius = 2;
+                    const radian = (x / 180) * radius;
+                    console.log(radian);
+                    this.printScaleDot(x,radian)
+                }
             }
 
             initLine() {
@@ -59,7 +68,7 @@
                 // }
 
 
-                this.initScale();
+                // this.initScale();
             }
 
             printDot(x, y) {
@@ -112,14 +121,14 @@
 
                     for (let x = small.x; x <= big.x; x = x + 0.01) {
                         const y = (slope===0 ? 1 : slope * x) + plusY;
-                        this.printScaleDot(x, y)
+                        this.printDot(x, y)
                     }
                 } else if (firstX === secondX) {
                     const small = firstY <= secondY ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
                     const big = firstY >= secondY ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
 
                     for (let y = small.y; y <= big.y; y = y + 0.01) {
-                        this.printScaleDot(small.x, y);
+                        this.printDot(small.x, y);
                     }
                 }
             } 
@@ -127,10 +136,13 @@
 
         const drawLineCanvas = new DrawLineCanvas();
         drawLineCanvas.init();
-        drawLineCanvas.printLineWithTwoDot(3, -2, 4, 0);
+        drawLineCanvas.printLineWithTwoDot(-8, -30, 40, 80);
+        drawLineCanvas.printLineWithTwoDot(8, -30, -8, -30);
 
-        drawLineCanvas.printLineWithTwoDot(2, 1, 2, 2);
-        drawLineCanvas.printLineWithTwoDot(1, 1, 2, 1);
+        // drawLineCanvas.printLineWithTwoDot(2, 1, 2, 2);
+        // drawLineCanvas.printLineWithTwoDot(1, 1, 2, 1);
+
+        // drawLineCanvas.drawCircle();
         // drawLineCanvas.printScaleDot(3,3);
     </script>
 </body>

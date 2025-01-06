@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        main {
+            width: 1000px;
+            height: 1000px;
+            border:1px solid red;
+            position:relative
+        }
+
+        div[id^=div] {
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <main id="divArea"></main>
+    <script>
+        class Div {
+            constructor(id) {
+                this.id = id;
+            }
+
+            random(minV, maxV){
+                return Math.floor( Math.random() * ( maxV - minV +1 ) + minV  );
+            }
+            display() {
+                let x, y, red, green, blue, top, left = 0;
+
+                x = this.random(25,50) + "px";
+                y = this.random(25,50) + "px";
+
+                red = Math.floor(Math.random() * 256);
+                green = Math.floor(Math.random() * 256);
+                blue = Math.floor(Math.random() * 256);
+
+                top = Math.floor((Math.random() * 96) + 1) + "%";
+                left = Math.floor((Math.random() * 96) + 1) + "%";
+
+                const css = `
+                    <style>
+                        .${this.id}{
+                            width: ${x};
+                            height: ${y};
+                            background-color: rgb(${red},${green},${blue});
+                            top: ${top};
+                            left: ${left};
+                        }
+                    </style>
+                `
+                
+                console.log("좌표값", top, left)
+                console.log(red, green, blue)
+                const htmlString = `<div id=${this.id} class=${this.id}></div>`;
+                document.querySelector('#divArea').innerHTML += htmlString + css;
+                // document.querySelector(`#${this.id}`).style.width = x;
+                // document.querySelector(`#${this.id}`).style.height = y;
+                // document.querySelector(`#${this.id}`).style.backgroundColor=`rgb(${red},${green},${blue})`
+                // document.querySelector(`#${this.id}`).style.top = top;
+                // document.querySelector(`#${this.id}`).style.left = left;
+
+                
+            }
+        }
+
+        const div = new Div("test");
+        const divList = [];
+        for (let i = 0; i < 100; i++) {
+            divList.push(new Div(`div${i}`));
+            divList[i].display();
+        }
+    </script>
+</body>
+
+</html>

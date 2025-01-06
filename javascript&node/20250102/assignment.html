@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F</title>
+    <style>
+        canvas {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="inputArea">
+        각도 <input id="numberV" type="number">
+        <select id="selectBox">
+            <option>degree</option>
+            <option>radian</option>
+            <option>mill</option>
+        </select>
+        <button id="resultBtn">변환</button>
+    </div>
+    <div id="resultArea">
+        <p>각도</p>
+    </div>
+    <div id="canvasArea">
+        <canvas id="canvas" width="500" height="500"></canvas>
+    </div>
+    <script>
+        class Mathmatics {
+            constructor(id) {
+                this.id = id;
+                this.canvas = document.getElementById("canvas");
+                this.pen = canvas.getContext("2d");
+                this.width = this.canvas.width;
+                this.height = this.canvas.height;
+                this.halfWidth = this.width / 2;
+                this.halfHeight = this.height / 2;
+                this.scale = 100;
+            }
+            getValue() {
+                return [document.querySelector("select[id=selectBox] option:checked").value, (document.getElementById("numberV").value)];
+            }
+            setValue(inputValues) {
+                switch (inputValues[0]) {
+                    case "degree":
+                        return ["degree", inputValues[1], (Math.cos((Math.PI / 180) * inputValues[1]) * this.scale), (Math.sin((Math.PI / 180) * inputValues[1]) * this.scale)]
+                        break;
+                    case "radian":
+                        return ["radian", (Math.PI / 180) * inputValues[1], (Math.cos((Math.PI / 180) * inputValues[1]) * this.scale), (Math.sin((Math.PI / 180) * inputValues[1]) * this.scale)]
+                        break;
+                    case "mill":
+                        return ["mill", inputValues[1] * (6400 / 360),]
+                }
+            }
+            event() {
+                window.addEventListener('click', (e) => {
+                    switch (e.target.id) {
+                        case "resultBtn":
+                            const setValues = this.setValue(this.getValue());
+                            this.display(setValues);
+                            console.log(setValues);
+                            this.printLineWithTwoDot(0, 0, setValues[2], setValues[3])
+                    }
+                })
+            }
+            display(setValues) {
+                document.querySelector("#resultArea").innerHTML = `${setValues[0]} : ${setValues[1]}`
+            }
+
+            printDot(x, y) {
+                this.pen.fillRect(x + 250, (y * -1) + 250, 1, 1)
+            }
+
+            printLineWithTwoDot(firstX, firstY, secondX, secondY) {
+                if (firstX != secondX) {
+                    const small = firstX <= secondX ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+                    const big = firstX >= secondX ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+
+
+                    //1. 기울기를 구합니다.
+                    const slope = (big.y - small.y) / (big.x - small.x);
+                    console.log("slope : " + slope)
+
+                    //2. y절편을 구합니다다.
+                    const plusY = ((slope * small.x) * -1) + small.y
+                    console.log("plusY : " + plusY)
+
+                    for (let x = small.x; x <= big.x; x = x + 0.01) {
+                        const y = (slope === 0 ? 1 : slope * x) + plusY;
+                        this.printDot(x, y)
+                    }
+                } else if (firstX === secondX) {
+                    const small = firstY <= secondY ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+                    const big = firstY >= secondY ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+
+                    for (let y = small.y; y <= big.y; y = y + 0.01) {
+                        this.printDot(small.x, y);
+                    }
+                }
+            }
+            drawCircle() {
+                for (let i = 0; i < 360; i++) {
+                    const x = Math.cos((Math.PI / 180 * i)) * this.scale;
+                    const y = Math.sin((Math.PI / 180 * i)) * this.scale;
+
+                    const borderX = Math.cos((Math.PI / 180 * i)) * (this.scale + 20);
+                    const borderY = Math.sin((Math.PI / 180 * i)) * (this.scale + 20);
+
+
+                    console.log(x, y)
+                    this.printDot(x, y);
+
+                    if (i % 45 === 0) {
+                        this.pen.fillText(i, x + this.halfWidth, (y * -1) + this.halfHeight);
+                    };
+                }
+            }
+
+            canvasInit() {
+                //중간 선그리기
+                for (let i = 0; i < this.width; i++) {
+                    this.pen.fillRect(i, this.halfHeight, 1, 1);
+                    this.pen.fillRect(this.halfWidth, i, 1, 1);
+                }
+                this.drawCircle();
+                this.pen.fillRect(1, 1, 1, 1);
+            }
+            run() {
+                this.event();
+                this.canvasInit();
+            }
+        }
+
+        const mathmatics = new Mathmatics("mathmatics");
+        mathmatics.run();
+
+    </script>
+</body>
+
+</html>

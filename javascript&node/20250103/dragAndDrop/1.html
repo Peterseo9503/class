@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>drag and drop</title>
+    <style>
+        .container2{
+            width:500px;
+            height:300px;
+            background-color: lightcyan;
+        }
+    </style>
+</head>
+<body>
+    <div draggable="true" id="item" class="item">
+        <p id="item">Drag's item</p>
+    </div>
+    <div class="container2" id="con"></div>
+    <script>
+        const item = document.querySelector(".item");
+        item.addEventListener( 'dragstart',(e)=>{
+            console.log( "드레기 시탈트~" )
+        } );
+        const container2 = document.querySelector(".container2");
+        container2.addEventListener("dragenter",(e)=>{
+            console.log("drag요소가 들어왔어요");
+        })
+
+        container2.addEventListener( 'dragover',(e)=>{
+            console.log("drag요소가 계속 올라와 있어요");
+        } )
+
+        container2.addEventListener( 'dragleave',(e)=>{
+            console.log("drag요소가 떠났어요");
+        } )
+    </script>
+</body>
+</html>

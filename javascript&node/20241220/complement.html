@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,10 +11,10 @@
     <main id="main"></main>
 
     <script>
-        class Deck {
+        class Queue {
             constructor(id) {
                 this.id = id;
-                this.storage = [];
+                this._storage = [];
             }
 
             pushItem(item) {
@@ -22,14 +23,14 @@
             popItem() {
                 return this.storage.pop();
             }
-            unshiftItem(item) {
-                this.storage.unshift(item);
-            }
-            shiftItem() {
-                this.storage.shift();
-            }
             clear() {
                 this.storage = [];
+            }
+            get storage(){
+                return this._storage;
+            }
+            set storage( array ){
+                this._storage = array;
             }
         }
         class Complement {
@@ -37,80 +38,80 @@
                 this.id = id;
                 this.inputDec1 = 0;
                 this.inputDec2 = 0;
-                this.firstDeck = new Deck("firstDeck");
-                this.secondDeck = new Deck("secondDeck");
-                this.carryDeck = new Deck("carryDeck");
-                this.resultDeck = new Deck("resultDeck");
+                this.firstQueue = new Queue("firstQueue");
+                this.secondQueue = new Queue("secondQueue");
+                this.carryQueue = new Queue("carryQueue");
+                this.resultQueue = new Queue("resultQueue");
             }
             setValues() {
                 this.inputDec1 = document.getElementById("inputDec1").value;
                 this.inputDec2 = document.getElementById("inputDec2").value;
-                this.carryDeck.storage = [1, 0, 0, 0, 0, 0, 0, 0];
-                this.resultDeck.storage = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+                this.carryQueue.storage = [1, 0, 0, 0, 0, 0, 0, 0];
+                this.resultQueue.storage = [0, 0, 0, 0, 0, 0, 0, 0, 0];
             }
             clear(flagNum) {
                 if (flagNum === 1) {
-                    this.firstDeck.clear();
+                    this.firstQueue.clear();
                 } else {
-                    this.secondDeck.clear();
+                    this.secondQueue.clear();
                 }
-                this.carryDeck.clear();
-                this.resultDeck.clear();
+                this.carryQueue.clear();
+                this.resultQueue.clear();
                 this.maxLength = 0;
             }
             changeToBinary(flagNum) {
                 let tempNum = flagNum === 1 ? this.inputDec1 : this.inputDec2;
                 while (1) {
                     if (tempNum < 2) {
-                        flagNum === 1 ? this.firstDeck.pushItem(tempNum) : this.secondDeck.pushItem(tempNum);
-                        tempNum = 0;
+                        flagNum === 1 ? this.firstQueue.pushItem(tempNum) : this.secondQueue.pushItem(tempNum);
+                        tempNum = 0; //0값으로 채워주기 위해서 
                         while (1) {
-                            let length = flagNum === 1 ? this.firstDeck.storage.length : this.secondDeck.storage.length;
-                            flagNum === 1 ? this.firstDeck.pushItem(0) : this.secondDeck.pushItem(0);
-                            if (length === 7) {
+                            let length = flagNum === 1 ? this.firstQueue.storage.length : this.secondQueue.storage.length;
+                            if (length >= 8) {
                                 break;
                             }
+                            flagNum === 1 ? this.firstQueue.pushItem(0) : this.secondQueue.pushItem(0);
                         }
                         break;
                     }
                     const mod = tempNum % 2; // 나머지
-                    flagNum === 1 ? this.firstDeck.pushItem(mod) : this.secondDeck.pushItem(mod);
+                    flagNum === 1 ? this.firstQueue.pushItem(mod) : this.secondQueue.pushItem(mod);
                     tempNum = Math.floor(tempNum / 2); // 몫 
                 }
             }
             getDecimal() {
                 let sumDecimal = 0;
-                this.resultDeck.storage.forEach((v, i, a) => {
+                this.resultQueue.storage.forEach((v, i, a) => {
                     sumDecimal += (v * (2 ** i));
                 })
                 return sumDecimal;
             }
             binaryToComplement() {
-                const secondArray = [...this.secondDeck.storage];
+                const secondArray = [...this.secondQueue.storage];
                 secondArray.forEach((v, i, a) => {
                     a[i] = v == 0 ? 1 : 0 // 1의보수를 위한 값의 반전.
                 })
                 // console.log("===============================")
-                // console.log("1_Deck : " + this.firstDeck.storage)
+                // console.log("1_Queue : " + this.firstQueue.storage)
                 // console.log("===============================")
                 // console.log("2_보수 : " + secondArray)
                 // console.log("===============================")
-                // console.log("3_캐리 : " + this.carryDeck.storage)
+                // console.log("3_캐리 : " + this.carryQueue.storage)
                 // console.log("===============================")
-                // console.log("4_결과 : " + this.resultDeck.storage)
+                // console.log("4_결과 : " + this.resultQueue.storage)
                 // console.log("===============================")
 
-                this.carryDeck.storage.forEach((v, i, a) => {
+                this.carryQueue.storage.forEach((v, i, a) => {
                     let sum = 0;
-                    sum = this.firstDeck.storage[i] + secondArray[i] + this.carryDeck.storage[i];
+                    sum = this.firstQueue.storage[i] + secondArray[i] + this.carryQueue.storage[i];
                     if (sum >= 2) {
-                        this.carryDeck.storage[i + 1] = 1;
+                        this.carryQueue.storage[i + 1] = 1;
                         sum = sum - 2;
                     }
-                    this.resultDeck.storage[i] = sum;
-                    // console.log(`${i} = ${this.firstDeck.storage[i]} + ${secondArray[i]} + ${this.carryDeck.storage[i]}`)
+                    this.resultQueue.storage[i] = sum;
+                    // console.log(`${i} = ${this.firstQueue.storage[i]} + ${secondArray[i]} + ${this.carryQueue.storage[i]}`)
                 });
-                // console.log(this.resultDeck.storage);
+                // console.log(this.resultQueue.storage);
             }
             event() {
                 window.addEventListener('click', (e) => {
@@ -136,18 +137,18 @@
                 })
             }
             displayBinary(flagNum) {
-                const tempArray = flagNum === 1 ? [...this.firstDeck.storage] : [...this.secondDeck.storage];
+                const tempArray = flagNum === 1 ? [...this.firstQueue.storage] : [...this.secondQueue.storage];
                 const htmlElement = flagNum === 1 ? document.getElementById("topInputContainer") : document.getElementById("bottomInputContainer");
                 let dynamicHtml = "";
-                tempArray.forEach( (v,i)=>{
+                tempArray.forEach((v, i) => {
                     dynamicHtml = `<input type=number value=${tempArray[i]}>` + dynamicHtml;
-                } );
+                });
                 htmlElement.innerHTML = dynamicHtml;
             }
             displayResult() {
                 let dynamicHtml = "";
                 for (let i = 0; i < 8; i++) {
-                    dynamicHtml = `<input type=number value=${this.resultDeck.storage[i]}>` + dynamicHtml;
+                    dynamicHtml = `<input type=number value=${this.resultQueue.storage[i]}>` + dynamicHtml;
                 }
                 document.getElementById("resultDiv").innerHTML = dynamicHtml;
                 document.getElementById("decimalDiv").innerHTML = `<input type="number" value = ${this.getDecimal()}>`;
@@ -187,7 +188,7 @@
                     width: 1000px;
                     height: 350px;
                     border: 5px solid white;
-                    background-color: rgb(53, 19, 177);
+                    background-color: lightblue 
                     border-radius: 10px;
                     display: flex;
                     flex-direction: column;
@@ -231,13 +232,13 @@
                     width: 70px;
                 }
                 </style>`;
-                const html = `<h1>BINARY MINUS CACULATOR</h1>
+                const html = `<h1>BINARY MINUS CALCULATOR</h1>
                 <div id="topDiv">Dec <input id="inputDec1" class="decimal" type="number" placeholder="0~255"> <button
-                        id="changeToBinary1">ChangeToBinary</button>
+                        id="changeToBinary1">2진수변환</button>
                     <div id="topInputContainer" class="topInputContainer"></div>
                 </div>
                 <div id="bottomDiv">Dec <input id="inputDec2" class="decimal" type="number" placeholder="0~255"> <button
-                        id="changeToBinary2">ChangeToBinary</button>
+                        id="changeToBinary2">2진수변환</button>
                     <div id="bottomInputContainer" class="topInputContainer"></div>
                 </div>
                 <div id="buttonDiv" class="buttonDiv"><button id="minusBtn">Minus</button></div>

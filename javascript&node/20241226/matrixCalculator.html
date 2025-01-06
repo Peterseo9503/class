@@ -1,0 +1,483 @@
+
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
+    <link rel="stylesheet" href="portfolio.css">
+    <link rel="icon" href="../../img/favicon.png">
+    <style>
+	.inputBtnRight i[class^="xi"]{  line-height:60px; font-size: 50px; }
+	.icon i[class^="xi"]{margin-left : 10px; text-align:center; font-size:20px; }
+	.modalExpandBtn i[class^="xi"]{ font-size:40px; }
+	.modalCloseBtn i[class^="xi"]{ font-size: 50px; }
+    </style>
+    <meta charset="utf-8"/>
+    <title>행렬 계산기</title>
+</head>
+
+<body>
+    <main class="mainArea">
+	<!-- 에러 모달 창-->
+	<div id="popupArea" class="popupArea">
+		<div class="popupBox">
+			<button id="errCloseBtn" class="errCloseBtn"><i class= "xi-close-circle"></i></button>
+			<p id="errMessageBox" class="errMessageBox"></p>
+			<button id="errConfirmBtn" class="errConfirmBtn"><span class="confirmText">확인<span></button>
+		</div>
+	</div>
+	<!-- 확대 모달 창-->
+	<div id="modalArea" class="modalArea">
+		<div class="modalBox">
+			<div id="modalPrintBox" class="modalPrintBox">
+				<div class="modalPrintBoxTop">
+					<p class="modalText">MATRIX CALCULATOR</p>
+					<button id="modalCloseBtn" class="modalCloseBtn"><i class="xi-close-circle"></i></button>
+				</div>
+				<div class="modalPrintBoxBottom">
+					<div id="modalPrintSmallBox" class="modalPrintSmallBox"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	    
+        <section class='headArea'>
+		<article><h1 class="title">MATRIX CALCULATOR</h1></article>
+        </section>
+	<section id="inputArea" class='inputArea'>
+            <div class='inputBox'>
+                <article class='inputBtnUp'>
+                    <div class="inputDivLeft"><span class="inputSpan">Matrix A</span><input id="leftRowValue"
+                            class="inputTag" type=number min="1" max="9" required value="5"><span class="icon"><i class="xi-close"></i></span>
+                            <input id="leftColValue" class="inputTag" type=number min="1" max="9" required value="5">
+                    </div><div class="inputDivRight"><span class="inputSpan">Matrix B</span><input id="rightRowValue"
+                            class="inputTag" type=number min="1" max="9" required value="5"><span class="icon"><i class="xi-close"></i></span>
+                            <input id="rightColValue" class="inputTag" type=number min="1" max="9" required value="5"></div>
+                </article>
+                <article class='inputBtnDown'>
+			<div class="inputDivLeft"><button id="leftOutputBtn" class="btn"><span class="btnText">OUTPUT</span></button><button
+          		     id="leftRandomBtn" class="btn"><span class="btnText">RANDOM</span></button><button id="leftResetBtn"
+			     class="btn"><span class="btnText">RESET</span></button></div><div class="inputDivRight"><button id="rightOutputBtn" class="btn">OUTPUT</button><button
+                            id="rightRandomBtn" class="btn">RANDOM</button><button id="rightResetBtn"
+                            class="btn">RESET</button></div>
+                </article>
+		<article class='inputBtnRight'>
+			<div class="inputBtnBox">
+				<button id="plusBtn" class="calBtn"><span class="calSpan"><i class="xi-plus"></i></span></button><button id="minusBtn" class="calBtn"><span class="calSpan"><i class="xi-minus"></i></span></button><button id="multipleBtn" class="calBtn"><span class="calSpan"><i class="xi-close"></i></span></button>
+				<button id="modalExpandBtn" class="modalBtn"><span class="calSpan"><i class="xi-search"></i></span></button>
+			</div>
+
+			<!--	    <button id="modalExpandBtn" class="modalExpandBtn"><span>결과 자세히 보기</span></button>-->
+		
+		</article>
+<!--		<div id="modalBtnArea" class="modalBtnArea"><button id="modalExpandBtn" class="modalExpandBtn"><i class="xi-expand"></i></button></div>--> 
+            </div>
+        </section>
+        <section class="printArea">
+            <div class="printBox">
+                <div class="printDiv">
+                    <div id="printLeftBox" class="printSmallBox">
+                    </div>
+                </div>
+                <div class="printDiv">
+                    <div id="printRightBox" class="printSmallBox">
+                    </div>
+                </div>
+                <div class="printDiv">
+                    <div id="printResultBox" class="printSmallBox">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+<script>
+
+    const matrixCal = {
+        leftMatrix: [],
+        rightMatrix: [],
+        resultMatrix: [],
+        leftValue: { row: 0, col: 0 },
+        rightValue: { row: 0, col: 0 },
+        resultValue: { row: 0, col: 0 },
+        setValue: function (position) {
+            if (position == "left") {
+                this.leftValue.row = document.getElementById("leftRowValue").value;
+                this.leftValue.col = document.getElementById("leftColValue").value;
+            } else if (position == "right") {
+                this.rightValue.row = document.getElementById("rightRowValue").value;
+                this.rightValue.col = document.getElementById("rightColValue").value;
+            } else { alert("Something wrong!! --> SetValue Method") }
+        },
+        matrixSet: function (position, operationType) {
+
+            let tempV = [];
+            if (position === "left") {
+                this.leftMatrix = [];
+
+                for (y = 0; y < this.leftValue.row; y++) {
+                    for (let x = 0; x < this.leftValue.col; x++) {
+                        tempV.push(0);
+                    }
+                    this.leftMatrix.push(tempV);
+                    tempV = [];
+                }
+                console.log(this.leftValue.col, this.leftValue.row, this.leftMatrix);
+            }
+            else if (position === "right") {
+                this.rightMatrix = [];
+
+                for (let y = 0; y < this.rightValue.row; y++) {
+                    for (let x = 0; x < this.rightValue.col; x++) {
+                        tempV.push(0);
+                    }
+                    this.rightMatrix.push(tempV);
+                    tempV = [];
+                }
+                console.log(this.rightValue.col, this.rightValue.row, this.rightMatrix);
+            }
+            // - + * 연산부분
+            else if (position === "result") {
+                this.resultMatrix = [];
+                //console.log(operationType);
+                //행렬의 곱 생각해서 Row에 left.row,     Col에 right.col줬음.
+                this.resultValue.row = this.leftValue.row;
+                this.resultValue.col = this.rightValue.col;
+
+                for (let y = 0; y < this.resultValue.row; y++) {
+                    for (let x = 0; x < this.resultValue.col; x++) {
+                        if (operationType == "plus") {
+                            tempV.push(Number(this.leftMatrix[y][x]) + Number(this.rightMatrix[y][x]));
+                        }
+                        else if (operationType == "minus") {
+                            tempV.push(Number(this.leftMatrix[y][x]) - Number(this.rightMatrix[y][x]));
+                        } else if (operationType == "multiple") {
+                            tempV[x] = 0;
+                            for (let k = 0; k < this.leftValue.col; k++) {
+                                tempV[x] += this.leftMatrix[y][k] * this.rightMatrix[k][x];
+                            }
+                        }
+                        else {
+                            alert("Something Wrong!! --> Matrixset ")
+                        }
+                    }
+                    this.resultMatrix.push(tempV);
+                    tempV = [];
+                }
+                console.log("resultArray: " + this.resultValue.col, this.resultValue.row, this.resultMatrix);
+            }
+            else { alert("Something wrong!! --> matrixInit") }
+
+        },
+        visualize: function (position) {
+            const resultBox = document.getElementById("printResultBox");
+
+            if (position === "left") {
+                const printLeftBox = document.getElementById("printLeftBox");
+                //RESET PART
+                if (this.leftMatrix.length === 0) {
+                    printLeftBox.innerHTML = '';
+                    //RESULT RESET PART
+                    this.resultMatrix = [];
+                    resultBox.innerHTML = '';
+		    //EXPAND BTN HIDE
+		    this.controlExpandBtn("hide");
+                    return;
+                }
+                //RESULT RESET PART
+                this.resultMatrix = [];
+                resultBox.innerHTML = '';
+		//EXPAND BTN HIDE
+		this.controlExpandBtn("hide");
+                printLeftBox.innerHTML = '';
+                printLeftBox.style.width = 54 * Number(this.leftValue.col) + "px";
+                for (let y = 0; y < this.leftValue.row; y++) {
+                    for (let x = 0; x < this.leftValue.col; x++) {
+                        printLeftBox.innerHTML += '<input id="LeftCell' + y + x + '" class="inputBoxTag" type="number" value="' + matrixCal.leftMatrix[y][x] + '">';
+                    }
+                }
+            }
+            else if (position === "right") {
+                const printRightBox = document.getElementById("printRightBox");
+                //RESET PART
+                if (this.rightMatrix.length === 0) {
+                    printRightBox.innerHTML = '';
+                    //RESULT RESET PART
+                    this.resultMatrix = [];
+                    resultBox.innerHTML = '';
+		    //EXPAND BTN HIDE
+		    this.controlExpandBtn("hide");
+                    return;
+                }
+                //RESULT RESET PART
+                this.resultMatrix = [];
+                resultBox.innerHTML = '';
+		//EXPAND BTN HIDE    
+		this.controlExpandBtn("hide");
+                printRightBox.innerHTML = '';
+                printRightBox.style.width = 54 * Number(this.rightValue.col) + "px";
+                for (let y = 0; y < this.rightValue.row; y++) {
+                    for (let x = 0; x < this.rightValue.col; x++) {
+                        printRightBox.innerHTML += '<input id="RightCell' + y + x + '" class="inputBoxTag" type="number" value="' + this.rightMatrix[y][x] + '">';
+                    }
+                }
+
+            } else if (position === "result") {
+                const printResultBox = document.getElementById("printResultBox");
+		const modalPrintSmallBox = document.getElementById("modalPrintSmallBox");
+		console.log(modalPrintSmallBox);
+                //RESET PART
+                if (this.resultMatrix.length === 0) {
+                    printResultBox.innerHTML = '';
+                    return;
+                }
+		//결과 제시히 보기 창 
+		this.controlExpandBtn("show");
+
+                printResultBox.innerHTML = '';
+		modalPrintSmallBox.innerHTML = '';														 
+                printResultBox.style.width = 54 * Number(this.resultValue.col) + "px";
+                modalPrintSmallBox.style.width = 104 * Number(this.resultValue.col) + "px";
+
+                for (let y = 0; y < this.resultValue.row; y++) {
+    			for (let x = 0; x < this.resultValue.col; x++) {
+                	let tempMatrixValue = 0;
+			tempMatrixValue = Number(this.resultMatrix[y][x]).toLocaleString();
+        printResultBox.innerHTML += '<input id="resultCell' + y + x + '" class="inputBoxTag" type="text" value="' + tempMatrixValue + '" readonly>';
+        modalPrintSmallBox.innerHTML += '<input id="modalCell' + y + x + '" class="modalBoxTag" type="text" value="' + tempMatrixValue + '" readonly>';
+                    }
+                }
+            }
+            else { alert("Somthing wrong --> visualize") }
+        },
+        areaReset: function (position) {
+            if (position === "left") {
+                this.leftMatrix = [];
+                this.visualize("left");
+            }
+            else if (position === "right") {
+                this.rightMatrix = [];
+                this.visualize("right");
+            }
+            else {
+                alert("Something wrong!! --> areaReset");
+            }
+        },
+        Calc: function (operation) {
+            if (this.leftMatrix.length === 0 || this.rightMatrix.length === 0) { this.exceptionPopup("행렬이 생성되어 있지 않아 연산이 불가능합니다."); return; }
+            if (operation == "plus" || operation == "minus") {
+		    if (this.leftValue.col != this.rightValue.col || this.leftValue.row != this.rightValue.row) { this.exceptionPopup("덧셈과 뺄셈 연산을 위해서는 <br>행렬의 가로와 세로 길이가<br> 일치해야 합니다."); return; }
+                else {
+                    this.matrixSet("result", operation);
+                    this.visualize("result");
+                    //this.resultMatrix
+                }
+            } else if (operation == "multiple") {
+                console.log(this.leftValue.col, this.rightValue.row);
+                if (this.leftValue.col != this.rightValue.row) {
+			this.exceptionPopup("곱셈 연산은 A 행렬의 열 길이와 <br>B 행렬의 행 길이가 같아야 합니다.");
+                    return;
+                } else {
+                    this.matrixSet("result", operation);
+                    this.visualize("result");
+                }
+            }
+        },
+        randomSet: function (position) {
+            if (position === "left") {
+                for (let y = 0; y < this.leftValue.row; y++) {
+                    for (let x = 0; x < this.leftValue.col; x++) {
+                        this.leftMatrix[y][x] = Math.floor(Math.random() * 10) ;
+                        //this.leftMatrix[y][x] = Math.floor(Math.random() * (99 + 1 +99) ) -99;
+                        //console.log(Math.floor(Math.random()*9) +1)
+                    }
+                }
+                this.visualize("left");
+            }
+            else if (position === "right") {
+                for (let y = 0; y < this.rightValue.row; y++) {
+                    for (let x = 0; x < this.rightValue.col; x++) {
+                        this.rightMatrix[y][x] = Math.floor(Math.random() * 10);
+                    }
+                }
+                this.visualize("right");
+            }
+            else { alert("Something worng --> randomset") }
+        },
+	exceptionPopup: function(errMessage){
+		const popupArea = document.getElementById("popupArea");
+		const errMessageBox = document.getElementById("errMessageBox");
+		
+		errMessageBox.innerHTML = errMessage;
+		popupArea.style.display = "block";
+	},
+	controlExpandBtn: function( value ){
+		const expandBtn = document.getElementById("modalExpandBtn");
+		if(value == "show"){expandBtn.style.display = "block";}
+		else if(value =="hide"){expandBtn.style.display = "none";}
+		else{ alert("Something wrong!! ->> controlExpandBtn") }
+	}
+
+
+
+    }
+	    //LEFT OUTPUT BTN EVENT
+    document.getElementById("leftOutputBtn").addEventListener(
+        'click',
+        function () {
+            matrixCal.setValue("left");
+            matrixCal.matrixSet("left");
+            matrixCal.visualize("left");
+        }
+    );
+    //RIGHT OUTPUT BTN EVENT
+    document.getElementById("rightOutputBtn").addEventListener(
+        'click',
+        function () {
+            matrixCal.setValue("right");
+            matrixCal.matrixSet("right");
+            matrixCal.visualize("right");
+        }
+    );
+
+    //LEFT CHANGE EVENT
+    document.getElementById("printLeftBox").addEventListener(
+        'input',
+        function (event) {
+            console.log(event.target.id, event.target.value);
+		console.log(typeof Number(event.target.id), event.target.value.slice(1,1) );
+		if( Number(event.target.value > 99) ){
+			event.target.value = 99;
+		}
+		if( Number(event.target.value) <= -99 ){
+			event.target.value = -99;
+    		}
+		 
+			
+	    let x = 0;
+       	    let y = 0;
+            x = event.target.id.slice(-1);
+            y = event.target.id.slice(-2, -1);
+            matrixCal.leftMatrix[y][x] = event.target.value;
+            console.log(x, y, matrixCal.leftMatrix);
+		
+        }
+    );
+
+    //RIGHT CHANGE EVENT
+    document.getElementById("printRightBox").addEventListener(
+        'input',
+        function (event) {
+		if( Number(event.target.value > 99) ){
+			event.target.value = 99;
+		}
+		if( Number(event.target.value) <= -99 ){
+			event.target.value = -99;
+    		}
+															   
+            console.log(event.target.id, event.target.value);
+            let x = 0;
+            let y = 0;
+            x = event.target.id.slice(-1);
+            y = event.target.id.slice(-2, -1);
+            matrixCal.rightMatrix[y][x] = event.target.value;
+            console.log(x, y, matrixCal.rightMatrix);
+        }
+    );
+    //LEFT RESET BTN
+    document.getElementById("leftResetBtn").addEventListener(
+        'click',
+        function () {
+            matrixCal.areaReset("left");
+        }
+
+    );
+    //RIGHT RESET BTN
+    document.getElementById("rightResetBtn").addEventListener(
+        'click',
+        function () {
+            matrixCal.areaReset("right");
+        }
+    );
+    //PLUS BTN
+    document.getElementById("plusBtn").addEventListener(
+        'click',
+        function () {
+            matrixCal.Calc("plus");
+        }
+    );
+    //MINUS BTN
+    document.getElementById("minusBtn").addEventListener(
+        'click',
+        function () {
+            matrixCal.Calc("minus");
+        }
+    );
+    //RANDOM LEFT BTN
+    document.getElementById("leftRandomBtn").addEventListener(
+        'click',
+        function () {
+            matrixCal.randomSet("left");
+        }
+    );
+    //RANDOM RIGHT BTN
+    document.getElementById("rightRandomBtn").addEventListener(
+        'click',
+        function () {
+            matrixCal.randomSet("right");
+        }
+    );
+    //MULTIPLE BTN
+    document.getElementById("multipleBtn").addEventListener(
+        'click',
+        function () {
+            matrixCal.Calc("multiple");
+        }
+
+    );
+    //ERRAREA CLOSE PART
+	document.getElementById("errConfirmBtn").addEventListener(
+	'click',
+	function(){
+		document.getElementById("popupArea").style="none";
+	}
+	);
+
+	document.getElementById("errCloseBtn").addEventListener(
+	'click',
+	function(){
+		document.getElementById("popupArea").style="none";
+	}
+	);
+	//INPUT NUMBER CHECK
+	document.getElementById("inputArea").addEventListener(
+	'input',
+	function( event ){
+		if(Number(event.target.value) >= 10 ){ 
+			event.target.value = ''; 
+		}
+		if(Number(event.target.value) < 1){
+			event.target.value = '';
+		}
+	}
+	);
+	//MODAL EXPAND BTN
+	document.getElementById("modalExpandBtn").addEventListener(
+		'click',
+		function(){
+			document.getElementById("modalArea").style.display ="block";
+		}
+	)
+	document.getElementById("modalCloseBtn").addEventListener(
+		'click',
+		function(){
+			document.getElementById("modalArea").style.display ="none";
+		}
+	)
+</script>
+
+</html>
+

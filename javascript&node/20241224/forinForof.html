@@ -1,0 +1,41 @@
+<script>
+// const sdh = {name:"donghyun", love:"ljm" };
+
+// for( let key in sdh ){
+//     // console.log(sdh[key])
+// }
+
+// // console.log(sdh);
+
+// const sdh2 = ["donghyun","ljm"];
+// for(let value of sdh2){
+//     // console.log(value)
+// }
+
+// // console.log(sdh2);
+
+// console.log(Object.keys( sdh ).find( v=>{ sdh[v] === "donghyun" } ))
+
+
+let myS = "I LOVE zard";
+
+
+let mySA = [];
+let tempS = "";
+
+mySA = [...myS];
+console.log(mySA);
+
+tempS = mySA.join('');
+console.log( tempS );
+
+
+//join() 함수는 배열의 모든 값들을 연결한 문자열을 리턴합니다.
+
+// tempS = (...mySA);
+
+tempS = ''.concat(...mySA);
+
+console.log(tempS);
+
+</script>

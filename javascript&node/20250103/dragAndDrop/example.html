@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container {
+            width: 500px;
+            height: 500px;
+            background-color: lightcyan;
+        }
+
+        .container2 {
+            width: 500px;
+            height: 500px;
+            background-color: lightgoldenrodyellow;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" dragable="true">
+        <p>❤️</p>
+    </div>
+    <div class="container2"></div>
+    <script>
+        const container = document.querySelector(".container");
+
+        container.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            //console.log(e);
+            //console("드래그 요소가 '첫' 번째 박스 영역에 계속 위치하면 발생하는 이벤트");
+        });
+        container.addEventListener("drop", (e) => {
+            e.preventDefault();
+            //console.log(e);
+            console.log("드래그 요소가 '첫' 번째 박스 영역에 드롭");
+        });
+
+
+        // 드래그 요소가 이동하여 위치할 우측 박스 영역
+        const container2 = document.querySelector(".container2");
+
+        container2.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            //console.log(e);
+            //console("드래그 요소가 '두' 번째 박스 영역에 계속 위치하면 발생하는 이벤트");
+        });
+        container2.addEventListener("drop", (e) => {
+            e.preventDefault();
+            console.log(e);
+            console.log("드래그 요소가 '두' 번째 박스 영역에 드롭");
+        });
+    </script>
+</body>
+
+</html>

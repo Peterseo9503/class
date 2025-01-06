@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    비교하고싶은 숫자의 개수를 입력하세요 : <input id="inputCounts" type="number"> <button id="inputBtn">MakeInputs</button><br>
+
+    <div id="inputArea"></div>  
+    <!-- <input id="num1" class="values" type="number"> <input id="num2" class="values" type="number"> <input id="num3" class="values" type="number"><br> -->
+    <button id="resultBtn">print result</button>
+    <br>
+    Max : <input id="max"></input>
+    Min : <input id="min"></input>
+
+    <script>
+        class Struct {
+            constructor(id, numbers) {
+                this.id = id;
+                this.numbers = numbers;
+                this.result = { max: undefined, min: undefined }
+            }
+
+            process() {
+                // let min = 99999;
+                // let max = 0;
+                // this.numbers.forEach((v, i, a) => {
+                //     console.log("process : " + i, v, a)
+                //     min = v < min ? v : min;
+                //     max = v > max ? v : max;
+                // });
+                this.result.max = Math.max(...this.numbers);
+                this.result.min = Math.min(...this.numbers);
+            }
+
+            getResult() {
+                this.process();
+                return this.result;
+            }
+        }
+
+        class MaxMin {
+            constructor(id) {
+                this.id = id;
+            }
+
+            event() {
+                window.addEventListener('click', (e) => {
+                    switch (e.target.id) {
+                        case "resultBtn":
+                            this.setValues();
+                            break;
+                        case "inputBtn":
+                            this.makeInputs();
+                            break;
+                            
+                    }
+                })
+            }
+
+            makeInputs(){
+                document.getElementById("inputArea").innerHTML = ``;
+                const count = Number(document.getElementById("inputCounts").value);
+                for(let i=0; i < count; i++){
+                    document.getElementById("inputArea").innerHTML += `<input type="number" class="values">`
+                }
+            }
+            setValues() {
+                const numbers = [];
+                let domList = document.getElementsByClassName("values"); //얘는 유사배열임
+                console.log(Array.isArray(domList))
+                domList = [...domList];
+                domList.forEach(v => {
+                    numbers.push(Number(v.value));
+                    
+                })
+
+                const struct = new Struct("id", numbers)
+
+                this.display(struct.getResult())
+            }
+
+            display(result) {
+                document.querySelector("#max").value = result.max;
+                document.querySelector("#min").value = result.min;
+            }
+        }
+
+        const main = (() => {
+            const maxMin = new MaxMin("maxmin");
+            maxMin.event();
+        })();
+
+
+    </script>
+</body>
+
+</html>

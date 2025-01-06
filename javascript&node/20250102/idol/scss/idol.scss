@@ -1,0 +1,81 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+@mixin image_set($url, $position:50% 50%) {
+    background-image: url($url);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: $position;
+}
+
+
+@mixin bordered($thinkness:10px) {
+    border: $thinkness solid #85A947;
+}
+
+main {
+    h1 {
+        font-size: 30px;
+        text-shadow: 2px 2px gray;
+    }
+
+    .titleBox {
+        position: absolute;
+        top: -50px;
+        left: calc(500px - 200px);
+        background-color: #EFE3C2;
+        width: 400px;
+        height: 100px;
+        @include bordered(100px);
+        border-radius: 20px;
+        text-align: center;
+        line-height: 90px;
+    }
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    ;
+}
+
+main {
+    width: 1000px;
+    height: 500px;
+    background-color: none;
+    @include bordered();
+    border-radius: 20px;
+    background-color: #85A947;
+    position: relative;
+}
+
+.idolBox {
+    display: flex;
+    height: 100%;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.idol {
+    width: 300px;
+    height: 450px;
+    border: 5px solid black;
+}
+
+
+.box1 {
+    @include image_set("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfuScG2innuj6A5r2Zeje94FYOO_MOuM5wyQ&s", "50% 50%")
+}
+
+.box2 {
+    @include image_set("https://cdnweb01.wikitree.co.kr/webdata/editor/202411/30/img_20241130142745_6da20ef7.webp")
+}
+
+.box3 {
+    @include image_set("https://news.nateimg.co.kr/orgImg/nn/2024/03/21/202403212044455532_1.jpg", "50%")
+}

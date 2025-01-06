@@ -1,0 +1,65 @@
+* {
+  margin: 0;
+  padding: 0; }
+
+main h1 {
+  font-size: 30px;
+  text-shadow: 2px 2px gray; }
+main .titleBox {
+  position: absolute;
+  top: -50px;
+  left: calc(500px - 200px);
+  background-color: #EFE3C2;
+  width: 400px;
+  height: 100px;
+  border: "100px" solid #85A947;
+  border-radius: 20px;
+  text-align: center;
+  line-height: 90px; }
+
+body {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
+main {
+  width: 1000px;
+  height: 500px;
+  background-color: none;
+  border: 10px solid #85A947;
+  border-radius: 20px;
+  background-color: #85A947;
+  position: relative; }
+
+.idolBox {
+  display: flex;
+  height: 100%;
+  justify-content: space-evenly;
+  align-items: center; }
+
+.idol {
+  width: 300px;
+  height: 450px;
+  border: 5px solid black; }
+
+.box1 {
+  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfuScG2innuj6A5r2Zeje94FYOO_MOuM5wyQ&s");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: "50% 50%"; }
+
+.box2 {
+  background-image: url("https://cdnweb01.wikitree.co.kr/webdata/editor/202411/30/img_20241130142745_6da20ef7.webp");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%; }
+
+.box3 {
+  background-image: url("https://news.nateimg.co.kr/orgImg/nn/2024/03/21/202403212044455532_1.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: "50%"; }
+
+/*# sourceMappingURL=idol.css.map */

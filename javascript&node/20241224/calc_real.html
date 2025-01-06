@@ -1,0 +1,972 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
+    <link rel="icon" href="../../img/favicon.png">
+    <title> Peter's Calculator </title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: 'Do Hyeon', sans-serif;
+        }
+
+        i {
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="topOfTopDiv">
+        <button id="replicateCalBtn" class="replicateCalBtn">계산기 생성</button>
+        <!-- <button id="removeCalBtn" class="replicateCalBtn">복제된 계산기 삭제</button> -->
+    </div>
+    <div id="calContainerDiv">
+        <div id="cal"></div>
+    </div>
+
+    <script>
+        class Calculator {
+            constructor(id) {
+                this.id = id;
+                //물어볼꺼!!!
+                this.timer = null;
+            }
+            init(targetDom) {
+                const htmlCalPart = `
+    <div id="${this.id}mainBox" class="mainBox">
+    <div id="${this.id}resultArea" class="resultArea">0</div>
+    <div class="division">
+        <button id="${this.id}toggleCanvasBtn" class="toggleCanvasBtn">Fn</button>
+
+        <div class="sliderContainer">
+
+            <div class="sliderNumbers">
+                <span>F</span>
+                <span>4</span>
+                <span>3</span>
+                <span>2</span>
+                <span>0</span>
+            </div>
+            <input type="range" min="0" max="4" value="2" class="slider" id="decimalRange">
+        </div>
+    </div>
+    <button data-value="C">C</button>
+    <button data-value="(">(</button>
+    <button data-value=")">)</button>
+    <button data-value=">"><i class="xi-caret-up xi-rotate-90" data-value=">"></i></button>
+    <button data-value="7">7</button>
+    <button data-value="8">8</button>
+    <button data-value="9">9</button>
+    <button data-value="/">&divide</button>
+    <button data-value="4">4</button>
+    <button data-value="5">5</button>
+    <button data-value="6">6</button>
+    <button data-value="*">&times</button>
+    <button data-value="1">1</button>
+    <button data-value="2">2</button>
+    <button data-value="3">3</button>
+    <button data-value="-">-</button>
+    <button data-value="0">0</button>
+    <button data-value=".">.</button>
+    <button class="equalBtn" data-value="=">=</button>
+    <button data-value="+">+</button>
+</div>
+`;
+
+
+                const htmlCanvasPart = `
+                <div id="${this.id}canvasArea" class="${this.id}canvasArea">
+            <div id="cLeftArea" class="cLeftArea">
+                    <div class="radioArea">
+                    <input type="radio" id="${this.id}oneRadio" name="tab">
+                    <label for="${this.id}oneRadio">1차 함수</label>
+                
+                    <input type="radio" id="${this.id}twoRadio" name="tab">
+                    <label for="${this.id}twoRadio">2차 함수</label>
+                
+                    <input type="radio" id="${this.id}thrRadio" name="tab">
+                    <label for="${this.id}thrRadio">3차 함수</label>
+                
+                    <input type="radio" id="${this.id}circleRadio" name="tab">
+                    <label for="${this.id}circleRadio">원 그리기</label>
+
+                <div id="${this.id}oneDiv" class="cLeftAreaPart">
+
+                    <div class="radioFomula"><p class="fomula"> <img class ="oneEquation" src="https://latex.codecogs.com/svg.image?&space;y=ax&plus;b&space;" title=" y=ax+b " /> </p></div>
+                    <div><span>a : </span> <input id="${this.id}oneAV" ></div>
+                    <div><span>b : </span> <input id="${this.id}oneBV" ></div>
+                    <div><button id="${this.id}oneBtn">그리기</button></div>
+                </div>
+                
+                <div id="${this.id}twoDiv" class="cLeftAreaPart content">
+                    <div class="radioFomula"><p class="fomula"><img class ="twoEquation" src="https://latex.codecogs.com/svg.image?y=ax^2&plus;bx&plus;c" title="y=ax^2+bx+c" /></p></div>
+                    <div><span>a : </span> <input id="${this.id}twoAV" ></div>
+                    <div><span>b : </span> <input id="${this.id}twoBV" ></div>
+                    <div><span>c : </span> <input id="${this.id}twoCV" ></div>
+                    <div><button id="${this.id}twoBtn">그리기</button></div>
+                </div>
+
+                <div id="${this.id}thrDiv" class="cLeftAreaPart content">
+                    
+                    <div class="radioFomula"><p class="fomula"><img class ="thrEquation" src="https://latex.codecogs.com/svg.image?y=ax^3&plus;bx^2&plus;cx&plus;d" title="y=ax^3+bx^2+cx+d" /></p></div>
+                    <div><span>a : </span> <input id="${this.id}thrAV" ></div>
+                    <div><span>b : </span> <input id="${this.id}thrBV" ></div>
+                    <div><span>c : </span> <input id="${this.id}thrCV" ></div>
+                    <div><span>d : </span> <input id="${this.id}thrDV" ></div>
+                    <div><button id="${this.id}thrBtn">그리기</button></div>
+                </div>
+
+                <div id="${this.id}circleDiv" class="cLeftAreaPart content">
+                    <div class="radioFomula">
+                    <div> <p class="fomula">
+                        <img class="circleFomula" src="https://latex.codecogs.com/svg.image?(x-a)^2&plus;(x-y)^2=r^2" title="(x-a)^2+(x-y)^2=r^2" />
+                        </p>
+                    </div>
+                    </div>
+                    <div><span>x : </span> <input id="${this.id}circleXV" > <span>y : </span> <input id="${this.id}circleYV" > </div>
+                    <div><span>r : </span> <input id="${this.id}circleRV"></div>
+                    <div><button id="${this.id}circleBtn">그리기</button></div>
+                </div>
+                    </div>
+                
+                
+            </div>
+            <div id="cRightArea" class="cRightArea">
+                <canvas id="${this.id}canvas" width="400" height="400" style="border:1px solid gray; background-color:white"></canvas>
+            </div>
+
+            <div id ="${this.id}canvasControlArea" class="canvasControlArea">
+            <div class="controlTop">
+                <button id="${this.id}plusScaleBtn" class="controlTopDiv"><i class="xi-expand xi-2x"></i></button>
+                <button id="${this.id}clearBtn" class="controlTopDiv"><i class="xi-eraser xi-2x"></i></button>
+                <button id="${this.id}minusScaleBtn" class="controlTopDiv"><i class="xi-compress xi-2x"></i></button>
+            </div>
+            <div class="controlBottom">
+                <div>
+                    <button class="controlBottomDiv hidden"></button>
+                    <button id="${this.id}moveUpBtn" class="controlBottomDiv"><i class="xi-caret-up"></i></button>
+                    <button class="controlBottomDiv hidden"></button>
+                </div>
+                <div>
+                    <button id="${this.id}moveLeftBtn" class="controlBottomDiv"><i class="xi-caret-up xi-rotate-270"></i></button>
+                    <button id="${this.id}moveDownBtn" class="controlBottomDiv"><i class="xi-caret-up xi-rotate-180"></i></button>
+                    <button id="${this.id}moveRightBtn" class="controlBottomDiv"><i class="xi-caret-up xi-rotate-90"></i></button>
+                </div>
+            </div>
+        </div> 
+        </div>
+            
+        
+                `
+                const cssCalPart = `
+   .topOfTopDiv{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+   }
+        .replicateCalBtn{
+            background-color: RGB(80, 200, 120);
+            margin-top:20px;
+            width:130px;
+            height:50px;
+            font-size: 20px;
+            border-radius:20px;
+            color: black;
+
+        }
+        .replicateCalBtn:hover {
+            background-color: rgb(100, 200, 120);
+            opacity: 0.5;
+            box-shadow: 2px 2px 5px rgb(0,0,0);
+        }   
+                   
+
+
+   .flexBox {
+            height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mainBox {
+            width: 240px;
+            height: 405px;
+            padding: 15px;
+            border: 1px solid gray;
+            border-radius: 10px;
+            background-color: rgb(80, 200, 120);
+            box-shadow: 5px 5px;
+        }
+
+        .resultArea {
+            width: 230px;
+            height: 40px;
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+            font-size: 25px;
+            line-height: 40px;
+            text-align: right;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 5px 5px;
+            padding: 0 10px 0 0;
+        }
+
+        .mainBox button {
+            font-family: 'Do Hyeon', sans-serif;
+            border-radius: 15px;
+            font-size: 25px;
+            width: 55px;
+            height: 50px;
+            float: left;
+            text-align: center;
+            line-height: 50px;
+            margin-left: 5px;
+            margin-top: 5px;
+            box-shadow: 2px 2px 5px rgb(0, 0, 0);
+            background-color: white;
+        }
+          
+        .mainBox .equalBtn {
+            /* background-color: rgb(255, 192, 76); */
+            background-color: RGB(255, 127, 80);
+            color: white;
+            box-shadow: 2px 2px 5px rgb(0, 0, 0);
+        }
+        
+        .mainBox .toggleCanvasBtn {
+            width: 130px;
+            height: 60px;
+            line-height: 50px;
+        }
+
+        /* 슬라이더와 숫자 스타일 */
+        .division {
+            width: 100%;
+            height: 80px;
+        }
+
+        .sliderContainer {
+            float: right;
+            width: 90px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .slider {
+            width: 100px;
+            margin-top: 10px;
+            -webkit-appearance: none;
+            height: 15px;
+            background: #d3d3d3;
+            border-radius: 10px;
+            outline: none;
+            opacity: 0.8;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: RGB(255, 127, 80);
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: RGB(255, 127, 80);
+            cursor: pointer;
+        }
+
+        .sliderNumbers {
+            display: flex;
+            justify-content: space-between;
+            width: 100px;
+            margin: 0 auto;
+            padding-top: 5px;
+        }
+
+        .sliderNumbers span {
+            font-size: 16px;
+            color: white;
+        }
+`
+                const cssCanvasPart = `
+        .${this.id}canvasArea {
+            margin-left: 10px;
+            height: 555px;
+            width: 1100px;
+            min-width:1100px;
+            background-color: rgb(80, 200, 120);
+            border: 1px solid black;
+            border-radius: 20px;
+            box-shadow: 2px 2px 5px rgb(0, 0, 0);
+             
+            justify-content: space-around;
+            align-items: center; 
+            font-size: 20px;
+            display: none
+        }
+
+        .cLeftArea {
+            width: 300px;
+            height: 505px;
+            border: 1px solid black;
+            box-shadow: 2px 2px 5px rgb(0, 0, 0);
+            opacity: 0.95;
+            background-color: rgba(255, 255, 255, 0.9); 
+            border-radius: 20px;
+            display: inline-block;
+            float: left;
+        }
+
+        .cLeftAreaPart{
+            margin-top:10px;
+            height:300px;
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 10px;
+            font-size:30px;
+        } 
+       
+        .cLeftAreaPart div{
+            width:100%;
+            display:flex;
+            justify-content: center;
+            font-size:25px;
+            line-height:25px;
+        } 
+        
+        .radioArea{
+            margin-top:20px;
+            text-align: center;
+        }
+
+
+        .radioFomula{
+            display:flex;
+            flex-direction: column;
+            justify-content:space-between;
+            padding:10px;
+        }
+       
+        input[type="radio"] {
+             display: none;
+        }
+        
+        label {
+            display: inline-block;
+            padding: 10px ;
+            width:80px;
+            text-align:center;
+            margin-top:5px;
+            cursor: pointer;
+            background-color: rgb(80, 200, 120);
+            box-shadow: 2px 2px 5px rgb(0, 0, 0);
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        input[type="radio"]#${this.id}oneRadio:checked + label {
+            background-color: rgb(66, 135, 245);
+        }
+        input[type="radio"]#${this.id}twoRadio:checked + label {
+            background-color: rgb(245, 166, 66);
+        }
+        input[type="radio"]#${this.id}thrRadio:checked + label {
+            background-color: rgb(245,105,180);
+        }
+        input[type="radio"]#${this.id}circleRadio:checked + label {
+            background-color: rgb(135,66,245);
+        }
+        
+        .fomula .oneEquation{
+            width:120px; height:50px;
+        }
+
+        .fomula .twoEquation{
+            width:200px; height:50px;
+        }
+
+        .fomula .thrEquation{
+            width:250px; height:50px;
+        }
+
+        .fomula .circleFomula{
+            width:250px; height:50px;
+        }
+
+        .cRightArea {
+           width:500px;
+           height:500px;
+           display: inline-block;
+           float: left;
+        }
+
+        
+        .${this.id}canvasArea input{
+            margin:0 10px 0 10px;
+            border-radius:10px;
+            width:40px;
+            height:25px;
+            font-size:30px;
+            text-align: center;
+        }
+        .cLeftArea button {
+            border-radius: 5px;
+            font-size: 20px;
+            width: 100px;
+            height: 50px;
+            background-color: rgb(255, 192, 76); 
+            box-shadow: 2px 2px 5px rgb(0, 0, 0);
+        }
+        
+        .hidden { opacity:0 }
+
+
+        canvas { 
+            border-radius:10px;
+            width:500px;
+            height:500px;
+            box-shadow: 2px 2px 5px rgb(0, 0, 0);
+        }
+
+        /* canvasControlArea */
+
+        .canvasControlArea{
+            
+            width:200px;
+            height: 400px;
+            margin: 10px 10px 10px 10px;
+        }
+        .controlTop{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width:100%;
+            height:200px;
+        }
+
+        .controlBottom{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width:100%;
+            height:200px;
+            flex-direction: column;
+        }
+
+        .canvasControlArea button {
+            text-align:center;
+            border-radius: 5px;
+            line-height:50px;
+            font-size: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: rgb(255, 192, 76); 
+            box-shadow: 2px 2px 5px rgb(0, 0, 0);
+            margin:5px;
+        }
+        
+        .controlTop i{
+            font-size: 30px;
+            margin-top:7px;
+        }
+        `
+
+                targetDom.innerHTML = `
+                <div class="flexBox">
+                ${htmlCalPart}
+                ${htmlCanvasPart}
+                </div>
+            `;
+                targetDom.innerHTML += `
+                <style>
+                ${cssCalPart}
+                ${cssCanvasPart}
+                </style>
+            `
+                this.initCanvas();
+                ;
+
+
+            }
+            setCalData() {
+                class Deck {
+                    constructor(id) {
+                        this.id = id;
+                        this.storage = [];
+                        this.deckLength = 0;
+                    }
+                    pushItem(item) {
+                        this.storage.push(item);
+                    }
+                    popItem() {
+                        return this.storage.pop();
+                    }
+                    unshiftItem(item) {
+                        this.storage.unshift(item);
+                    }
+                    shiftItem() {
+                        return this.storage.shift();
+                    }
+                    clearItem() {
+                        this.storage = [];
+                    }
+                    getLength() {
+                        this.deckLength = this.storage.length;
+                        return this.storage.length;
+                    }
+                }
+                const calDeck = new Deck('calDeck');
+                let decimalRange = 2;
+
+                const getResultString = () => {
+                    let cpString = '';
+                    const storageLength = calDeck.getLength();
+                    for (let i = 0; i < storageLength; i++) {
+                        let tempString = '';
+                        //swaping
+                        tempString = calDeck.shiftItem();
+                        cpString += tempString;
+                        calDeck.pushItem(tempString);
+                        //swaping
+                    }
+                    return cpString;
+                }//END getResultString
+
+                const mainBox = document.getElementById(this.id + "mainBox");
+                const canvasArea = document.getElementById(this.id + "canvasArea");
+                /* 버튼제어부분 */
+                const toggleBtnID = this.id + "toggleCanvasBtn";
+                mainBox.addEventListener('click', (event) => {
+
+                    //toggleBtn 제어 부분
+                    if (event.target.id === toggleBtnID) {
+                        if (canvasArea.style.display === 'none' || canvasArea.style.display === '') {
+                            canvasArea.style.display = 'flex';  // Canvas 보이기
+                            mainBox.style.transition = 'transform 0.5s'; // 애니메이션 추가
+                            mainBox.style.transform = 'translateX(-10px)'; // 왼쪽으로 이동
+                        } else {
+                            canvasArea.style.display = 'none'; // Canvas 숨기기
+                            mainBox.style.transition = 'transform 0.5s';
+                            mainBox.style.transform = 'translateX(0px)'; // 원래 위치로 이동
+                        }
+                    }
+                    // END toggleBtn 제어 부분
+
+
+
+                    if (event.target.dataset.value != null) {
+                        switch (event.target.dataset.value) {
+                            case ">":
+                                calDeck.popItem();
+                                this.displayCalData(getResultString());
+                                break;
+                            case "=":
+                                try {
+                                    eval(getResultString())
+                                } catch (error) {
+                                    calDeck.clearItem();
+                                    this.displayCalData("NaN", "result");
+                                    return;
+                                }
+                                //END eval 함수 에러 예외처리
+                                this.displayCalData(eval(getResultString()), "result", decimalRange);
+                                calDeck.clearItem();
+                                break;
+                            case "C":
+                                calDeck.clearItem();
+                                this.displayCalData(getResultString());
+                                break;
+                            default: calDeck.pushItem(event.target.dataset.value);
+                                this.displayCalData(getResultString());
+                        }
+                    }
+                })//END MainBox onclick
+
+                mainBox.addEventListener('change', (event) => {
+                    decimalRange = event.target.value;
+                })//END MainBox change
+
+            }//END setCalData
+            displayCalData(calString, caller = "", decimalRange = 2) {
+                if (caller === "result") {
+                    let drawString = calString;
+                    const sliderValue = { "decimalV0": "F", "decimalV1": 4, "decimalV2": 3, "decimalV3": 2, "decimalV4": 0 };
+                    const modiDeciamlRange = sliderValue["decimalV" + decimalRange];
+                    if (drawString === "NaN" || calString === undefined) {
+                        clearTimeout(this.timer);
+                        document.getElementById(this.id + 'resultArea').innerHTML = "올바르지 않은 입력";
+                        this.timer = setTimeout(() => { document.getElementById(this.id + 'resultArea').innerHTML = "0" }, 1000);
+                    } else {
+                        //소수점 처리
+                        if (modiDeciamlRange != 0) {
+
+                            if (modiDeciamlRange === "F" && Number.isInteger(Number(drawString))) {
+                                document.getElementById(this.id + 'resultArea').innerHTML = drawString;
+                            }
+                            else {
+                                drawString = modiDeciamlRange === "F" ? Number(drawString).toFixed(14) : Number(drawString).toFixed(modiDeciamlRange);
+
+                                let dotIndex = String(drawString).lastIndexOf(".");
+                                let decimalString = String(drawString).substring(dotIndex + 1);
+
+                                drawString = Number(Math.floor(calString)).toLocaleString();
+                                drawString = drawString + "." + decimalString;
+
+                                document.getElementById(this.id + 'resultArea').innerHTML = drawString;
+                            }
+                        }
+                        else {
+                            drawString = Number(Math.floor(calString)).toLocaleString();
+                            document.getElementById(this.id + 'resultArea').innerHTML = drawString;
+                        }
+                        //END 소수점 처리
+                    }
+                } else {
+                    document.getElementById(this.id + 'resultArea').innerHTML = calString;
+                }
+            }//END displayCalData
+            //물어볼꺼!!!
+            setCanvasData() {
+                const canvasArea = document.getElementById(this.id + "canvasArea");
+                const canvasData = {
+                    oneAV: 0, oneBV: 0,
+                    twoAV: 0, twoBV: 0, twoCV: 0,
+                    thrAV: 0, thrBV: 0, thrCV: 0, thrDV: 0,
+                    circleXV: 0, circleYV: 0, circleRV: 0,
+                    scaleFactor: 10, movingX: 0, movingY: 0
+                };
+                let tempNumber = 0;
+                let inputElements = []; //클리어버튼 누를때 value초기화를 위한 
+
+                //데이터 입력 이벤트 
+                canvasArea.addEventListener(
+                    'input', (event) => {
+                        if (event.target.id.slice(-5) != "Radio") {
+                            let idString = event.target.id;
+                            const indexV = idString.lastIndexOf(this.id) + this.id.length;
+                            const idValue = idString.substring(indexV);
+                            canvasData[idValue] = event.target.value;
+                            //클리어를 위한 데이터저장
+                            inputElements.push(event.target.id);
+
+                        }
+                    }
+                );
+                //END 데이터 입력 이벤트  
+
+                const divArray = [];
+                divArray.push(document.getElementById((this.id) + "oneDiv"));
+                divArray.push(document.getElementById((this.id) + "twoDiv"));
+                divArray.push(document.getElementById((this.id) + "thrDiv"));
+                divArray.push(document.getElementById((this.id) + "circleDiv"));
+
+                //Div 초기화 함수
+                const clearDiv = () => {
+                    divArray.forEach((v) => {
+                        v.style.display = "none";
+                    });
+                };
+
+                //버튼 클릭 이벤트
+                canvasArea.addEventListener('click', (event) => {
+                    let idString = event.target.id;
+                    const indexV = idString.lastIndexOf(this.id) + this.id.length;
+                    const idValue = idString.substring(indexV);
+
+                    switch (idValue) {
+                        case "oneBtn": this.displayCanvasData("one", canvasData);
+                            break;
+                        case "twoBtn": this.displayCanvasData("two", canvasData);
+                            break;
+                        case "thrBtn": this.displayCanvasData("thr", canvasData);
+                            break;
+                        case "circleBtn": this.displayCanvasData("circle", canvasData);
+                            break;
+                        case "oneRadio": clearDiv(); divArray[0].style.display = 'flex';
+                            break;
+                        case "twoRadio": clearDiv(); divArray[1].style.display = 'flex';
+                            break;
+                        case "thrRadio": clearDiv(); divArray[2].style.display = 'flex';
+                            break;
+                        case "circleRadio": clearDiv(); divArray[3].style.display = 'flex';
+                            break;
+                        case "clearBtn":
+                            inputElements.forEach((v) => {
+                                document.getElementById(v).value = "";
+                            });
+                            inputElements = [];
+
+                            canvasData.scaleFactor = 10; //스케일펙터 초기값
+                            canvasData.movingX = 0;
+                            canvasData.movingY = 0;
+                            canvasData.oneAV = 0; canvasData.oneBV = 0;
+                            canvasData.twoAV = 0; canvasData.twoBV = 0; canvasData.twoCV = 0;
+                            canvasData.thrAV = 0; canvasData.thrBV = 0; canvasData.thrCV = 0; canvasData.thrDV = 0;
+                            canvasData.circleXV = 0; canvasData.circleYV = 0; canvasData.circleRV = 0;
+
+                            this.displayCanvasData("clear", canvasData);
+
+                            break;
+                        case "plusScaleBtn": canvasData.scaleFactor = canvasData.scaleFactor >= 100 ? 100 : canvasData.scaleFactor + 10;
+                            this.displayCanvasData("scale", canvasData);
+                            break;
+                        case "minusScaleBtn": canvasData.scaleFactor = canvasData.scaleFactor <= 10 ? 10 : canvasData.scaleFactor - 10;
+                            this.displayCanvasData("scale", canvasData);
+                            break;
+                        case "moveUpBtn": canvasData.movingY = canvasData.movingY >= 250 ? 250 : canvasData.movingY + 10;
+                            this.displayCanvasData("moveY", canvasData);
+                            break;
+                        case "moveLeftBtn": canvasData.movingX = canvasData.movingX >= 250 ? 250 : canvasData.movingX + 10;
+                            this.displayCanvasData("moveX", canvasData);
+                            break;
+                        case "moveDownBtn": canvasData.movingY = canvasData.movingY <= -250 ? -250 : canvasData.movingY - 10;
+                            this.displayCanvasData("moveY", canvasData);
+                            break;
+                        case "moveRightBtn": canvasData.movingX = canvasData.movingX <= -250 ? -250 : canvasData.movingX - 10;
+                            this.displayCanvasData("moveX", canvasData);
+                            break;
+                    }
+                }
+                );
+                //END 버튼 클릭 이벤트
+            }
+            //caller에 따라서 함수호출 하면 restParameter(...values)의 값에 a,b,c,d x,y,r 값들이 들어옴. 
+            displayCanvasData(caller, valuesObject) {
+                const canvas = document.getElementById(this.id + "canvas");
+                const pen = canvas.getContext("2d");
+                const canvasWidth = canvas.width;
+                const canvasHeight = canvas.height;
+                const halfWidth = canvasWidth / 2;
+                const halfHeight = canvasHeight / 2;
+
+                let { oneAV, oneBV,
+                    twoAV, twoBV, twoCV,
+                    thrAV, thrBV, thrCV, thrDV,
+                    circleXV, circleYV, circleRV,
+                    scaleFactor, movingX, movingY } = { ...valuesObject }
+
+
+                const clearPen = (inputScale = 0, inputMovingX = 0, inputMovingY = 0) => {
+                    pen.clearRect(0, 0, canvasWidth, canvasHeight);
+                    scaleFactor = inputScale;
+                    movingX = inputMovingX;
+                    movingY = inputMovingY;
+
+                    this.initCanvas(scaleFactor, movingX, movingY);
+
+                }
+
+                const modiDot = (x, y) => {
+                    // pen.fillStyle = "black";
+                    pen.fillRect(x + (canvasWidth / 2), (canvasHeight / 2) - y, 1, 1);
+                }
+
+                //1차방정식
+                const oneEquation = () => {
+                    let a = Number(eval(oneAV));
+                    let b = Number(eval(oneBV));
+
+                    for (let x = -(halfWidth / 2) + movingX; x < (halfWidth / 2) + movingX; x = x + 0.01) {
+                        let y = (a * x) + b;
+                        pen.fillStyle = "rgb(66, 135, 245)";
+                        modiDot((x * scaleFactor + movingX), (y * scaleFactor - movingY));
+                    }
+                }
+
+                //2차방정식
+                const twoEquation = () => {
+                    const a = Number(eval(twoAV))
+                    const b = Number(eval(twoBV))
+                    const c = Number(eval(twoCV));
+                    pen.fillStyle = "rgb(245,166,66)";
+                    for (let x = -(halfWidth / 2) + movingX; x < (halfWidth / 2) + movingX; x = x + 0.01) {
+                        let y = (a * (x ** 2)) + (b * x) + c;
+                        modiDot((x * scaleFactor + movingX), (y * scaleFactor - movingY));
+                    }
+                }
+
+                //3차방정식 함수
+                const thrEquation = () => {
+                    const a = Number(eval(thrAV));
+                    const b = Number(eval(thrBV));
+                    const c = Number(eval(thrCV));
+                    const d = Number(eval(thrDV));
+                    pen.fillStyle = "rgb(245,105,180)";
+                    for (let x = -(halfWidth / 2) + movingX; x < (halfWidth / 2) + movingX; x = x + 0.01) {
+                        let y = (a * (x ** 3)) + (b * (x ** 2)) + (c * x) + d;
+                        modiDot((x * scaleFactor + movingX), (y * scaleFactor - movingY));
+                    }
+                }
+
+                //원그리기
+                const drawCircle = () => {
+                    const x = Number(eval(circleXV));
+                    const y = Number(eval(circleYV));
+                    const r = Number(eval(circleRV));
+                    pen.fillStyle = "rgb(135,66,245)";
+                    for (let radian = 0; radian <= Math.PI * 2; radian = radian + 0.01) {
+                        const cos = Math.cos(radian) * r;
+                        const sin = Math.sin(radian) * r;
+                        modiDot(((cos + x) * scaleFactor) + movingX, ((sin + y) * scaleFactor) - movingY);
+                    }
+                }
+                const rePrint = () => {
+                    oneEquation();
+                    twoEquation();
+                    thrEquation();
+                    drawCircle();
+                }
+
+                switch (caller) {
+                    case "one": oneEquation(); break;
+                    case "two": twoEquation(); break;
+                    case "thr": thrEquation(); break;
+                    case "circle": drawCircle(); break;
+                    case "clear": clearPen(10); break;
+                    case "scale":
+                        clearPen(scaleFactor, movingX, movingY);
+                        rePrint();
+                        this.initCanvas(scaleFactor, movingX, movingY);
+                        break;
+                    case "moveX":
+                        clearPen(scaleFactor, movingX, movingY);
+                        rePrint();
+                        this.initCanvas(scaleFactor, movingX, movingY);
+                        break;
+                    case "moveY":
+                        clearPen(scaleFactor, movingX, movingY);
+                        rePrint();
+                        this.initCanvas(scaleFactor, movingX, movingY);
+                        break;
+
+                }
+
+            }//END displayCanvasData
+            //물어볼꺼!!!
+            initCanvas(parmScaleFactor = 10, parmMovingX = 0, parmMovingY = 0) {
+                const canvas = document.getElementById(this.id + "canvas");
+                const pen = canvas.getContext("2d");
+                const canvasWidth = canvas.width;
+                const canvasHeight = canvas.height;
+                let scaleFactor = 10;
+                let movingX = 0;
+                let movingY = 0;
+
+                scaleFactor = parmScaleFactor;
+                movingX = parmMovingX;
+                movingY = parmMovingY;
+
+                const modiDot = (x, y) => {
+                    pen.fillStyle = "black";
+                    pen.fillRect(x + (canvasWidth / 2), (canvasHeight / 2) - y, 1, 1);
+                }
+
+                const initLine = () => {
+                    pen.fillStyle = "black";
+                    for (let x = -(canvasWidth); x < canvasWidth - movingX; x++) {
+                        pen.fillRect(x + movingX, (canvasHeight / 2) + movingY, 1, 1);
+                    }
+                    for (let y = -(canvasWidth); y < canvasHeight - movingY; y++) {
+                        pen.fillRect((canvasWidth / 2) + movingX, y + movingY, 1, 1);
+                    }
+
+                }
+                const printScale = () => {
+                    for (let x = -(canvasWidth); x < (canvasWidth); x++) {
+                        if ((x % scaleFactor) === 0 && x != 0) {
+                            for (let y = -(scaleFactor / 2); y < (scaleFactor / 2); y++) {
+                                modiDot(x + movingX, y - movingY);
+                            }
+                        }
+                    }
+
+                    for (let y = -(canvasHeight); y < (canvasHeight); y++) {
+                        if ((y % scaleFactor) === 0 && y != 0) {
+                            for (let x = -(scaleFactor / 2); x < (scaleFactor / 2); x++) {
+                                modiDot(x + movingX, y - movingY);
+                            }
+                        }
+                    }
+                }// END printScale
+
+                printScale();
+                initLine();
+            }//END initCanvas
+            control(initTargetDom) {
+                this.init(initTargetDom);
+                this.setCalData();
+                this.setCanvasData();
+
+            }//END control
+        }//END Cal Class
+
+        class CreationCalculator {
+            constructor(id) {
+                this.id = id;
+                this.calsNum = 0;
+                this.cals = {};
+                this.calContainer = {};
+            }
+
+            //targetElements [ element, element ]
+            //               targetDiv, createBtn
+            setCal(targetElements) {
+                const targetDiv = targetElements[0];
+                const createBtn = targetElements[1];
+
+                createBtn.addEventListener('click', () => {
+                    let classId = "calculator" + this.calsNum;
+                    let divId = "cal" + this.calsNum;
+
+                    this.cals[classId] = new Calculator(classId);
+
+                    const tempDiv = document.createElement("div");
+                    tempDiv.id = divId;
+                    this.calContainer[divId] = tempDiv;
+                    targetDiv.appendChild(this.calContainer[divId]);
+
+                    this.displayCal(classId, divId);
+                    this.calsNum++;
+                });
+            }//End setCal
+
+            displayCal(classId, divId) {
+                this.cals[classId].control(this.calContainer[divId]);
+            }//End displayCal
+
+            control(...targetElements) {
+                this.setCal(targetElements); //사실.. 컨트롤 부분은 없어도 될거 같지만.. 그냥 만들었습니다.. 
+            }//End control
+
+        }//End CreationCalculator
+
+        const Cal = new Calculator('myCal');
+        Cal.control(document.getElementById('cal'));
+
+        const createCal = new CreationCalculator('createCal');
+        createCal.control(document.getElementById("cal"), document.getElementById("replicateCalBtn"));
+
+    </script>
+</body>
+
+</html>

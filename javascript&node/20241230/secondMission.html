@@ -1,0 +1,171 @@
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title> 0~100까지 랜덤값의 평균, 최소, 최대, 중앙값을 알아보자 </title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		.eventArea {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.eventArea button {
+			width: 100px;
+			height: 50px;
+			margin: 20px;
+		}
+
+		main {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.randomArea {
+			width: 500px;
+			height: 500px;
+		}
+
+		.randomArea input {
+			border: 1px solid black;
+			width: 48px;
+			height: 48px;
+			text-align: center;
+		}
+
+		.resultList {
+			display: flex;
+		}
+
+		.resultArea p {
+			font-size: 15px;
+		}
+
+		.canvasArea {
+			width: 100%;
+		}
+
+		canvas {
+			border: 1px solid red;
+			margin-left: calc(50% - 350px)
+		}
+	</style>
+</head>
+
+<body>
+	<main>
+		<div id="eventArea" class="eventArea">
+			<h1> 랜덤값 생성</h1> <button id="randomBtn">RANDOM</button>
+		</div>
+		<div class="resultList">
+			<div id="randomArea" class="randomArea"></div>
+			<div id="resultArea" class="resultArea"></div>
+		</div>
+	</main>
+	<div class="canvasArea">
+		<canvas id="canvas" width="700" height="500">
+	</div>
+
+	<script>
+		class Random {
+			constructor(id, range) {
+				this.id = id;
+				this.range = range;
+				this.randomNumbers = [];
+			}
+
+			makeRandom() {
+				for (let i = 0; i < this.range; i++) {
+					this.randomNumbers.push(Math.floor((Math.random() * (this.range + 1))));
+				}
+				//this.randomNumbers = [...new Array(100).map( (_,i)=> Math.floor(Math.random() * (100 + 1)) )];
+			}
+			getCalcValues() {
+				let [max, min, avg, median, mode, modeCount, variance, deviation] = [0, 0, 0, 0, [], 0, [], 0];
+				max = Math.max(...this.randomNumbers);
+				min = Math.min(...this.randomNumbers);
+				this.randomNumbers.forEach(v => avg += v);
+				avg = avg / this.randomNumbers.length;
+
+				//정렬
+				let sortedArray = [...this.randomNumbers];
+				sortedArray.sort((a, b) => a - b);
+
+				//중위값
+				if (Math.floor(this.range % 2) === 1) {
+					median = sortedArray[Math.floor(this.range / 2)];
+				} else {
+					median = (sortedArray[this.range / 2] + sortedArray[this.range / 2 - 1]) / 2
+				}
+				//최빈값
+				const modeObj = {}
+				this.randomNumbers.forEach(v => {
+					if (v in modeObj) {
+						modeObj[v] = modeObj[v] + 1;
+					} else {
+						modeObj[v] = 1;
+					}
+				});
+				modeCount = (Math.max(...Object.values(modeObj)));
+				mode = Object.keys(modeObj).filter((v) => { if (modeObj[v] === modeCount) { return v } })
+
+				console.log(mode);
+				//분산
+
+				this.randomNumbers.forEach(v => {
+					variance.push(Math.floor(Math.pow((v - avg), 2)))
+				});
+
+				console.log(variance);
+				variance.forEach(v => {
+					deviation += v;
+				})
+
+				deviation = Math.sqrt(deviation / this.randomNumbers.length);
+
+				console.log("표준편차 :" + deviation);
+
+				const returnValues = { "sortedArray": sortedArray, "max": max, "min": min, "avg": avg, "median": median, "mode": mode, "modeCount": modeCount,"deviation":deviation };
+				return returnValues;
+			}
+			display() {
+				const resultObject = this.getCalcValues();
+				const { sortedArray, max, min, avg, median, mode, modeCount,deviation } = resultObject;
+				console.log(sortedArray, max, min, avg, median);
+				document.getElementById("randomArea").innerHTML = "";
+				document.getElementById("randomArea").innerHTML = sortedArray.map(value => {
+					return `<input value=${value}>`
+				}).join('');
+				document.getElementById("resultArea").innerHTML = `<p>max : ${max}</p><p>min : ${min}</p><p>avg : ${avg}</p><p>median : ${median}</p> <p>mode : ${mode}</p> <p>modeCount : ${modeCount}</p><p>deviation : ${deviation}</p>`
+			}
+
+
+			event() {
+				window.addEventListener('click', (e) => {
+					switch (e.target.id) {
+						case "randomBtn":
+							this.randomNumbers = [];
+							this.makeRandom();
+							this.display();
+					}
+				})
+			}
+			run() {
+				this.event();
+			}
+		}
+
+		const random = new Random("random", 100);
+		random.run();
+
+	</script>
+</body>
+
+</html>

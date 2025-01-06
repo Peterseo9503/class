@@ -1,0 +1,77 @@
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .timerArea {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: orange;
+        color: white;
+        text-align: center;
+        line-height: 100px;
+        font-size: 30px;
+    }
+</style>
+
+<body>
+    <div id="timerArea" class="timerArea">0</div>
+    <button id="startBtn">START</button>
+    <button id="stopBtn">STOP</button>
+    <button id="resetBtn">RESET</button>
+
+
+    <script>
+
+        class Timer {
+            constructor(id) {
+                this.id = id;
+                this.count = 0;
+                this.interval = null;
+            }
+            getTimeString(inputValue) {
+                let timeString = "";
+                let inputNum = input;
+                let hour, minute, second = 0;
+
+                hour = inputNum / 3600;
+                inputNum = inputNum % 3600;
+
+                minute = inputNum / 60;
+                inputNum = inputNum % 60;
+
+                second = inputNum;
+
+                timeString = `${hour}:${minute}:${second}`
+                return timeString;
+            }
+            event() {
+                window.addEventListener('click', (e) => {
+                    switch (e.target.id) {
+                        case "startBtn":
+                            this.interval = setInterval(() => {
+                                this.count++;
+                                document.getElementById("timerArea").innerHTML = (this.count);
+
+                                // document.getElementById("timerArea").innerHTML = this.getTimeString(this.count);
+                            }, 1000)
+                            break;
+                        case "stopBtn":
+                            clearInterval(this.interval);
+                            break;
+                        case "resetBtn":
+                            clearInterval(this.interval);
+                            this.count = 0;
+                            document.getElementById("timerArea").innerHTML = 0;
+                            break;
+                    }
+                })
+            }
+        }
+
+        const timer = new Timer("timer");
+        timer.event();
+    </script>
+</body>

@@ -1,0 +1,14 @@
+@mixin important-text{
+	color: red;
+	font-size: 25px;
+	font-weight: bold;
+	border: 1px solid blue;
+}
+//팁 : 하이픈과 밑줄은 동일한 것으로 간주됩니다. 이것은 
+// @mix important-text와 important_text 가 동일한 믹스인으로 간주됨을 의미합니다.
+
+
+.danger{
+	@include important-text; 
+	background-color: green;
+}

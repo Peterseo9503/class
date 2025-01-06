@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>assignment</title>
+    <style>
+        canvas {
+            border: 1px solid red
+        }
+    </style>
+</head>
+
+<body>
+    <div id="inputArea"></div>
+    <!-- <canvas id="canvas" width="500" height="500"></canvas> -->
+    <script>
+        const dotCollection = [
+            {
+                dot:
+                    { x: -20, y: 50 }
+            },
+            {
+                line: [
+                    { x: -9, y: -10 },
+                    { x: 12, y: -15 }
+                ]
+            },
+            {
+                triangle: [
+                    { x: 5, y: 8 },
+                    { x: -8, y: 0 },
+                    { x: 10, y: -10 }
+                ]
+            },
+            {
+                rectangle: [
+                    { x: 15, y: 8 },
+                    { x: -8, y: 0 },
+                    { x: -10, y: -10 },
+                    { x: 10, y: -9 }
+                ]
+            },
+            {
+                circle: [
+                    { r: 9, a: -8, b: 10 }
+                ]
+            }
+        ];
+
+        class DrawDiagram {
+            constructor(id) {
+                this.id = id;
+                this.canvas = null;
+                this.pen = null;
+                this.width = 0;
+                this.height = 0;
+                this.scale=5;
+            }
+
+
+
+            init(inputArea) {
+                const html = `<canvas id="canvas" width="500" height="500"></canvas>`
+                document.getElementById(inputArea).innerHTML = html;
+
+                this.canvas = document.getElementById("canvas");
+                this.pen = this.canvas.getContext("2d");
+                this.width = this.canvas.getAttribute("width");
+                this.height = this.canvas.getAttribute("height");
+
+                //가로
+                for (let x = 0; x < this.width; x++) {
+                    this.pen.fillRect(x, this.height / 2, 1, 1);
+                }
+                //세로
+                for (let y = 0; y < this.width; y++) {
+                    this.pen.fillRect(this.width / 2, y, 1, 1);
+                }
+            }
+
+            drawDiag(inputObj) {
+                const printLineWithTwoDot = (firstX, firstY, secondX, secondY) => {
+                    if (firstX != secondX) {
+                        const small = firstX <= secondX ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+                        const big = firstX >= secondX ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+
+
+                        //1. 기울기를 구합니다.
+                        const slope = (big.y - small.y) / (big.x - small.x);
+                        console.log("slope : " + slope)
+
+                        //2. y절편을 구합니다다.
+                        const plusY = ((slope * small.x) * -1) + small.y
+                        console.log("plusY : " + plusY)
+
+                        for (let x = small.x; x <= big.x; x = x + 0.01) {
+                            const y = (slope === 0 ? 1 : slope * x) + plusY;
+                            this.printDot(x, y)
+                        }
+                    } else if (firstX === secondX) {
+                        const small = firstY <= secondY ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+                        const big = firstY >= secondY ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+
+                        for (let y = small.y; y <= big.y; y = y + 0.01) {
+                            this.printDot(small.x, y);
+                        }
+                    }
+                }
+                const [dot, line, triangle, rectangle, circle] = [[], [], [], [], []];
+                const drawCircle = (r, a, b) =>{
+                    for (let x = -r; x <= r; x = x + 0.01) {
+                    const y = Math.sqrt((Math.pow(r, 2) - Math.pow(x, 2)));
+                    console.log(x, y)
+                    this.printDot(x * this.scale + a, y * this.scale + b);
+                    this.printDot(x * this.scale + a, -y * this.scale + b);
+                }
+            }
+                inputObj.forEach((v) => {
+                    const values = Object.values(v)[0]
+                    if (Array.isArray(values)) {
+                        switch (values.length) {
+                            case 1: circle.push(values);
+                                break;
+                            case 2: line.push(values);
+                                break;
+                            case 3: triangle.push(values);
+                                break;
+                            case 4: rectangle.push(values);
+                                break;
+                            default: console.log("err");
+                        }
+                    } else if (typeof values === 'object') {
+                        dot.push(values);
+                    }
+                });
+
+                console.log(dot, line, triangle, rectangle, circle);
+                this.pen.style={color:"red"}
+                //1. 점찍기 
+                this.pen.fillStyle="red"
+                for (let key in dot) {
+                    this.printDot(dot[key].x, dot[key].y);
+                }
+                this.pen.fillStyle="blue"
+
+                // 2. line그리기 
+                for (let index = 0; index < line.length; index++) {
+                    printLineWithTwoDot(line[index][0].x, line[index][0].y, line[index][1].x, line[index][1].y)
+                }
+                this.pen.fillStyle="green"
+
+                //3. triangle그리기
+                for (let index = 0; index < triangle.length; index++) {
+                    printLineWithTwoDot(triangle[index][0].x, triangle[index][0].y, triangle[index][1].x, triangle[index][1].y)
+                    printLineWithTwoDot(triangle[index][1].x, triangle[index][1].y, triangle[index][2].x, triangle[index][2].y)
+                    printLineWithTwoDot(triangle[index][2].x, triangle[index][2].y, triangle[index][0].x, triangle[index][0].y)
+                }
+
+                this.pen.fillStyle="lightblue"
+
+                //4. rectangle 그리기
+                for (let index = 0; index < rectangle.length; index++) {
+                    printLineWithTwoDot(rectangle[index][0].x, rectangle[index][0].y, rectangle[index][1].x, rectangle[index][1].y)
+                    printLineWithTwoDot(rectangle[index][1].x, rectangle[index][1].y, rectangle[index][2].x, rectangle[index][2].y)
+                    printLineWithTwoDot(rectangle[index][2].x, rectangle[index][2].y, rectangle[index][3].x, rectangle[index][3].y)
+                    printLineWithTwoDot(rectangle[index][3].x, rectangle[index][3].y, rectangle[index][0].x, rectangle[index][0].y)
+                } 
+                this.pen.fillStyle="gold"
+
+                //5. circle그리기 
+                for (let index = 0; index < rectangle.length; index++) {
+                    drawCircle(circle[index][0].r, circle[index][0].a, circle[index][0].b );
+                } 
+
+                ///1. dot이면 바로 객체값
+                // 다른얘들은 배열인데 
+                // 인덱스의 값이 2개면 Line,
+                // 3개면 triangle
+                // 4개면 rectangle
+                // 1개면 원 
+
+            }
+
+            printDot(x, y) {
+                this.pen.fillRect((x * this.scale) + this.width / 2, ((y * -1) * this.scale) + this.height / 2, 1, 1);
+            }
+
+            run(inputArea) {
+                this.init(inputArea);
+            }
+        }
+        const drawDiagram = new DrawDiagram("drawDiagram");
+        drawDiagram.run("inputArea");
+        drawDiagram.drawDiag(dotCollection)
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <script>
+        class Canvas {
+            constructor(id) {
+                this.id = id;
+                this.canvas = document.getElementById("canvas");
+                this.pen = this.canvas.getContext("2d");
+                this.width = this.canvas.getAttribute("width");
+                this.height = this.canvas.getAttribute("height");
+            }
+
+            printDot() {
+                this.pen.fillRect(1, 1, 1, 1);
+            }
+            printMiddleDot(x, y) {
+                this.pen.fillRect(x + 250, (y * -1) + 250, 1, 1)
+            }
+
+            // drawCircle(r,a,b){
+            //     let radius = Math.sqrt(14);
+            //     let a = Math.sqrt(3)/Math.sqrt(2);
+            //     let b = Math.sqrt(5)/Math.sqrt(3);
+
+            //     for(  let i=0; i<360; i++ ){
+            //         const sin = Math.sin( (Math.PI / 180) *i )
+            //         const cos = Math.cos( (Math.PI / 180) *i )
+            //         console.log( sin, cos )
+            //         this.printMiddleDot(cos*100+a,sin*100+b)
+            //     }
+            // }
+
+            init() {
+                for (let y = 0; y < this.height; y++) {
+                    this.pen.fillRect(this.width / 2, y, 1, 1)
+                }
+                for (let x = 0; x < this.width; x++) {
+                    this.pen.fillRect(x, this.height / 2, 1, 1)
+                }
+            }
+
+            drawCircle(r, a, b) {
+                let rr = Math.sqrt(14);
+                let aa = Math.sqrt(3) / Math.sqrt(2);
+                let bb = Math.sqrt(5) / Math.sqrt(3);
+
+                console.log(rr, aa, bb)
+                for (let x = -rr; x <= rr; x = x + 0.01) {
+                    const y = Math.sqrt((Math.pow(rr, 2) - Math.pow(x, 2)));
+                    console.log(x, y)
+                    this.printMiddleDot(x * 50 + aa, y * 50 + bb);
+                    this.printMiddleDot(x * 50 + aa, -y * 50 + bb);
+                }
+            }
+        }
+        const canvas = new Canvas("id");
+        // canvas.printMiddleDot(1,1);
+        canvas.init();
+        canvas.drawCircle();
+        const dotCollection = [
+            {
+                dot:
+                    { x: -20, y: 50 }
+            },
+            {
+                line: [
+                    { x: -9, y: -10 },
+                    { x: 12, y: -15 }
+                ]
+            },
+            {
+                triangle: [
+                    { x: 5, y: 8 },
+                    { x: -8, y: 0 },
+                    { x: 10, y: -10 }
+                ]
+            },
+            {
+                rectangle: [
+                    { x: 15, y: 8 },
+                    { x: -8, y: 0 },
+                    { x: -10, y: -10 },
+                    { x: 10, y: -9 }
+                ]
+            },
+            {
+                circle: [
+                    { r: 9 },
+                    { a: -8 },
+                    { b: 10 }
+                ]
+            }
+        ]
+    </script>
+</body>
+
+</html>

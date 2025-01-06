@@ -1,0 +1,27 @@
+<script>
+    class Foo {
+        constructor(name = '', age) {
+            this._name = name;
+            this._age = age;
+        }
+        get name() {
+            return this._name;
+        }
+        get age() {
+            return this._age;
+        }
+        set age(inV) {
+            if (inV === this._age + 1) {
+                this._age = inV;
+            }
+            else {
+                alert("Wrong Age");
+            }
+        }
+    }
+    const myO = new Foo("SDH",29);
+    myO.age = 30;
+    console.log(myO.age)
+    console.log(myO.name)
+    //Getter , Setter를 정의할때는 메소드 형태로 지정하지만, 실제로 사용할때는 속성을 사용하는거처럼 사용하면 됨
+</script>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        const arrayA =
+            [
+                [1, 2, 3],
+                [4, 5, 6]
+            ];
+        const arrayB =
+            [
+                [7, 8],
+                [9, 10],
+                [11, 12]
+            ];
+        const resultArray = [];
+        for (let row = 0; row < arrayA.length; row++) {
+            console.log("row : " + row)
+            resultArray.push([]);
+            for (let column = 0; column < arrayB[0].length; column++) {
+                console.log("column : " + column)
+                resultArray[row][column]=0;
+                for (let bColumn = 0; bColumn < arrayB.length; bColumn++) {
+                    console.log("bColumn : " + bColumn)
+
+                    console.log("3중 :" + arrayA[row][bColumn] + ":" + arrayB[bColumn][column])
+                    resultArray[row][column] += Number(arrayA[row][bColumn]) + Number(arrayB[bColumn][column]);
+                }
+            }
+        }
+
+        console.log(resultArray);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,24 @@
+<main id="container"></main>
+<script>
+    // const test = ${[...Array(12)].map((_, index) => {
+    //     const month = index + 1;
+    //     const isSelected = month === currentMonth ? 'selected' : '';
+    //     return `<option value="${month}" ${isSelected}>${month}월</option>`;
+    // }).join('')}
+
+    const array = [...Array(12)];
+
+    console.log([...Array(12)]) // 1차월 배열을 생성하고 12개의 정의되지 않은 값을 생성한다. 
+
+    const htmlArray = array.map((_, index) => { //맵의 구분자에서 _(언더바)의 의미는 매개변수를 사용하지 않는다는 의미.
+        return `<div> ${index} </div>`
+    });
+
+    console.log(htmlArray);
+
+    const htmlString = htmlArray.join(""); 
+
+    console.log(htmlString);
+
+    document.getElementById("container").innerHTML = htmlString;
+</script>
