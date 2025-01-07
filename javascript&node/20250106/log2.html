@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="500" height="500">
+    </canvas>
+    <canvas id="canvas2" width="500" height="500">
+    </canvas>
+    <script>
+        class Canvas {
+            constructor(id, canvas) {
+                this.id = id;
+                this.canvas = canvas;
+                this.canvasWidth = 0;
+                this.canvasHeight = 0;
+                this.halfWidth = 0;
+                this.halfHeight = 0;
+                this.pen = null;
+                this.xScale = 30;
+                this.yScale = 100;
+            }
+            init() {
+                this.canvasWidth = this.canvas.getAttribute("width");
+                this.canvasHeight = this.canvas.getAttribute("height");
+                this.pen = this.canvas.getContext('2d');
+                this.halfWidth = this.canvasWidth / 2;
+                this.halfHeight = this.canvasHeight / 2;
+
+                for (let x = 0; x < this.canvasWidth - this.xScale; x++) {
+                    this.pen.fillRect(x + this.xScale, this.canvasHeight - this.xScale, 1, 1)
+                }
+
+                for (let y = 0; y < this.canvasWidth - this.xScale; y++) {
+                    this.pen.fillRect(this.xScale, (y), 1, 1)
+                }
+            }
+            printDot(x, y) {
+                // this.pen.fillRect((x*this.scaleFactor)+this.scaleFactor,this.canvasWidth - (y*this.scaleFactor),1,1); //scale만큼 떠있잖아? 
+                this.pen.fillRect((x * this.xScale) + this.xScale, (this.canvasWidth - (y / this.xScale) * this.xScale) - this.xScale, 1, 1); //scale만큼 떠있잖아? 
+
+            }
+
+            printLog() {
+                for (let x = 0; x < this.canvasWidth; x = x + 0.01) {
+                    const y = 2 ** x == 1 ? 0 : 2 ** x;
+                    this.printDot(x, y)
+                }
+            }
+            printScale() {
+                //scale, scale로 시작한다는 생각해야함.
+
+                for (let x = 0; x <= this.canvasWidth; x++) {
+                    if (x % this.xScale === 0) {
+                        this.pen.fillText((x / this.xScale), x + this.xScale, (this.canvasHeight - this.xScale) + 10)
+                        this.pen.fillText(Math.pow(2, (x / this.xScale)), x + this.xScale, (this.canvasHeight - this.xScale) + 20)
+                    }
+
+                }
+
+                for (let y = this.canvasHeight; y >= 0; y--) {
+                    if (y % this.yScale === 0) {
+                        this.pen.fillText((this.canvasHeight - y), this.xScale, y - this.xScale)
+                    }
+                }
+            }
+
+            // getBase(a,y){
+            //     return Math.log(y) / Math.log(a);
+            // }
+
+            printDot2(x, y) {
+                // this.pen.fillRect((x*this.scaleFactor)+this.scaleFactor,this.canvasWidth - (y*this.scaleFactor),1,1); //scale만큼 떠있잖아? 
+                this.pen.fillRect((x * this.xScale) + this.xScale, (this.canvasWidth - Math.log2(y) * this.xScale) - this.xScale, 1, 1); //scale만큼 떠있잖아? 
+            }
+
+            printScale2() {
+                for (let x = 0; x < this.canvasWidth; x = x + 0.01) {
+                    this.printDot2(x, 2 ** x) // 나는 x를 구하고 싶은데 
+                }
+
+                for (let x = 0; x <= this.canvasWidth; x++) {
+                    if (x % this.xScale === 0) {
+                        //X축
+                        this.pen.fillText((x / this.xScale), x + this.xScale, (this.canvasHeight - this.xScale) + 10)
+
+                        //Y축
+                        this.pen.fillText(  (2 ** ((510 - x) / this.xScale) ), this.xScale, x - this.xScale)
+                    }
+                }
+
+                for (let y = this.canvasHeight; y >= 0; y--) {
+                    if (y % this.xScale === 0) {
+                        // this.pen.fillText( 2**15 - (2 ** (y / this.xScale)), this.xScale, y - this.xScale)
+                        // this.pen.fillText((this.canvasHeight - y), this.xScale, y - this.xScale)
+                    }
+                }
+
+            }
+
+        }
+
+
+        const canvas = new Canvas("id", document.getElementById("canvas"));
+        canvas.init();
+        canvas.printLog();
+        canvas.printScale();
+
+        const canvas2 = new Canvas("id", document.getElementById("canvas2"));
+        canvas2.init();
+        canvas2.printScale2();
+        console.log(Math.log2(32));
+    </script>
+</body>
+
+</html>

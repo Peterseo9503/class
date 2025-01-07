@@ -1,0 +1,111 @@
+// <div class="mainContainer">
+//         <div class="title">
+//             <p>🛍️오늘의 쇼핑 제안</p>
+//         </div>
+//         <div class="contentArea">
+//             <div class="content">
+//                 <div class="productImg"></div>
+//                  <p>
+//                 <div class="rocketImg"></div>
+//                 <div class="ratingArea">
+//                     <div class="ratingStars"></div>
+//                     <span class="ratingCnt">(467)</span>
+//                 </div>
+//                 <div></div>
+//             </div>
+//         </div>
+//     </div>
+
+$backImg1 : "https://thumbnail6.coupangcdn.com/thumbnails/remote/292x292ex/image/vendor_inventory/9b72/f58ad742bb6f97938007eb2afc86b99d7f9606adc8ab9499e38fa0837769.jpg";
+$backImg2 : "https://thumbnail6.coupangcdn.com/thumbnails/remote/292x292ex/image/retail/images/2024/09/10/10/2/c07d1032-44b4-4bdd-b2e7-c3ce5e3384fd.jpg";
+$backImg3 : "https://thumbnail10.coupangcdn.com/thumbnails/remote/292x292ex/image/vendor_inventory/84cc/189854be9379b24099a5744dfbc2ab954e4e5eb863e89a09b8b2a36bb4c1.jpg";
+$backImg4 : "https://thumbnail9.coupangcdn.com/thumbnails/remote/292x292ex/image/retail/images/2024/06/18/14/4/b6e5a261-03db-4294-a8d1-7a066cd346fe.jpg";
+$backImg5 : "https://thumbnail9.coupangcdn.com/thumbnails/remote/292x292ex/image/vendor_inventory/fd15/3052011b4c5ba347bdb3bae93b9ebebe2e4d39d4b0bc261dd3f15aac67ca.png";
+$rocketImg : "https://image7.coupangcdn.com/image/coupang/rds/logo/iphone_2x/logoRocketMerchantLargeV3R3@2x.png";
+
+@mixin back-img($img-url){
+    background-image: url($img-url);
+    background-size: cover;
+}
+
+@mixin test-border($color:blue){
+    // border:1px solid $color;
+}
+
+.mainContainer{
+    width:1000px;
+    height:600px;
+    @include test-border;
+
+    .title{
+        font-size:30px;
+        font-weight:700;
+    }
+    .contentArea{
+        display:flex;
+        justify-content: space-between;
+        align-items: center;
+        width:100%;
+        height:400px;
+        @include test-border(lightblue);
+
+        .content{
+            width:180px;
+            height:100%;
+            @include test-border(rgb(205, 235, 135))
+        }
+
+        .productImg{
+            width:100%;
+            height:250px;
+            @include test-border(rgb(235, 135, 135));
+            
+        }
+
+        .img1{
+            @include back-img($backImg1);
+        }
+        .img2{
+            @include back-img($backImg2);
+        }
+        .img3{
+            @include back-img($backImg3);
+        }
+        .img4{
+            @include back-img($backImg4);
+        }
+        .img5{
+            @include back-img($backImg5);
+        }
+        p{
+            width:100%;
+            height:33px;
+            line-height:33px;
+            white-space:nowrap ;
+            @include test-border(rgb(59, 128, 95))
+        }
+
+        .rocketImg{
+            width:60%;
+            height:20px;
+            @include test-border(rgb(235, 135, 135));
+            @include back-img($rocketImg);
+        }
+        .ratingArea{
+            display: flex;
+            line-height:33px;
+            padding:2px;
+            .ratingStars{
+                width:60%;
+                height:33px;
+                @include test-border(rgb(59, 128, 95))
+            }
+            .ratingCnt{
+                width:40%;
+                height:33px;
+            }
+        }
+        
+
+    }
+}

@@ -1,0 +1,55 @@
+.mainContainer {
+  width: 1000px;
+  height: 600px; }
+  .mainContainer .title {
+    font-size: 30px;
+    font-weight: 700; }
+  .mainContainer .contentArea {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 400px; }
+    .mainContainer .contentArea .content {
+      width: 180px;
+      height: 100%; }
+    .mainContainer .contentArea .productImg {
+      width: 100%;
+      height: 250px; }
+    .mainContainer .contentArea .img1 {
+      background-image: url("https://thumbnail6.coupangcdn.com/thumbnails/remote/292x292ex/image/vendor_inventory/9b72/f58ad742bb6f97938007eb2afc86b99d7f9606adc8ab9499e38fa0837769.jpg");
+      background-size: cover; }
+    .mainContainer .contentArea .img2 {
+      background-image: url("https://thumbnail6.coupangcdn.com/thumbnails/remote/292x292ex/image/retail/images/2024/09/10/10/2/c07d1032-44b4-4bdd-b2e7-c3ce5e3384fd.jpg");
+      background-size: cover; }
+    .mainContainer .contentArea .img3 {
+      background-image: url("https://thumbnail10.coupangcdn.com/thumbnails/remote/292x292ex/image/vendor_inventory/84cc/189854be9379b24099a5744dfbc2ab954e4e5eb863e89a09b8b2a36bb4c1.jpg");
+      background-size: cover; }
+    .mainContainer .contentArea .img4 {
+      background-image: url("https://thumbnail9.coupangcdn.com/thumbnails/remote/292x292ex/image/retail/images/2024/06/18/14/4/b6e5a261-03db-4294-a8d1-7a066cd346fe.jpg");
+      background-size: cover; }
+    .mainContainer .contentArea .img5 {
+      background-image: url("https://thumbnail9.coupangcdn.com/thumbnails/remote/292x292ex/image/vendor_inventory/fd15/3052011b4c5ba347bdb3bae93b9ebebe2e4d39d4b0bc261dd3f15aac67ca.png");
+      background-size: cover; }
+    .mainContainer .contentArea p {
+      width: 100%;
+      height: 33px;
+      line-height: 33px;
+      white-space: nowrap; }
+    .mainContainer .contentArea .rocketImg {
+      width: 60%;
+      height: 20px;
+      background-image: url("https://image7.coupangcdn.com/image/coupang/rds/logo/iphone_2x/logoRocketMerchantLargeV3R3@2x.png");
+      background-size: cover; }
+    .mainContainer .contentArea .ratingArea {
+      display: flex;
+      line-height: 33px;
+      padding: 2px; }
+      .mainContainer .contentArea .ratingArea .ratingStars {
+        width: 60%;
+        height: 33px; }
+      .mainContainer .contentArea .ratingArea .ratingCnt {
+        width: 40%;
+        height: 33px; }
+
+/*# sourceMappingURL=copang.css.map */

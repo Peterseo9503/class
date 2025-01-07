@@ -76,7 +76,7 @@
                         this.printLineWithTwoDot(0, 0, Math.cos(radian) * 70, Math.sin(radian) * 70)
                         degree = degree - 6;
                         console.log(degree % 360);
-                        document.getElementById("second").value = date.getSeconds();
+                        document.getElementById("second").value = date.getSeconds() -1;
                     },1000)
                 }
 
@@ -84,8 +84,6 @@
                 if (firstX != secondX) {
                     const small = firstX <= secondX ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
                     const big = firstX >= secondX ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
-
-
                     //1. 기울기를 구합니다.
                     const slope = (big.y - small.y) / (big.x - small.x);
                     console.log("slope : " + slope)

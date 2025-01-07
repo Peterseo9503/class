@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <script>
+        class Canvas {
+            constructor(id) {
+                this.id = id;
+                this.canvas = null;
+                this.canvasWidth = 0;
+                this.canvasHeight = 0;
+                this.halfWidth = 0;
+                this.halfHeight = 0;
+                this.pen = null;
+                this.scaleFactor = 50;
+            }
+            init() {
+                this.canvas = document.getElementById("canvas");
+                this.canvasWidth = this.canvas.getAttribute("width");
+                this.canvasHeight = this.canvas.getAttribute("height");
+                this.pen = this.canvas.getContext('2d');
+                this.halfWidth = this.canvasWidth / 2;
+                this.halfHeight = this.canvasHeight / 2;
+
+                this.initLine();
+                this.printLog();
+                this.initScale();
+            }
+            initLine() {
+                for (let x = 0; x < this.canvasHeight; x++) {
+                    this.pen.fillRect(x, this.halfHeight, 1, 1)
+                }
+                for (let y = 0; y < this.canvasHeight; y++) {
+                    this.pen.fillRect(this.halfWidth, y, 1, 1)
+                }
+            }
+            printDot(x, y) {
+                this.pen.fillRect(x*(this.scaleFactor) + this.halfWidth, (y * -1) + this.halfHeight, 1, 1)
+            }
+
+            printLog() {
+                for (let x = -(this.halfWidth); x <= this.halfWidth; x = x++) {
+                    this.printDot(x, x);
+                    const y1 = 2 ** x;
+                    this.printDot(x, y1);
+                }
+
+            }
+            initScale() {
+                for (let x = 0; x <= this.halfWidth; x = x + this.scaleFactor) {
+                    for (let y = -5; y <= 5; y++) {
+                        this.printDot(x, y);
+                        this.printDot(-x, y);
+                    }
+                    //x축 오른쪽 
+                    this.pen.fillText((x / this.scaleFactor), x + this.halfWidth, this.halfHeight + 10);
+                    //x축 왼쪽 
+                    this.pen.fillText(-x / this.scaleFactor, -x + this.halfWidth, this.halfHeight + 10);
+                }
+
+                for (let y = 0; y <= this.halfHeight; y = y + this.scaleFactor) {
+                    for (let x = -5; x <= 5; x++) {
+                        this.printDot(x, y);
+                        this.printDot(x, -y);
+
+                    }
+                    //y축 위
+                    this.pen.fillText((-y / this.scaleFactor) === 0 ? "" : (-y / this.scaleFactor), this.halfWidth + 10, this.halfHeight + y + 5);
+                    //y축 아래 
+                    this.pen.fillText((y / this.scaleFactor) === 0 ? "" : (y / this.scaleFactor), this.halfWidth + 10, this.halfHeight - y + 5);
+                }
+            }
+        }
+        const canvas = new Canvas("canvas");
+        canvas.init();
+    </script>
+</body>
+
+</html>

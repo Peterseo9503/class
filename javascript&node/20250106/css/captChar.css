@@ -1,0 +1,72 @@
+@charset "UTF-8";
+/* <main>
+        <canvas id="myCanvas" width="200" height="100"></canvas>
+        <input id="inputV" type="text"><button id="resultBtn">확인</button>
+        <div id="resultArea" class="resultArea">위의 숫자를 입력하세요</div>
+        <section id="keyPadArea" class="keyPadArea">
+            <article id="keyPadAreaLeft"></article>
+            <article id="keyPadAreaRight"></article>
+        </section>
+    </main> */
+body {
+  width: 100%;
+  height: 100vh; }
+
+main {
+  margin: auto;
+  width: 500px;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between; }
+  main input {
+    width: 150px;
+    height: 50px;
+    font-family: "Comic Sans MS";
+    font-size: 30px;
+    text-align: center; }
+  main button {
+    width: 150px;
+    height: 50px;
+    font-family: "Comic Sans MS";
+    font-size: 30px;
+    text-align: center; }
+  main .resultArea {
+    font-family: "Comic Sans MS";
+    font-size: 30px;
+    text-align: center; }
+  main .keyPadArea {
+    width: 300px;
+    height: 200px;
+    display: flex;
+    justify-content: start; }
+    main .keyPadArea .keyPadAreaLeft {
+      width: 188px;
+      height: 100%; }
+      main .keyPadArea .keyPadAreaLeft .keyLeft {
+        border: 1px solid lightgray;
+        border-radius: 2px;
+        cursor: pointer;
+        display: inline-block;
+        width: 60px;
+        height: 60px;
+        font-family: "Comic Sans MS";
+        font-size: 30px;
+        text-align: center;
+        line-height: 60px; }
+    main .keyPadArea .keyPadAreaRight {
+      width: 60px;
+      height: 186px; }
+      main .keyPadArea .keyPadAreaRight .keyRight {
+        border: 1px solid lightgray;
+        border-radius: 2px;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        font-family: "Comic Sans MS";
+        font-size: 30px;
+        text-align: center;
+        line-height: 186px; }
+
+/*# sourceMappingURL=captChar.css.map */
