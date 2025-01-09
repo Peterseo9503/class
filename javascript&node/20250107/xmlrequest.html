@@ -1,0 +1,18 @@
+<div id="demo"></div>
+    <h2>The XMLHttpRequest Object</h2>
+    <button type="button" onclick="loadDoc()">Change Content</button>
+    
+     
+    <script>
+    function loadDoc() {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          document.getElementById("demo").innerHTML =
+          this.responseText;
+        }
+      };
+      xhttp.open("POST", "http://127.0.0.1:8000/consult/", true);
+      xhttp.send();
+    }
+    </script>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="musicListBox"></div>
+    <script>
+        class MusicList {
+            consturctor(id) {
+                this.id = id;
+            }
+            loadData() {
+                const httpReq = new XMLHttpRequest();
+                console.log(httpReq);
+                httpReq.onreadystatechange =  ()=> {
+                    let getData = null;
+                    if (httpReq.readyState == 4 && httpReq.status == 200) {
+                        getData = JSON.parse(httpReq.responseText);
+                        this.display(getData);
+                    }
+                }
+                httpReq.open("GET", "musicList.json", true);
+                httpReq.send();
+            };
+            display(jsonData){
+                // {list : singerList } = jsonData;
+                const element = document.getElementById("musicListBox");
+                // Array.from({ length: likes }, () => '★').join('')
+                jsonData.list.forEach((objectValues,index) => {
+                    element.innerHTML += `<div id="musicBox${index}" class=musicBox ></div>`
+                    for(let key in objectValues){
+                        document.getElementById("musicBox"+index).innerHTML += 
+                        key === "id" ? "" : `<p>${key} :  ${key === "like" ? "*".repeat( objectValues[key] ): objectValues[key]}</p>`
+                        //숫자만큼 별만들기? for말고 
+                    }
+                });
+            }
+
+            run(){
+                this.loadData();
+
+            }
+        }
+        const musicList = new MusicList("test");
+        musicList.run();
+    </script>
+</body>
+
+</html>

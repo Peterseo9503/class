@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Score</title>
+    <style>canvas{
+        border:1px solid black;
+    }
+    .canvasBox{
+        display:flex;
+
+    }
+    
+    </style>
+</head>
+<body>
+    <div id="mainContainer">
+        <div id="titleBox"></div>
+        <div id="canvasBox"></div>
+        <div id="ratingBox"></div>
+    </div>
+
+    <script>
+        class Score{
+            getJsonData() {
+                const apiRequest = new XMLHttpRequest();
+
+                apiRequest.onreadystatechange = () => {
+                    if (apiRequest.readyState === 4 && apiRequest.status === 200) {
+                        const jsonData = JSON.parse(apiRequest.responseText);
+                        this.display( jsonData );
+                    }
+                }
+                apiRequest.open("GET", `classScore.json?t=${Math.random()}`,true);
+                apiRequest.send();
+            }
+
+            display(jsonData){
+                const {className , classNumber, studentList} = jsonData;
+
+                //1. title 시각화 
+                document.getElementById("titleBox").innerHTML=`
+                    <h1><span>${className}반</span> <span>${classNumber}호</span></h1>
+                `
+                const nos = [];
+                const names = [];
+                const kors = [];
+                const maths = [];
+                const engs = [];
+
+                studentList.forEach( (values,i,a)=>{
+                    const {no,name,kor,math,eng} = values;
+                    nos.push(no);
+                    names.push(name);
+                    kors.push(kor);
+                    maths.push(math);
+                    engs.push(eng);
+                } );
+
+                this.drawCanvas( "KOREAN", kors , names);
+                this.drawCanvas( "MATHMATICS", maths , names);
+                this.drawCanvas( "ENGLISH", engs , names);
+
+            }
+            drawCanvas( subject,scores,names, ){
+                const divBoxElement = document.createElement("div");
+                divBoxElement.id = `${subject}box`;
+                const h2Element = document.createElement("h2");
+                h2Element.innerHTML = subject;
+                divBoxElement.appendChild( h2Element );
+
+                document.getElementById("canvasBox").appendChild( divBoxElement );
+
+                // document.getElementById("canvasBox").innerHTML += `
+                // <div id=${subject}box>
+                // <h2>${subject}</h2>
+                // </div>
+                // `
+
+                const canvasElement = document.createElement("canvas");
+                canvasElement.width=500;
+                canvasElement.height=300;
+                canvasElement.id=`${subject}canvas`;
+
+                
+
+                
+                document.getElementById(`${subject}box`).appendChild(canvasElement);
+
+                const canvas = document.getElementById(`${subject}canvas`);
+
+                const pen = canvas.getContext('2d');
+
+                const width = canvas.width;
+                const height = canvas.height;
+                const scaleX = 75;
+                const scaleY = height/100; //3 
+                console.log(scores);
+                console.log(names);
+                
+                //평균그려주기 
+                let avg = 0;
+                scores.forEach( v=>{
+                    avg +=v;
+                } )
+                avg = avg/scores.length;
+                console.log( avg);
+
+                pen.fillStyle="red";
+                for(let x = 0; x<=width; x++){
+                    pen.fillRect( x, height-(avg * scaleY),1,1 );
+                }
+
+
+                //점수 막대그래프  
+
+                scores.forEach( (v,i,a)=>{
+                    pen.fillStyle = "green";
+                    pen.fillRect( (i+1)*scaleX, height-v,1,1);
+                    for(let y=0; y<(v*scaleY); y++){
+                        for( let x =0; x<20; x++ ){
+                            pen.fillRect( (i+1)*scaleX+x, height-y,1,1);
+                        }
+                        pen.fillRect( (i+1)*scaleX, height-y,1,1);
+                    }
+                    //이름 
+                    pen.fillStyle = "black";
+                    pen.font =  "bold 15pt '맑은 고딕'";
+                    pen.textAlign = "center";
+                    pen.fillText( names[i],((i+1)*scaleX) +10,20  )
+                } )
+
+
+            }
+            run(){
+                this.getJsonData();
+            }
+        }
+        
+        const score = new Score("score");
+        score.run();
+
+    </script>
+</body>
+</html>

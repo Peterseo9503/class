@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "google-closure-compiler": "^20240317.0.0",
+    "terser": "^5.37.0"
+  }
+}

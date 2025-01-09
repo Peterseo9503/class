@@ -1,0 +1,28 @@
+- var book = { name: "Hello", price: 12.99 };
+
+doctype html
+html(lang="ko")
+    head
+        title ZARD
+    body
+        p Hello ZARD!
+        #content 
+            .block
+                input#bar.foo1.foo2(placeholder="zard")
+
+        li
+            a(href="#book-a") BOOK A
+        li: a(href="book-b") BOOK B
+        h1 foo
+        h2 =book.name
+        h3 "#{book.name}" for #{book.price} $
+
+        p
+            span foo bar
+            |hello world
+            | wefwe
+            
+        p.
+            fewfawef 
+            fweffefe
+            fef

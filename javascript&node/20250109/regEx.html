@@ -1,0 +1,37 @@
+    <!-- <input type="text" name="value" pattern="\d{3,}" required> -->
+        <!-- <input type="text" name="email" pattern="[\w.]+@[\w.]+\.\w+" required>
+        <input type="text" name="email" pattern="\w+[\w.]*@[\w.]+\.\w+" required> -->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/submit" method="POST">
+    <!-- 전화번호, 이름, 이메일-->
+        전화번호 : <input type="text" name="tel" pattern="[\d]{2,3}-?[\d]{3,4}-?[\d]{3,4}"> <br>
+        <!-- 이름 : <input type="text" name="name" pattern="[\D]+"><br>
+        이메일 : <input type="text" pattern="\w+[\w.]*@[\w.]+\.\w+"> -->
+        <!-- URL : <input type="text" name="URL" pattern="https?:\/\/[\w.\/]+"> -->
+         <!-- RGB : <input type="text" name="rgb" pattern="#[A-Fa-f0-9]{6}"> -->
+         <!-- Range : <input type="text" name="range" pattern="\d{1,2}[-\/]\d{1,2}[-\/]\d{2,4}"> -->
+          <!-- 물음표(?)는 엄밀히 말하면 {0,1}, 더하기(+){1,} 별표(*){0,1}--> <!-- 최소 3개이상 {3,} -->
+
+           <!-- 100달러이상의 주문을 찾으려면? -->
+           <input type="text" pattern="\$\d{3,}" name="최소100달러이상">
+        <button type="submit">Submit</button>
+        <script>
+            //정규식과 배열고차함수(filter)을 사용해서 원하는 값을 다른 배열로 추출해오기. 
+            const regEx = /\d{1,2}[\-/]\d{1,2}[\-/]\d{2,4}/;
+            const rawDatas = ["4/8/17", "10-6-2018", "2/2/2", "01-01-01"];
+
+            const filterRegEx = rawDatas.filter( (v)=> regEx.test(v) );
+            console.log(filterRegEx);
+        </script>
+    </form>
+
+</body>
+</html>

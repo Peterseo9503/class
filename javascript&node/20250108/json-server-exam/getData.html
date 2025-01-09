@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    /* GET */
+    // const xhr = new XMLHttpRequest();
+    // xhr.open('GET', 'http://localhost:3000/todos/4');
+    // xhr.send();
+
+    // xhr.onreadystatechange = function (e) {
+    //   if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+    //   if (xhr.status === 200) { 
+    //     console.log(xhr.responseText);
+    //   } else {
+    //     console.log("Error!");
+    //   }
+
+    // };
+
+
+
+    /* POST */
+    // const xhr = new XMLHttpRequest();
+    // xhr.open( 'POST', 'http://localhost:3000/todos' );
+    // xhr.setRequestHeader('Content-type', 'application/json');
+    // xhr.send( JSON.stringify( { id:4, content: 'Angular', completed: true} ) );
+
+    // xhr.onreadystatechange = function(e){
+    //   if( xhr.readyState !== XMLHttpRequest.DONE ) return;
+
+    //   if( xhr.status === 201 ){
+    //     console.log( xhr.responseText );
+    //   }else{
+    //     console.log( "Error!" );
+    //   }
+    // }
+
+
+    /* PUT 전체 레코드 수정 */
+    // const xhr = new XMLHttpRequest();
+    // //              http://localhost:3000/todos
+    // xhr.open("PUT","http://localhost:3000/todos/4");
+    // xhr.setRequestHeader('Content-type', "application/json");
+    // xhr.send( JSON.stringify( {id:4, content:'React', completed: false} ) );
+    
+    // xhr.onreadystatechange = function(e){
+    //   if(xhr.readyState !== XMLHttpRequest.DONE) return;
+
+    //   if(xhr.status === 200){
+    //     console.log( xhr.responseText );
+    //   }else{
+    //     console.log("Error!!");
+    //   }
+    // }
+
+
+    /* PATCH 필드 수정정 */
+    // const xhr = new XMLHttpRequest();
+    // //              http://localhost:3000/todos
+    // xhr.open("PATCH","http://localhost:3000/todos/4");
+    // xhr.setRequestHeader('Content-type', "application/json");
+    // xhr.send( JSON.stringify( {completed: false} ) );
+    
+    // xhr.onreadystatechange = function(e){
+    //   if(xhr.readyState !== XMLHttpRequest.DONE) return;
+
+    //   if(xhr.status === 200){
+    //     console.log( xhr.responseText );
+    //   }else{
+    //     console.log("Error!!");
+    //   }
+    // }
+
+     /* PATCH 레코드 삭제 */
+
+    
+    const xhr = new XMLHttpRequest();
+    //              http://localhost:3000/todos
+    xhr.open("DELETE","http://localhost:3000/todos/4");
+    xhr.setRequestHeader('Content-type', "application/json");
+    xhr.send();
+    
+    xhr.onreadystatechange = function(e){
+      if(xhr.readyState !== XMLHttpRequest.DONE) return;
+
+      if(xhr.status === 200){
+        console.log( xhr.responseText );
+      }else{
+        console.log("Error!!");
+      }
+    }
+
+    //Fetch문법 공부하기 !! 
+
+
+  </script>
+</body>
+
+</html>

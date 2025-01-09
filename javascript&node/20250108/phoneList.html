@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .userList{
+            border:1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="phoneList" id="phoneList">
+
+    </div>
+    <script>
+        class PhoneList {
+            constructor(id) {
+                this.id = id;
+            }
+
+            getJsonData() {
+                const apiRequest = new XMLHttpRequest();
+
+                apiRequest.onreadystatechange = () => {
+                    if (apiRequest.readyState === 4 && apiRequest.status === 200) {
+                        const jsonData = JSON.parse(apiRequest.responseText);
+                        this.display( jsonData );
+                    }
+                }
+                apiRequest.open("GET", "phoneList.json",true);
+                apiRequest.send();
+            }
+
+            display(jsonData){
+
+                console.log( jsonData );
+                const {list } = jsonData;
+                list.forEach( values=>{
+                    const {id,name,tel,address, gender} = values;
+                    document.getElementById("phoneList").innerHTML += `
+                    <div class="userList"> id : ${id} name : ${name} tel : ${tel} address : ${address} gender : ${gender}</div>
+                    `
+                } )
+            }
+            run(){
+                this.getJsonData();
+            }
+        }
+
+        const phoneList = new PhoneList( "phoneList" );
+        phoneList.run();
+    </script>
+</body>
+
+</html>

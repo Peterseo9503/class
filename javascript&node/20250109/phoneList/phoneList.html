@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incredible Phone List</title>
+</head>
+
+<body>
+    <div id="mainContainer">
+        <h1>전화번호부</h1>
+        <div id="listContainer">
+
+        </div>
+        <div id="inputArea">
+            이름 : <input id="nameValue" type="text"> 전화 : <input id="telValue" type="text"> 주소 : <input id="addrValue"
+                type="text"> <button id="addBtn">추가</button>
+        </div>
+    </div>
+
+    <script>
+        class PhoneList {
+            constructor(id) {
+                this.id = id;
+                this.url = "http://kkms4001.iptime.org:20122/phoneList/";
+            }
+            getData(number = undefined) {
+                //GET으로 데이터 받아오기
+                const url = number === undefined ? this.url : this.url + `${number}`;
+                fetch(url)
+                    .then(res => res.json())
+                    .then(data => {
+                        const dataList = data;
+                        console.log(dataList);
+                        this.display( dataList );
+                    }).catch(err => console.log(err));
+            }// END getData Method
+
+            postData(object) {
+                const url = this.url;
+                fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json",
+                    },
+                    //나중에 JSON.stringify( object )이런식으로 바꿔줘야함.
+                    body: JSON.stringify(
+                        {
+                            "id": 5,
+                            "name": "LOVE2",
+                            "tel": "01011114444",
+                            "addr": "Seoul"
+                        }
+                    ),
+                }
+                ).then(res => res.json()).then(data => console.log(data)).catch(error => console.log(error))
+            }//END PostData Method
+            putData(number, object) {
+                const url = this.url + number;
+                fetch(url, {
+                    method: "PUT",
+                    headers: {
+                        "Content-type": "application/json"
+                    },
+                    //나중에는 object인자가 들어가야함. 
+                    body: JSON.stringify(
+                        {
+                            "id": 5,
+                            "name": "LEEJUNGIM",
+                            "tel": "01099999999",
+                            "addr": "요진아파트201동 1204호"
+                        }
+                    )
+                })
+                    .then(res => res.json())
+                    .then(data => console.log(data))
+                    .catch(err => console.log(err));
+
+            }//END PostData Method
+            patchData(number, object) {
+                const url = this.url + number;
+                console.log(url);
+                fetch(url, {
+                    method: "PATCH",
+                    headers:{
+                        "Content-type" : "application/json",
+                    },
+                    body:JSON.stringify(
+                        {"id":6}
+                    )
+                },
+                ).then( res=> res.json() )
+                .then( data => console.log( data ) )
+                .catch(err => console.log(err)); 
+            }//END PatchData Method
+            deleteData(number){
+                fetch( this.url+number ,{
+                    method:"DELETE"
+                }).then( res=> res.json() )
+                .then( data => console.log(data) )
+                .catch( err=> console.log(err) )
+            }//END DeleteData Method
+
+            display(object){
+                console.log(object);
+            }
+            run(){
+                this.getData();
+            }
+        }
+        const phoneList = new PhoneList("phoneList");
+        phoneList.run();
+    </script>
+</body>
+
+</html>

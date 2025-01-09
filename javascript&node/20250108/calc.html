@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin:0; padding:0;
+            box-sizing: border-box;
+        }
+        :root{
+            --columnNumber:4;
+        }
+        /* .myBox{
+            min-width:200px; max-width:500px;
+            height:200px; background-color: pink;
+        }
+        .sBox{
+            height: 200px;
+            width: calc( 100% / var( --columnNumber )  );
+            float:left;
+            border: 1px solid black;
+        } */
+
+        .myBox2{
+            /* width: 200px; */
+            width:500px;
+            min-height:500px; max-height:1000px;
+            background-color: #50c878; 
+        }
+        .sBox2{
+            height:calc( 100% / var( --columnNumber ));
+            width:500px;
+            float:left;
+            border:1px solid #ffc04c;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="myBox">
+        <div class="sBox"></div>
+        <div class="sBox"></div>
+        <div class="sBox"></div>
+        <div class="sBox"></div>
+    </div>
+
+    <div class="myBox2">
+        <div class="sBox2"></div>
+        <div class="sBox2"></div>
+        <div class="sBox2"></div>
+        <div class="sBox2"></div>
+    </div>
+</body>
+</html>
