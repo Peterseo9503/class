@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시계만들기</title>
+    <style>
+        .can {
+            border: 1px solid red
+        }
+    </style>
+</head>
+
+<body>
+    <canvas width="400" height="400" id="can" class="can"></canvas>
+    <script>
+        class TicTok {
+            constructor(id) {
+                this.id = id;
+                this.can = document.getElementById("can");
+                this.pen = this.can.getContext("2d");
+                this.width = this.can.width;
+                this.height = this.can.height;
+            }
+            printDot(x, y) {
+                this.pen.fillRect(this.width / 2 + x, this.height / 2 - y, 1, 1);
+            }
+            printClock() {
+                for (let x = 0; x <= 360; x++) {
+                    let radian = Math.PI / 180 * x;
+                    let r = this.width / 2;
+                    this.printDot(Math.cos(radian) * r, Math.sin(radian) * r);
+                }
+            }
+            printCross() {
+                // for (let x = 0; x <= this.width; x++) {
+                //     this.printDot(x, 0);
+                // }
+                // for (let x = 0; x >= -this.width / 2; x--) {
+                //     this.printDot(x, 0);
+                // }
+                // for (let y = 0; y <= this.height / 2; y++) {
+                //     this.printDot(0, y);
+                // }
+                // for (let y = 0; y >= -this.height / 2; y--) {
+                //     this.printDot(0, y);
+                // }
+                // this.printDot(Math.cos(radian) *this.width/2 , Math.sin(radian) *this.width/2);
+                //x1                                //y1
+                // for (let i = 0; i <= 360; i++) {
+                //     let radian = Math.PI / 180 * i;
+                //     // for (let x = -Math.cos(radian) * this.width / 2; x <= Math.cos(radian) * this.width / 2; x++) {
+                //         let gi = (Math.sin(radian) * this.width / 2) / (Math.cos(radian) * this.width / 2)
+                //         let y = gi * (i - Math.cos(radian) * this.width / 2) + (Math.sin(radian) * this.width / 2);
+                //         this.lineDraw(i, y);
+                //     // }
+                // }
+
+                for (let degree = 0; degree <= 360; degree = degree + 1) {
+                    const radian = Math.PI / 180 * degree;
+                    if (degree % 90 === 0) {
+                        // console.log(Number(Math.cos(radian).toFixed(3)) * 150, Number(Math.sin(radian).toFixed(3)) * 150)
+                        this.lineDraw(Number(Math.cos(radian).toFixed(3)) * 150, Number(Math.sin(radian).toFixed(3)) * 150)
+                    }
+
+                }
+
+
+                //  //x1
+                // // y1
+                // x2 =0;
+                // y2 =0;
+
+            }
+            lineDraw(x2, y2) {
+                console.log(x2,y2)
+                let x1 = 0;
+                let y1 = 0;
+                if (x1 >= x2) {
+                    [x1, x2] = [Number(x2), x1];
+                    [y1, y2] = [Number(y2), y1];
+                }
+                //x1이 작은값 
+                console.log(`x1:${x1},x2:${x2}`)
+                console.log(`y1:${y1},y2:${y2}`)
+
+                if (x2 == 0 ) {
+                    for (let y = y1; y<=y2;y++){
+                        this.printDot(0,y)
+                    }
+                } else {
+                    for (let x = x1; x <= x2; x++) {
+                        let gi = (y2 - y1) / (x2 - x1);
+                        let y = gi * (x - x1) + y1;
+                        this.printDot(x, y);
+                    }
+                }
+            }
+            run() {
+                this.printClock();
+                this.printDot(1, 1);
+                this.printCross();
+                // this.lineDraw(-50,-50);
+            }
+        }
+        const tictok = new TicTok();
+        tictok.run();
+    </script>
+</body>
+
+</html>

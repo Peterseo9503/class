@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogGraph</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            justify-content: space-evenly;
+            padding: 20px;
+        }
+
+        canvas {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="canvasContainer">
+
+    </div>
+    <canvas id="canvas" width="530" height="530"></canvas>
+    <canvas id="canvas2" width="530" height="530"></canvas>
+    <canvas id="canvas3" width="530" height="530"></canvas>
+
+    <script>
+        class Canvas {
+            constructor(id) {
+                this.id = id;
+                this.canvas = null;
+                this.pen = null;
+                this.width = 0;
+                this.height = 0;
+
+                this.xScale = 50;
+                this.yScale = 100;
+                this.baseExponent = 0;
+                this.space = 30;
+            }
+
+            init(elementId) {
+                this.canvas = document.getElementById(elementId);
+                console.log(this.canvas);
+                this.pen = this.canvas.getContext('2d');
+                this.width = Number(this.canvas.width);
+                this.height = Number(this.canvas.height);
+                this.halfWidth = Number(this.width / 2);
+                this.halfHeight = Number(this.height / 2);
+            }
+            printSpace() {
+                for (let x = 0; x < this.width; x++) {
+                    this.pen.fillRect(x + this.space, this.height - this.space, 1, 1);
+                }
+                for (let y = 0; y < (this.height - this.space); y++) {
+                    this.pen.fillRect(this.space, y, 1, 1);
+                }
+            }
+
+            printSecondaryScale() {
+                this.pen.fillStyle = "lightgray";
+                for (let y = 0; y < this.height - this.xScale; y++) {
+                    if (y % this.xScale === 0)
+                        for (let x = 0; x < this.width; x++) {
+                            this.printDot(x, y);
+                            this.printDot(y, x);
+                        }
+                }
+                this.pen.fillStyle = "black";
+            }
+
+            printDot(x, y) {
+                this.pen.fillRect((x + this.space), (this.height - this.space) + (y * -1), 1, 1);
+            }
+            printScaleDot(x, y) {
+                this.pen.fillRect((x * this.xScale + this.space), (this.height - this.space) + (y * this.xScale * -1), 1, 1);
+            }
+            printText(text, x, y) {
+                this.pen.fillText(text, (x + this.space), (this.height - this.space) + (y * -1));
+            }
+
+            printScale(graph, exponent = 0) {
+                this.printSecondaryScale();
+                this.pen.textAlign = "center";
+                //X축 Scale 
+                if (graph === "plain") {
+                    this.pen.fillText("Plain Graph y=2", 200, 80); // 기본 텍스트
+                    this.pen.fillText("x", 238, 72); // 지수 부분 (작게 위로 이동)
+                    for (let x = 0; x <= this.width - this.space; x++) {
+                        if (x % this.xScale === 0) {
+                            this.printText(x / this.xScale, x, 0 - 15);
+                            //줄 그어주기 
+                            for (let y = -3; y <= 3; y++) {
+                                if (x === 0) { break; }
+                                this.printDot(x, y);
+                            }
+                        }
+                    }
+                    //Y축 Scale
+                    for (let y = 0; y < this.height - this.space; y++) {
+                        if (y % this.xScale === 0) {
+                            (y != 0) && (this.printText((y / this.xScale) * this.yScale, -15, y - 5));
+                            if (y != 0) {
+                                for (let x = -3; x <= 3; x++) {
+                                    this.printDot(x, y);
+                                }
+                            }
+
+                        }
+                    }
+                } else if (graph === "log") {
+                    this.pen.fillText("LOG Graph y=2", 200, 80); 
+                    this.pen.fillText("x", 238, 72); 
+                    for (let x = 0; x <= this.width - this.space; x++) {
+                        if (x % this.xScale === 0) {
+                            this.printText(x / this.xScale, x, 0 - 15);
+                            for (let y = -3; y <= 3; y++) {
+                                if (x === 0) { break; }
+                                this.printDot(x, y);
+                            }
+                        }
+                    }
+                    //Y축 Scale
+                    for (let y = 0; y < this.height - this.space; y++) {
+                        if (y % this.xScale === 0) {
+                            (y != 0) && (this.printText(exponent, -15, y - 5));
+                            (y != 0) && (this.printText((y / this.xScale), -10, y + 2));
+
+                            if (y != 0) {
+                                for (let x = -3; x <= 3; x++) {
+                                    this.printDot(x, y);
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            print2Exponent() {
+                for (let x = 0; x < this.width; x = x + 0.01) {
+                    // this.printScaleDot(x,((2**x)) );
+                    this.printScaleDot(x, (2 ** x) / this.yScale);
+                }
+            }
+
+
+            printlogDot(x, y, exponent) {
+                this.printScaleDot(x, (Math.log(y) / Math.log(exponent))) //지수값을 알고 싶은거잖아. 
+            }
+
+
+            printLogExponent() {
+                for (let x = 0; x < this.width; x = x + 0.01) {
+                    // this.printScaleDot(x,((2**x)) );
+                    this.printlogDot(x, (2 ** x), 2);
+                }
+            }
+
+            printLog3Exponent() {
+                for (let x = 0; x < this.width; x = x + 0.01) {
+                    // this.printScaleDot(x,((2**x)) );
+                    this.printlogDot(x, (2 ** x), 3);
+                }
+            }
+
+            runPlane(elementId) {
+                this.init(elementId);
+                this.printSpace();
+                this.printScale("plain");
+                this.print2Exponent();
+            }
+            runlog(elementId) {
+                this.init(elementId);
+                this.printSpace();
+                this.printScale("log", 2);
+                this.printLogExponent();
+            }
+            runlog3(elementId) {
+                this.init(elementId);
+                this.printSpace();
+                this.printScale("log", 3);
+                this.printLog3Exponent();
+            }
+        }
+
+        const canvas = new Canvas("id",);
+        canvas.runPlane("canvas");
+
+        const canvas2 = new Canvas("id2");
+        canvas2.runlog("canvas2");
+
+        const canvas3 = new Canvas("id3");
+        canvas2.runlog3("canvas3");
+    </script>
+</body>
+
+</html>

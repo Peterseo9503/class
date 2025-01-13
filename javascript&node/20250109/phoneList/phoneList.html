@@ -5,17 +5,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Incredible Phone List</title>
+    <link rel="styleSheet" href="./css/phoneList.css" >
 </head>
 
 <body>
-    <div id="mainContainer">
-        <h1>전화번호부</h1>
-        <div id="listContainer">
+    <div id="mainContainer" class="mainContainer">
+        <h1>PHONE BOOK</h1>
+        <div id="titleContainer" class="titleContainer">
+            <h2>NAME</h2>
+            <h2>TEL</h2>
+            <h2>ADDRESS</h2>
 
         </div>
+        <div id="listContainer" class="listContainer">
+        </div>
         <div id="inputArea">
-            이름 : <input id="nameValue" type="text"> 전화 : <input id="telValue" type="text"> 주소 : <input id="addrValue"
-                type="text"> <button id="addBtn">추가</button>
+            <form id="forRegExp">
+                이름 : <input id="nameValue" pattern="\D+" type="text">
+                전화 : <input id="telValue" pattern="\d{2,3}-?\d{3,4}-?\d{3,4}" type="text">
+                주소 : <input id="addrValue" pattern="^[a-zA-Z0-9]+$" type="text">
+                <!-- <input type="text" pattern="^[a-zA-Z0-9]+$" title="영어와 숫자만 입력 가능합니다." /> -->
+
+                <input type="submit" id="postBtn" value="추가"></input>
+            </form>
+
         </div>
     </div>
 
@@ -23,17 +36,20 @@
         class PhoneList {
             constructor(id) {
                 this.id = id;
-                this.url = "http://kkms4001.iptime.org:20122/phoneList/";
+                this.url = "http://kkms4001.iptime.org:20123/phoneList/";
+                this.latestId = 0;
             }
             getData(number = undefined) {
                 //GET으로 데이터 받아오기
-                const url = number === undefined ? this.url : this.url + `${number}`;
+                const url = number === undefined ? this.url : this.url + `${number}?t=${Math.randon()}`;
                 fetch(url)
                     .then(res => res.json())
                     .then(data => {
                         const dataList = data;
-                        console.log(dataList);
-                        this.display( dataList );
+                        console.log(data[data.length - 1]);
+                        this.latestId = Number(data[data.length - 1].id) + 1;
+                        // console.log(dataList);
+                        this.display(dataList);
                     }).catch(err => console.log(err));
             }// END getData Method
 
@@ -46,35 +62,33 @@
                     },
                     //나중에 JSON.stringify( object )이런식으로 바꿔줘야함.
                     body: JSON.stringify(
-                        {
-                            "id": 5,
-                            "name": "LOVE2",
-                            "tel": "01011114444",
-                            "addr": "Seoul"
-                        }
+                        object
                     ),
                 }
-                ).then(res => res.json()).then(data => console.log(data)).catch(error => console.log(error))
+                ).then(res => res.json())
+                    .then(data => {
+                        console.log(data);
+                        this.getData();
+                    }
+                    )
+                    .catch(error => console.log(error));
             }//END PostData Method
-            putData(number, object) {
-                const url = this.url + number;
+            putData(object) {
+                const url = this.url + object.id + "?t= + new Date().getTime()";
                 fetch(url, {
                     method: "PUT",
                     headers: {
                         "Content-type": "application/json"
                     },
-                    //나중에는 object인자가 들어가야함. 
                     body: JSON.stringify(
-                        {
-                            "id": 5,
-                            "name": "LEEJUNGIM",
-                            "tel": "01099999999",
-                            "addr": "요진아파트201동 1204호"
-                        }
+                        object
                     )
                 })
                     .then(res => res.json())
-                    .then(data => console.log(data))
+                    .then(data => {
+                        console.log(data)
+                        this.getData();
+                    })
                     .catch(err => console.log(err));
 
             }//END PostData Method
@@ -83,30 +97,90 @@
                 console.log(url);
                 fetch(url, {
                     method: "PATCH",
-                    headers:{
-                        "Content-type" : "application/json",
+                    headers: {
+                        "Content-type": "application/json",
                     },
-                    body:JSON.stringify(
-                        {"id":6}
+                    body: JSON.stringify(
+                        { "id": 6 }
                     )
                 },
-                ).then( res=> res.json() )
-                .then( data => console.log( data ) )
-                .catch(err => console.log(err)); 
+                ).then(res => res.json())
+                    .then(data => console.log(data))
+                    .catch(err => console.log(err));
             }//END PatchData Method
-            deleteData(number){
-                fetch( this.url+number ,{
-                    method:"DELETE"
-                }).then( res=> res.json() )
-                .then( data => console.log(data) )
-                .catch( err=> console.log(err) )
+            deleteData(object) {
+                console.log(this.url + object.id);
+                fetch(this.url + object.id, {
+                    method: "DELETE"
+                }).then(res => res.json())
+                    .then(data => {
+                        console.log(data);
+                        this.getData();
+                    })
+                    .catch(err => console.log(err))
             }//END DeleteData Method
 
-            display(object){
-                console.log(object);
+            display(values) {
+                document.getElementById("listContainer").innerHTML = `
+                    ${values.map(v => {
+                    const htmlText = `<div class="listBox">
+                            <span id="id${v.id}">${v.id}<span>
+                            <input id="name${v.id}" type=text value=${v.name}>
+                            <input id="tel${v.id}"type=text value=${v.tel}>
+                            <input id="addr${v.id}" type=text value=${v.addr}>
+                            <button id="putBtn${v.id}">수정</button>
+                            <button id="deleteBtn${v.id}">삭제</button>
+                            </div>`
+                    return htmlText;
+                }).join('')}
+                `
             }
-            run(){
-                this.getData();
+            getInputValues() {
+                const inputObj = {
+                    id: String(this.latestId),
+                    name: document.getElementById("nameValue").value,
+                    tel: document.getElementById("telValue").value,
+                    addr: document.getElementById("addrValue").value
+                }
+                return inputObj;
+            }
+
+            getListValues(inputId) {
+                const match = inputId.match(/\d+/);
+                const getid = match[0];
+                const object = {
+                    id: getid,
+                    name: document.getElementById(`name${getid}`).value,
+                    tel: document.getElementById(`tel${getid}`).value,
+                    addr: document.getElementById(`addr${getid}`).value,
+                };
+
+                return object; // 추출된 객체 반환
+            }
+            event() {
+                document.getElementById("forRegExp").addEventListener("submit", (e) => {
+                    e.preventDefault();
+                })
+                const postRegExp = /putBtn/;
+                const deleteRegExp = /deleteBtn/;
+
+                window.addEventListener('click', (event) => {
+                    if (postRegExp.test(event.target.id)) {
+                        this.putData(this.getListValues(event.target.id))
+                    } else if (deleteRegExp.test(event.target.id)) {
+                        this.deleteData(this.getListValues(event.target.id));
+                    }
+
+                    switch (event.target.id) {
+                        case "postBtn":
+                            this.postData(this.getInputValues());
+                            break;
+                    }
+                })
+            }
+            run() {
+                this.getData(); //기본창 display()실핼됨. 
+                this.event();
             }
         }
         const phoneList = new PhoneList("phoneList");

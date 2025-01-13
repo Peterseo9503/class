@@ -17,6 +17,8 @@
     </canvas>
     <canvas id="canvas2" width="500" height="500">
     </canvas>
+    <canvas id="canvas3" width="530" height="530">
+    </canvas>
     <script>
         class Canvas {
             constructor(id, canvas) {
@@ -27,7 +29,8 @@
                 this.halfWidth = 0;
                 this.halfHeight = 0;
                 this.pen = null;
-                this.xScale = 50;
+                this.spcaeScale = 30;
+                this.xScale = 30;
                 this.yScale = 100;
             }
             init() {
@@ -84,6 +87,7 @@
                 this.pen.fillRect((x * this.xScale) + this.xScale, (this.canvasWidth - Math.log2(y) * this.xScale) - this.xScale, 1, 1); //scale만큼 떠있잖아? 
             }
 
+            
             printScale2() {
                 for (let x = 0; x < this.canvasWidth; x = x + 0.01) {
                     this.printDot2(x, 2 ** x) // 나는 x를 구하고 싶은데 
@@ -95,7 +99,7 @@
                         this.pen.fillText((x / this.xScale), x + this.xScale, (this.canvasHeight - this.xScale) + 10)
 
                         //Y축
-                        this.pen.fillText(  (2 ** ((510 - x) / this.xScale) ), this.xScale, x - this.xScale)
+                        this.pen.fillText((2 ** ((510 - x) / this.xScale)), this.xScale, x - this.xScale)
                     }
                 }
 
@@ -106,6 +110,14 @@
                     }
                 }
 
+            }
+            printDot3(x,y){
+                this.pen.fillRect( (x * this.xScale)+this.spcaeScale, this.canvasHeight - (Math.log10(y) * this.xScale) -this.spaceScale ,1,1);
+            }
+
+            runLog10(){
+                this.init();
+                this.printDot3(1,100);
             }
 
         }
@@ -119,7 +131,9 @@
         const canvas2 = new Canvas("id", document.getElementById("canvas2"));
         canvas2.init();
         canvas2.printScale2();
-        console.log(Math.log2(32));
+
+        const canvas3 = new Canvas("id3",document.getElementById("canvas3"));
+        canvas3.runLog10();
     </script>
 </body>
 

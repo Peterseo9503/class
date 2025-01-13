@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{margin:0; padding: 0;}
+        .can{
+            border: 1px solid blue;
+        }
+    </style>
+</head>
+<body>
+    <div id="mainArea"></div>
+    <!-- <canvas width="400" height="400" id="can" class="can"></canvas>
+    <canvas width="400" height="400" id="can2" class="can"></canvas>
+    <canvas width="400" height="400" id="can3" class="can"></canvas> -->
+    <script>
+        class Canvas{
+            constructor(id){
+                this.id = id;
+                this.scale = 25;
+                this.plus = 30;
+                this.mit = null;
+            }
+            makeCanvas(){
+                const can = document.createElement("canvas");
+                can.width = 400;
+                can.height = 400;
+                can.id = `Canvas_${this.id}`;
+                can.style = `border: 1px solid blue`;
+                document.getElementById("mainArea").appendChild( can );
+                return can;
+            }
+            printXY(){
+                for(let x= 0 ; x<=this.width; x+=0.01){
+                    let y = this.mit ** x;
+                    this.printDot(x,y);
+                }
+            }
+            printText(){
+                for(let i=0; i<=this.can.width; i++){
+                    this.pen.fillText(i,this.plus + (i *this.scale) ,this.can.width-20);
+                }
+                for(let i=0; i<=this.can.width; i+=this.scale){
+                    let num = (this.mit ** (i/this.scale)).toExponential(1);
+                    this.pen.fillText(num ,0 , this.can.width-i -this.plus); // -50 은 스케일 위치값
+                }
+            }
+        }
+        class Can extends Canvas{
+            constructor(id){
+                super(id);
+                this.can = null;
+                this.pen = null;
+                this.mit = 2;
+            }
+            printDot(x,y){
+                this.pen.fillStyle = "red";
+                this.pen.fillRect(super.plus+ x*super.scale,super.width-super.plus-y,1,1);
+                this.pen.fillStyle = "black";
+            }
+            printScale(){
+                for(let i=0; i<this.can.width; i++){
+                    this.pen.fillRect(i+super.plus,this.can.width-super.plus,1,1);
+                    this.pen.fillRect(super.plus,i-super.plus,1,1);
+                }
+                for(let i=0; i<this.can.width; i+=super.scale){
+                    for(let j=0; j<this.can.width; j ++){
+                        this.pen.fillStyle = "gray";
+                        this.pen.fillRect(i+super.plus,j - super.plus,1,1);
+                        this.pen.fillRect(j+super.plus,i- super.plus,1,1);
+                        this.pen.fillStyle = "black"
+                    }   
+                }
+            }
+            printText(){
+                for(let i=0; i<=this.can.width  ; i+=super.scale){
+                    this.pen.fillText((i/super.scale)+2,super.plus + i ,this.can.width -20);
+                }
+                for(let i=super.scale; i<=super.width; i+=super.scale){
+                    this.pen.fillText(i/super.scale *100 , 10  ,this.can.width-i - super.plus);
+                }
+            }
+            control(){
+                this.can = super.makeCanvas();
+                this.pen = this.can.getContext("2d");
+                this.printScale();
+                this.printText();
+                super.printXY();
+            }
+        }
+        class Can2 extends Canvas{
+            constructor(id) {
+                super(id);
+                this.can = null;
+                this.pen = null;
+                this.mit = 2;
+            }
+            printDot(x,y){
+                this.pen.fillStyle = "green";
+                this.pen.fillRect(super.plus + x,this.can.width-Math.log2(y)-super.plus,1,1);
+                this.pen.fillStyle = "black";
+            }
+            printScale(){
+                for(let i=0; i<this.can.width; i++){
+                    this.pen.fillRect(super.plus,i-super.plus,1,1);
+                    this.pen.fillRect(i+super.plus,this.can.width-super.plus,1,1);
+                }
+                for(let i=0; i<this.can.width; i+=super.scale){
+                    for(let j=0; j<this.can.width; j ++){
+                        this.pen.fillStyle = "gray";
+                        this.pen.fillRect(i+super.plus,j - super.plus,1,1);
+                        this.pen.fillRect(j+super.plus,i- super.plus,1,1);
+                        this.pen.fillStyle = "black"
+                    }   
+                }
+            }
+            control(){
+                this.can = super.makeCanvas();
+                this.pen = this.can.getContext("2d");
+                this.printScale();
+                super.printXY();
+                super.printText();
+            }   
+        }
+        class Can3 extends Canvas{
+            constructor(id) {
+                super(id);
+                this.can = null;
+                this.pen = null;
+                this.mit = 3;
+            }
+            printDot(x,y){
+                this.pen.fillStyle = "green";
+                this.pen.fillRect(x,y,1,1);
+                // this.pen.fillRect(this.plus + x * this.scale,this.width-(Math.log(y)/Math.log(this.mit)) * this.scale-this.plus,1,1);
+                this.pen.fillStyle = "black";
+            }
+            printScale(){
+                for(let i=0; i<this.can.width; i++){
+                    this.pen.fillRect(super.plus,i-super.plus,1,1);
+                    this.pen.fillRect(i+super.plus,this.can.width-super.plus,1,1);
+                }
+                for(let i=0; i<this.can.width; i+=super.scale){
+                    for(let j=0; j<this.can.width; j ++){
+                        this.pen.fillStyle = "gray";
+                        this.pen.fillRect(i+super.plus,j - super.plus,1,1);
+                        this.pen.fillRect(j+super.plus,i- super.plus,1,1);
+                        this.pen.fillStyle = "black"
+                    }   
+                }
+            }
+            control(){
+                this.can = super.makeCanvas();
+                this.pen = this.can.getContext("2d");
+                this.printScale();
+                super.printXY();
+                super.printText();
+                this.printDot(10,10);
+            }   
+        }
+        
+        const can = new Can("can");
+        can.control();
+        const can2 = new Can2("can2");
+        can2.control();
+        const can3 = new Can3("can3");
+        can3.control();
+    </script>
+</body>
+</html>

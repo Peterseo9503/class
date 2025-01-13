@@ -1,4 +1,8 @@
 - var book = { name: "Hello", price: 12.99 };
+- var data = { name:"Hello <em>World<em>"};
+- var array = {book: ["A","B","C"]};
+mixin book(name,price)
+    li #{name} for #{price} $
 
 doctype html
 html(lang="ko")
@@ -9,12 +13,11 @@ html(lang="ko")
         #content 
             .block
                 input#bar.foo1.foo2(placeholder="zard")
-
         li
             a(href="#book-a") BOOK A
         li: a(href="book-b") BOOK B
         h1 foo
-        h2 =book.name
+        h2=book.name
         h3 "#{book.name}" for #{book.price} $
 
         p
@@ -26,3 +29,31 @@ html(lang="ko")
             fewfawef 
             fweffefe
             fef
+        li=data.name
+        li!=data.name
+
+        input(type="text", placeholder="your name")
+        input(type=type, value='hello #{name}')
+        
+
+
+        if book.name == "Hello"
+            h1 Hello!! 
+        else
+            h1 Bye~~
+
+        select 
+            each bk, i in array.book
+                option(value=i) bk #{bk}
+
+        case book.name
+            when "Hello"
+                p price : #{book.price}
+            when "other"
+                p nonprice
+            default 
+                p 둘다 없네여... 
+
+        ul#books 
+            +book("book A", 12.99)
+            +book("book B", 15.99)

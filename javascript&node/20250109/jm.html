@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <title>전화번호부</title>
+    <link rel="stylesheet" href="./telBook.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="telBookArea">
+            <h1>전화번호부</h1>
+            <div class="textArea">
+                <span class="text">number</span>
+                <span class="text">name</span>
+                <span class="text">tel</span>
+                <span class="text">address</span>
+                <span class="text">수정</span>
+                <span class="text">삭제</span>
+
+            </div>
+            <main id="mainArea" class="mainArea">
+
+            </main>
+            <footer class="pushItemArea">
+                <span class="push">이름:</span>
+                <input type="text" id="nameV" class="inputArea">
+                <span class="push">전화:</span>
+                <input type="text" id="telV" class="inputArea">
+                <span class="push">주소:</span>
+                <input type="text" id="addV" class="inputArea">
+                <button id="addBtn">추가</button>
+            </footer>
+            <aside class="captcharArea">
+                ⛔captchar⛔<br>
+                <div id="checkOK"></div>
+                <canvas id="can" class="can" width="200" height="100"></canvas><br>
+                <input type="number" id="captNum" class="inputArea"><br>
+                
+                <button id="refreshBtn">새로고침</button><button id="captBtn">확인</button>
+            </aside>
+        </div>
+    </div>
+    <script>
+        class TelBook {
+            constructor(id) {
+                this.id = id;
+                this.can = document.getElementById("can");
+                this.pen = this.can.getContext("2d");
+                this.jsonData = null;
+                this.captChar = '';
+                this.checkOK = false;
+            }
+            makeCaptchar() {//캡챠 만두꼬야
+                this.captChar = '';
+                for (let i = 0; i < 4; i++) {
+                    this.captChar += Math.floor(Math.random() * 10);
+                    console.log(this.captChar);
+                    this.pen.fillStyle = "red";
+                    this.pen.font = "30px Comic Sans MS";
+                    this.pen.textAlign = "center";
+                }
+                this.pen.fillText(this.captChar, this.can.width / 2, this.can.height / 2 + 10);
+                
+            }
+            captCharCheck() { // 체크해서 수정, 삭제 가능하게 만들기
+                if(this.captChar == document.getElementById("captNum").value){
+                    document.getElementById("checkOK").innerHTML = "확인완료! 수정과 삭제 가능!";
+                    this.checkOK = true; 
+                    this.displayTelBook();
+                    this.deleteDB();
+                    this.setDB();
+
+                }else{
+                    document.getElementById("checkOK").innerHTML ="확인실패! 수정과 삭제 불가능!";
+                }
+            }
+            getDB() {//처음 실행할때 바로 가져오기
+                const xhr = new XMLHttpRequest();
+                xhr.open("GET", "http://kkms4001.iptime.org:21200/tel/");
+                xhr.send();
+                xhr.onreadystatechange = function (e) {
+                    if (xhr.readyState != XMLHttpRequest.DONE) return;
+                    if (xhr.status == 200) {
+                        telBook.jsonData = JSON.parse(xhr.responseText);
+                        telBook.displayTelBook();
+                    } else {
+                        console.log("err");
+                    }
+                };
+                // this.displayTelBook();
+            }
+            addTelData() {//DB 추가하기
+                console.log(this.jsonData);
+                let nameV = document.getElementById("nameV").value;
+                let telV = document.getElementById("telV").value;
+                let addV = document.getElementById("addV").value;
+                // let idV = this.jsonData[this.jsonData.length-1].id+1;
+                let idV = 0;
+                if (this.jsonData.length == 0) {
+                    idV = 1;
+                } else {
+                    idV = String(Number(this.jsonData[this.jsonData.length - 1].id) + 1);
+                }
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', 'http://kkms4001.iptime.org:21200/tel/');
+                xhr.setRequestHeader('Content-type', 'application/json');
+                xhr.send(JSON.stringify({ id: idV, name: nameV, tel: telV, addr: addV }));
+                xhr.onreadystatechange = function (e) {
+                    if (xhr.readyState != XMLHttpRequest.DONE) return;
+                    if (xhr.status == 201) {
+                        console.log(xhr.responseText);
+                        telBook.getDB();
+                    } else {
+                        console.log("Error!");
+                    }
+                };
+                document.getElementById("nameV").value = '';
+                document.getElementById("telV").value = '';
+                document.getElementById("addV").value = '';
+            }
+            btnControl() {
+                window.addEventListener("click", (e) => {
+                    switch (e.target.id) {
+                        case "addBtn":
+                            this.addTelData();
+                           
+                            break;
+                        case "captBtn" :
+                            this.captCharCheck();
+                            break;
+                        case "refreshBtn":
+                            //캔버스 새로 그리기
+                            this.pen.clearRect(0, 0, this.can.width, this.can.height);
+                            this.makeCaptchar();
+                            break;
+                    }
+                })
+            }
+            displayTelBook() {
+                console.log(this.jsonData);
+                document.getElementById("mainArea").innerHTML = '';
+                this.jsonData.forEach((v, i, a) => {
+                    document.getElementById("mainArea").innerHTML += `
+                    <div class="inputBoxArea">
+                        <span class="inputBox">${v.id}</span>
+                        <input type="text" class="inputBox"  id="get_${v.name}" value="${v.name}">
+                        <input type="text" class="inputBox"  id="get_${v.tel}" value="${v.tel}">
+                        <input type="text" class="inputBox" id="get_${v.addr}" value="${v.addr}">
+                        <span class="inputBox"><button id="set_${v.id}">수정</button></span>
+                        <span class="inputBox"><button id="del_${v.id}">삭제</button></span>
+                    </div>
+                    `;
+                    if(!this.checkOK){// 아니 이거 왜 안됨??????/////////////////////////////////////////////////////////////////////////////
+                        document.getElementById(`get_${v.name}`).disabled = true;
+                        document.getElementById(`get_${v.tel}`).disabled = true;
+                        document.getElementById(`get_${v.addr}`).disabled = true;
+                    }else{
+                        document.getElementById(`get_${v.name}`).disabled = false;
+                        document.getElementById(`get_${v.tel}`).disabled = false;
+                        document.getElementById(`get_${v.addr}`).disabled = false;
+                    }
+                });
+                this.setDB();
+                this.deleteDB();
+            }
+            setDB() {
+                console.log(this.jsonData);
+                this.jsonData.forEach((v, i, a) => {
+                    document.getElementById(`set_${v.id}`).addEventListener("click", (e) => {
+                        if(this.checkOK){
+                            let nameV = document.getElementById(`get_${v.name}`).value;
+                            let telV = document.getElementById(`get_${v.tel}`).value;
+                            let addrV = document.getElementById(`get_${v.addr}`).value;
+                            const xhr = new XMLHttpRequest();
+                            xhr.open('PATCH', `http://kkms4001.iptime.org:21200/tel/${v.id}`);
+                            xhr.send(JSON.stringify({name : nameV , tel : telV , addr : addrV}));
+                            xhr.onreadystatechange = function (e) {
+                                if (this.readyState != XMLHttpRequest.DONE) return;
+                                if (this.status == 200) {
+                                    console.log(xhr.responseText);
+                                    telBook.getDB();
+                                }else{
+                                    console.log("ERR!");
+                                }
+                            }
+                        }
+                    });
+                });
+                
+            }
+            deleteDB() {
+                console.log(this.jsonData);
+                this.jsonData.forEach((v, i, a) => {
+                    document.getElementById(`del_${v.id}`).addEventListener("click", (e) => {
+                        if(this.checkOK){
+                            console.log(v.id);
+                            const xhr = new XMLHttpRequest();
+                            xhr.open('DELETE', `http://kkms4001.iptime.org:21200/tel/${v.id}`);
+                            xhr.send();
+                            xhr.onreadystatechange = function (e) {
+                                if (xhr.readyState != XMLHttpRequest.DONE) return;
+                                if (xhr.status == 200) {
+                                    console.log(xhr.responseText);
+                                    telBook.getDB();
+                                } else {
+                                    console.log("ERROR!");
+                                }
+                            }
+                        };
+                    });
+                });
+                // this.getDB();
+            }
+            run() {
+                this.getDB();
+                this.btnControl();
+                this.makeCaptchar();
+            }
+        }
+        const telBook = new TelBook("telBook");
+        telBook.run();
+    </script>
+</body>
+
+</html>
