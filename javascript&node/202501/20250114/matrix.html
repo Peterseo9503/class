@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+
+    </div>
+    <script>
+        class Canvas {
+            constructor(id) {
+                this.id = id;
+                this.canvas = null;
+                this.pen = null;
+                this.width = 0;
+                this.height = 0;
+                this.halfWidth = 0;
+                this.halfHeight = 0;
+            }
+            init() {
+                document.getElementById("container").innerHTML = `
+                <canvas id ="canvas" width="500" height="500"></canvas>
+                `
+                this.canvas = document.getElementById('canvas');
+
+                this.pen = this.canvas.getContext('2d');
+                this.width = this.canvas.width;
+                this.height = this.canvas.height;
+                this.halfWidth = this.width / 2;
+                this.halfHeight = this.height / 2;
+            }
+            initLine() {
+                //가로선
+                for (let x = 0; x < this.width; x++) {
+                    this.pen.fillRect(x, this.halfHeight, 1, 1);
+                }
+                //세로선선
+                for (let y = 0; y < this.height; y++) {
+                    this.pen.fillRect(this.halfWidth, y, 1, 1);
+                }
+            }
+            printLine(firstX, firstY, secondX, secondY) {
+                if (firstX > secondX) {
+                    [fristX, firstY, secondX, secondY] = [secondX, secondY, firstX, fisrtY];
+                }
+                //기울기
+                const slope = (secondY - firstY) / (secondX - firstX);
+                //상수
+                const constY = ((slope * firstX) * -1) + firstY;
+
+                // for(let x=firstX; x<secondX; x++ ){
+                //     const fomulaY = (x*slope) + constY
+                //     this.printDot(x,fomulaY)
+                // }
+
+                for (let x = -this.halfWidth; x < this.halfWidth; x++) {
+                    const fomulaY = (3 * x) + 4
+                    this.printDot(x, fomulaY);
+
+                    const [moveX, moveY] = this.matrixTranslate(x,fomulaY,80,30)
+                    this.printDot(moveX, moveY);
+
+                }
+            }
+            printDot(x, y) {
+                this.pen.fillRect(x + this.halfWidth, (y * -1) + this.halfHeight, 1, 1)
+            }
+            matrixTranslate(x, y, moveX, moveY) {
+                const transMatrix = [
+                    [1, 0, moveX],
+                    [0, 1, moveY],
+                    [0, 0, 1]
+                ]
+                const xyMatrix = [
+                    [x],
+                    [y],
+                    [1]
+                ];
+
+                const resultMatrix = [];
+                for (let x = 0; x < 3; x++) {
+                    resultMatrix.push([0]);
+                    for (let y = 0; y < 1; y++) {
+                        for (let z = 0; z < 3; z++) {
+                            console.log(transMatrix[x][z], xyMatrix[z][y])
+                            resultMatrix[x][y] += (transMatrix[x][z] * xyMatrix[z][y]);
+                        }
+                    }
+                }
+                console.log( resultMatrix);
+                return [resultMatrix[0][0], resultMatrix[1][0]]
+            }
+            run() {
+                this.init();
+                this.initLine();
+                this.printLine();
+                this.matrixTranslate(1,2,3,4)
+            }
+        }
+        const canvas = new Canvas("canvas");
+        canvas.run();  
+    </script>
+
+</body>
+
+</html>

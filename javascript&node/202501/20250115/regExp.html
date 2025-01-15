@@ -1,0 +1,32 @@
+<script>
+const reg = /(&nbsp;){2,}/; // 공백
+
+const testString = "dk&nbsp;&nbsp;dldn";
+// console.log(reg.test(testString));
+// console.log(testString.match( reg ))
+
+const reg2 = /(\d{1,3}\.){3}\d{1,3}/g
+const testString2 = "127.0.0.0 192.0.0.0 223.0.0.0";
+
+const iterator = testString2.matchAll(reg2);
+
+console.log(iterator);
+// console.log( iterator.next() );
+// console.log( iterator.next() );
+// console.log( iterator.next() );
+// console.log( iterator.next() );
+
+
+const reg3 = /(19|20)\d{2}/g;
+const testString3 = 'DOB: 1967-08-17 19 20';
+
+// console.log( [testString3.matchAll( reg3 )]);
+
+const reg4 = /01(0|6|7|8)/
+
+const ipRegEx = /(((25[0-5])|(2[0-4]\d)|(1\d{2})|^(\d{1,2}))\.){3}(((25[0-5])|(2[0-4]\d)|(1\d{2})|(\d{1,2})))$/;
+const testString4 = "255.255.255.255";
+
+// console.log( testString4.match(ipRegEx) );
+
+</script>

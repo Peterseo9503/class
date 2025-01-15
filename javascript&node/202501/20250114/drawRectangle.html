@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <p>3,8,9,2</p>
+    <div id="container">
+
+
+    </div>
+    <script>
+        class Canvas {
+            constructor(id) {
+                this.id = id;
+                this.canvas = null;
+                this.pen = null;
+                this.width = 0;
+                this.height = 0;
+                this.halfWidth = 0;
+                this.halfHeight = 0;
+                this.scale = 15;
+            }
+            getValue() {
+                const [firstX, firstY, secondX, secondY] = [
+                    Number(document.getElementById("firstX").value),
+                    Number(document.getElementById("firstY").value),
+                    Number(document.getElementById("secondX").value),
+                    Number(document.getElementById("secondY").value),
+                ]
+                return [firstX, firstY, secondX, secondY]
+            }
+            init() {
+                
+                document.getElementById("container").innerHTML = `
+                  <span>(<input id="firstX" type="number"> , <input id="firstY" type="number" >)</span>
+                  <span>(<input id="secondX" type="number" > , <input id="secondY" type="number" >)</span>
+                  <div><button id="drawRectBtm">Draw Rectangle</button></div>
+                <canvas id ="canvas" width="500" height="500"></canvas>
+                `
+                this.canvas = document.getElementById('canvas');
+                this.pen = this.canvas.getContext('2d');
+                this.width = this.canvas.width;
+                this.height = this.canvas.height;
+                this.halfWidth = this.width / 2;
+                this.halfHeight = this.height / 2;
+            }
+            getMatrix(key, x=0, y=0) {
+                //roate일때는 X가 세타값이 됨.
+                const matrixs = {
+                    scale: [
+                        [x, 0, 0],
+                        [0, y, 0],
+                        [0, 0, 1]
+                    ],
+                    move: [
+                        [1, 0, x],
+                        [0, 1, y],
+                        [0, 0, 1]
+                    ],
+                    rotate:[
+                        [],
+                        [],
+                        []
+                    ]
+                }
+                return matrixs[key];
+            }
+            initLine() {
+                //가로선
+                for (let x = 0; x < this.width; x++) {
+                    this.pen.fillRect(x, this.halfHeight, 1, 1);
+                }
+                //세로선
+                for (let y = 0; y < this.height; y++) {
+                    this.pen.fillRect(this.halfWidth, y, 1, 1);
+                }
+
+                //스케일 팩터 가로선
+                for (let x = -this.halfWidth; x < this.halfWidth; x++) {
+                    if (x % this.scale === 0) {
+                        for (let y = -3; y <= 3; y++) {
+                            this.printDot(x, y)
+                        }
+                    }
+                }
+                //스케일 팩터 세로선
+                for (let y = -this.halfHeight; y < this.halfHeight; y++) {
+                    if (y % this.scale === 0) {
+                        for (let x = -3; x <= 3; x++) {
+                            this.printDot(x, y);
+                        }
+                    }
+                }
+            }
+            printLine(firstX, firstY, secondX, secondY) {
+                if (firstX > secondX) {
+                    [fristX, firstY, secondX, secondY] = [secondX, secondY, firstX, fisrtY];
+                }
+                //기울기
+                const slope = (secondY - firstY) / (secondX - firstX);
+                //상수
+                const constY = ((slope * firstX) * -1) + firstY;
+
+                for (let x = firstX; x < secondX; x++) {
+                    const fomulaY = (x * slope) + constY
+                    this.printDotWithScale(x, fomulaY)
+                }
+
+                // for (let x = -this.halfWidth; x < this.halfWidth; x++) {
+                //     const fomulaY = (3 * x) + 4
+                //     this.printDot(x, fomulaY);
+                // }
+            }
+
+            printRect(firstX, firstY, secondX, secondY, flag = 0) {
+                //먼저 가로 두줄 그어주자 
+                //(1,2) (3,4) 가 들어왔다는 가정 하에 
+                (flag != 0) ? this.pen.fillStyle = "red" : this.pen.fillStyle = "black";
+
+                (firstX > secondX) && ([firstX, firstY, secondX, secondY] = [secondX, secondY, firstX, firstY]);
+                for (let x = firstX; x <= secondX; x = x + 0.01) { //firstx가 매번 작다는 가정 하에
+                    this.printDotWithScale(x, firstY);
+                    this.printDotWithScale(x, secondY);
+                }
+
+                (firstY > secondY) && ([firstX, firstY, secondX, secondY] = [secondX, secondY, firstX, firstY]);
+                for (let y = firstY; y <= secondY; y = y + 0.01) { //firstY가 매번 작다는 가정 하에
+                    this.printDotWithScale(firstX, y);
+                    this.printDotWithScale(secondX, y);
+                }
+            }
+
+
+            printDotWithScale(x, y) {
+                this.pen.fillRect((x * this.scale) + this.halfWidth, ((y * this.scale) * -1) + this.halfHeight, 1, 1)
+            }
+            printDot(x, y) {
+                this.pen.fillRect(x + this.halfWidth, (y * -1) + this.halfHeight, 1, 1)
+            }
+
+            clearCanvas() {
+                this.pen.clearRect(0, 0, this.width, this.height);
+                this.initLine();
+            }
+
+            //START 행렬의 곱 메소드
+            multiMatrix(leftM, rightM) {
+                const resultMatrix = [];
+                for (let x = 0; x < 3; x++) {
+                    resultMatrix.push([0]);
+                    for (let y = 0; y < 1; y++) {
+                        for (let z = 0; z < 3; z++) {
+                            resultMatrix[x][y] += (leftM[x][z] * rightM[z][y]);
+                        }
+                    }
+                }
+                return [resultMatrix[0][0], resultMatrix[1][0]];
+            }
+            // END  행렬의 곱 메소드
+
+            //START 스케일 메소드
+            printScaleRect(firstX, firstY, secondX, secondY, scaleX, scaleY) {
+                const sacleMatrix = this.getMatrix("scale",scaleX, scaleY);
+                const firstMatrix = [
+                    [firstX],
+                    [firstY],
+                    [1],
+                ];
+                const secondMatrix = [
+                    [secondX],
+                    [secondY],
+                    [1],
+                ];
+                console.log(...this.multiMatrix( sacleMatrix, firstMatrix ), ...this.multiMatrix( sacleMatrix, secondMatrix ));
+
+                this.printRect(...this.multiMatrix( sacleMatrix, firstMatrix ), ...this.multiMatrix( sacleMatrix, secondMatrix ));
+            }
+            //END 스케일 메소드
+
+            //START 이동 메소드
+            printMoveRect(firstX, firstY, secondX, secondY, moveX, moveY) {
+                const moveMatrix = this.getMatrix("move", moveX, moveY);
+                const firstMatrix = [
+                    [firstX],
+                    [firstY],
+                    [1],
+                ]
+                const secondMatrix = [
+                    [secondX],
+                    [secondY],
+                    [1],
+                ]
+                this.printRect(...this.multiMatrix(moveMatrix, firstMatrix), ...this.multiMatrix(moveMatrix, secondMatrix));
+            }
+            // END  이동 메소드
+
+            event() {
+                window.addEventListener('click', (event) => {
+                    switch (event.target.id) {
+                        case "drawRectBtm":
+                            const [firstX, firstY, secondX, secondY] = [...this.getValue()];
+                            this.clearCanvas();
+                            this.printRect(firstX, firstY, secondX, secondY);
+                            this.printMoveRect(firstX, firstY, secondX, secondY, -10,-14);
+                            this.printScaleRect(firstX, firstY, secondX, secondY, 1.5,1.5)
+                        //moved Rectangle 
+                        //console.log(...this.moveCoordinate(firstX, firstY, -10, -14), ...this.moveCoordinate(secondX, secondY, -10, -14));
+                        //this.printRect(...this.moveCoordinate(firstX, firstY, -10, -14), ...this.moveCoordinate(secondX, secondY, -10, -14), 1);
+                        //End moved Rectangle
+
+                        //scale Rectangle 다시 하기 
+                        // this.printRect( firstX,firstY, ...this.scaleCoordinate( secondX, secondY,1.5,1.2 ),1 );
+
+
+                    }
+                })
+            }
+            run() {
+                this.init();
+                this.initLine();
+                this.event();
+
+                const scaleMatrix = [
+                    [1.5, 0, 0],
+                    [0, 1.5, 0],
+                    [0, 0, 1]
+                ];
+
+                const test = [[1], [1], [1]];
+                console.log(this.multiMatrix(this.getMatrix("scale", 1.5, 1.5), test));
+
+                // this.printLine();
+            }
+        }
+        const canvas = new Canvas("canvas");
+        canvas.run();  
+    </script>
+
+</body>
+
+</html>
