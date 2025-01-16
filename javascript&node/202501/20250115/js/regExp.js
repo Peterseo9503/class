@@ -11,5 +11,13 @@ matches.forEach(match => console.log(match));
 // console.log("test")
 const regExp3 = /<[hH]([1-6]).*?<\/[hH]\1>/g;
 const testString3 = "<h1>test</h2> <h1>test</h1>";
-console.log(regExp3.test(testString3));
-console.log(testString3.match(regExp3));
+//1.      iterator = {
+//     ~~~~
+//     return next() {
+//        ~~~
+//         return {
+//            value: ~~~,
+//             done: boolean
+//         }
+//     }
+// }

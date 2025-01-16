@@ -14,6 +14,12 @@ const squareFunc = function (num) {
     return num * num;
 };
 console.log(squareFunc(10));
+// function makeSound2(sound: string): MakeSound{
+//     console.log();
+// }
+const makeSound = (sound) => {
+    return sound;
+};
 class Todo {
     constructor(id, content, completed) {
         this.id = id;
@@ -64,3 +70,19 @@ function sayHello2(person) {
 }
 const me2 = { name: "Seo", age: "31", };
 sayHello2(me2);
+const userInfo = {
+    username: "seo",
+    password: "1234"
+};
+console.log(userInfo);
+const student = {
+    name: "Lee",
+    age: 20,
+    grade: 3
+};
+;
+const WebDeveloper = {
+    name: "seo",
+    age: 20,
+    skills: ['HTML', 'JS', 'css', 'Sass', 'Pug', 'react', 'Python', 'Django', 'TypeScript', 'Docker', 'wsl', 'Aws', 'linux', 'express', 'node',]
+};

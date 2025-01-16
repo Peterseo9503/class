@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas</title>
+    <style>
+        canvas {
+            border: 1px solid red;
+        }
+
+        input {
+            width: 20px;
+        }
+
+        input::-webkit-inner-spin-button {
+            appearance: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+
+
+    </div>
+    <script>
+        class Canvas {
+            constructor(id) {
+                this.id = id;
+                this.canvas = null;
+                this.pen = null;
+                this.width = 0;
+                this.height = 0;
+                this.halfWidth = 0;
+                this.halfHeight = 0;
+                this.scale = 20;
+            }
+            init() {
+                document.getElementById("container").innerHTML = `
+                <canvas id="canvas" width="500" height="500"></canvas><br>
+                <span>Line : (<input id="firstLineX" type="number" value="-9"> , <input id="firstLineY" type="number" value="4">) (<input id="secondLineX" type="number" value="7"> , <input id="secondLineY" type="number" value="6">) </span><br>
+                <span>Triangle : (<input id="firstTriangleX" type="number" value="3"> , <input id="firstTriangleY" type="number" value="2">) (<input id="secondTriangleX" type="number" value="2"> , <input id="secondTriangleY" type="number" value="2">)  (<input id="thirdTriangleX" type="number" value="1"> , <input id="thirdTriangleY" type="number" value="6">)</span><br>
+                <span>Rectangle : (<input id="firstRectX" type="number" value="7"> , <input id="firstRectY" type="number" value="5">) (<input id="secondRectX" type="number" value="3"> , <input id="secondRectY" type="number" value="8">)</span> <br>
+                <span>Circle : (<input id="circleX" type="number" value="-7"> , <input id="circleY" type="number" value="2">) Radius(<input id="circleRadius" type="number" value="1">)</span> 
+
+                <div>
+                <button id="printBtn">Print</button>
+                </div>
+                Move : X<input id="moveX" type="number" value="1"> Y<input id="moveY" type="number" value="1"> <button id="moveBtn">Move</button><br>
+                Scale : Width<input id="scaleWidth" type="number" value="1.5"> Height<input id="scaleHeight" type="number" value="1.5"> <button id="scaleBtn">Scale</button><br>
+                Rotate : Degree<input id="rotateDegree" type="number" value="10"> <button id="rotateBtn">Rotate</button><br>
+                <button id="xRotateBtn">xRotate</button>
+                <button id="yRotateBtn">yRotate</button>
+                <button id="xyRotateBtn">xyRotate</button>
+
+                `
+
+                this.canvas = document.getElementById('canvas');
+                this.pen = this.canvas.getContext('2d');
+                this.width = this.canvas.width;
+                this.height = this.canvas.height;
+                this.halfWidth = this.width / 2;
+                this.halfHeight = this.height / 2;
+            }
+            initLine() {
+                //가로선
+                for (let x = 0; x < this.width; x++) {
+                    this.pen.fillRect(x, this.halfHeight, 1, 1);
+                }
+                //세로선
+                for (let y = 0; y < this.height; y++) {
+                    this.pen.fillRect(this.halfWidth, y, 1, 1);
+                }
+
+                //스케일 팩터 가로선
+                for (let x = -this.halfWidth; x < this.halfWidth; x++) {
+                    if (x % this.scale === 0) {
+                        for (let y = -3; y <= 3; y++) {
+                            this.printDot(x, y)
+                        }
+                    }
+                }
+                //스케일 팩터 세로선
+                for (let y = -this.halfHeight; y < this.halfHeight; y++) {
+                    if (y % this.scale === 0) {
+                        for (let x = -3; x <= 3; x++) {
+                            this.printDot(x, y);
+                        }
+                    }
+                }
+            }
+            printLine(firstX, firstY, secondX, secondY, flag) {
+                //색 보정을 위한 코드 추가가
+                const colors = ["red", "green", "blue"];
+                this.pen.fillStyle = colors[flag];
+
+                if (firstY == secondY) {
+                    if (firstX >= secondX) {
+                        [firstX, secondX] = [secondX, firstX]
+                    }
+                    for (let x = firstX; x <= secondX; x = x + 0.01) {
+                        this.printDotWithScale(x, firstY);
+                    }
+                }
+
+                else if (firstX != secondX) {
+                    const small = firstX <= secondX ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+                    const big = firstX >= secondX ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+                    const slope = (big.y - small.y) / (big.x - small.x);
+                    const plusY = ((slope * small.x) * -1) + small.y
+                    for (let x = small.x; x <= big.x; x = x + 0.01) {
+                        const y = (slope === 0 ? 1 : slope * x) + plusY;
+                        this.printDotWithScale(x, y)
+                    }
+                } else if (firstX === secondX) {
+                    const small = firstY <= secondY ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+                    const big = firstY >= secondY ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+                    for (let y = small.y; y <= big.y; y = y + 0.01) {
+                        this.printDotWithScale(small.x, y);
+                    }
+                }
+                //보정 초기화
+                this.pen.fillStyle = "black";
+            }
+            printDotWithScale(x, y) {
+                this.pen.fillRect((x * this.scale) + this.halfWidth, ((y * this.scale) * -1) + this.halfHeight, 1, 1)
+            }
+            printDot(x, y) {
+                this.pen.fillRect(x + this.halfWidth, (y * -1) + this.halfHeight, 1, 1)
+            }
+            // START 인풋값 받아오는 메소드
+            getValues(name) {
+                const datas = {
+                    line: [],
+                    triangle: [],
+                    rectangle: [],
+                    move: [],
+                    scale: [],
+                    rotate: [],
+                    circle: []
+                }
+                //Line input's values
+                document.querySelectorAll(`input[id*="Line"]`).forEach(
+                    element => { datas.line.push(Number(element.value)); }
+                );
+                //Triangle input's values
+                document.querySelectorAll(`input[id*="Triangle"]`).forEach(
+                    element => { datas.triangle.push(Number(element.value)); }
+                );
+                //Rectangle input's values
+                document.querySelectorAll(`input[id*="Rect"]`).forEach(
+                    element => { datas.rectangle.push(Number(element.value)); }
+                );
+                //Move  input's values
+                document.querySelectorAll(`input[id*="move"]`).forEach(
+                    element => { datas.move.push(Number(element.value)); }
+                );
+                //Scale  input's values
+                document.querySelectorAll(`input[id*="scale"]`).forEach(
+                    element => { datas.scale.push(Number(element.value)); }
+                );
+                //Rotate input's value
+                datas.rotate.push(Number(document.getElementById("rotateDegree").value));
+
+                //Circle input's values
+                document.querySelectorAll(`input[id*="circle"]`).forEach(
+                    (element) => {
+                        datas.circle.push(Number(element.value));
+                    }
+                )
+                return datas;
+            }
+            // END  인풋값 받아오는 메소드
+
+            // START 삼각형그려주는는 메소드
+            printTriangle(firstX, firstY, secondX, secondY, thirdX, thirdY) {
+                this.printLine(firstX, firstY, secondX, secondY, 1);
+                this.printLine(secondX, secondY, thirdX, thirdY, 1);
+                this.printLine(firstX, firstY, thirdX, thirdY, 1);
+            }
+            // END  삼각형그려주는 메소드
+
+            // START 사각형을 그려주는 메소드
+            printRectangle(firstX, firstY, secondX, secondY) {
+                this.printLine(firstX, firstY, firstX, secondY, 2);
+                this.printLine(firstX, firstY, secondX, firstY, 2);
+                this.printLine(secondX, secondY, firstX, secondY, 2);
+                this.printLine(secondX, secondY, secondX, firstY, 2);
+            }
+            // END  사각각형그려주는 메소드
+
+            // START 원을 그려주는 메소드
+            printCircle(x, y, radius) {
+                this.pen.fillStyle = "gold";
+                for (let degree = 0; degree <= 360; degree++) {
+                    const radian = Math.PI / 180 * degree;
+                    this.printDotWithScale((Math.cos(radian) * radius) + x, (Math.sin(radian) * radius) + y)
+                }
+                this.pen.fillStyle = "black";
+            }
+            // END  원을 그려주는 메소드
+
+            // START 행렬 API메소드
+            getMatrix(key, x = 0, y = 0) {
+                //roate일때는 X가 세타값이 됨.
+                const matrixs = {
+                    scale: [
+                        [x, 0, 0],
+                        [0, y, 0],
+                        [0, 0, 1]
+                    ],
+                    move: [
+                        [1, 0, x],
+                        [0, 1, y],
+                        [0, 0, 1]
+                    ],
+                    rotate: [
+                        [],
+                        [],
+                        []
+                    ]
+                }
+                return matrixs[key];
+            }
+            // END 행렬 API메소드
+
+            //START 행렬의 곱 메소드
+            multiMatrix(leftM, x, y) {
+                const rightM = [
+                    [x],
+                    [y],
+                    [1]
+                ]
+                const resultMatrix = [];
+                for (let x = 0; x < 3; x++) {
+                    resultMatrix.push([0]);
+                    for (let y = 0; y < 1; y++) {
+                        for (let z = 0; z < 3; z++) {
+                            resultMatrix[x][y] += (leftM[x][z] * rightM[z][y]);
+                        }
+                    }
+                }
+                return [resultMatrix[0][0], resultMatrix[1][0]];
+            }
+            // END  행렬의 곱 메소드
+
+            // START 모든 도형 그려주기 메소드
+            printDiagram(datas) {
+                this.printLine(...datas.line, 0);
+                this.printTriangle(...datas.triangle);
+                this.printRectangle(...datas.rectangle);
+                this.printCircle(...datas.circle);
+            }
+            // END  모든 도형 그려주기 메소드
+
+            // START 무브 메소드드
+            printEventDiagram(datas, eventName) {
+
+                const eventMatrix = this.getMatrix(eventName, ...datas[eventName]);
+                // let [firstX, firstY, secondX, secondY, thirdX, thirdY] = [undefined,undefined,undefined,undefined,undefined,undefined];
+                //let [firstX, firstY, secondX, secondY, thirdX, thirdY] = [0,0,0,0,0,0]
+
+                // START "Line"
+                let [firstX, firstY, secondX, secondY,thirdX, thirdY] = [...datas.line,0,0];
+                const [Linex1, Liney1, Linex2, Liney2] = [
+                    ...this.multiMatrix(eventMatrix, firstX, firstY),
+                    ...this.multiMatrix(eventMatrix, secondX, secondY),
+                ];
+                this.printLine(Linex1, Liney1, Linex2, Liney2);
+                // END "Line"
+
+                //START "Triangle"
+                [firstX, firstY, secondX, secondY, thirdX, thirdY] = [...datas.triangle];
+                const [triangeX1, triangeY1, triangeX2, triangeY2, triangleX3, triangleY3] = [
+                    ...this.multiMatrix(eventMatrix, firstX, firstY),
+                    ...this.multiMatrix(eventMatrix, secondX, secondY),
+                    ...this.multiMatrix(eventMatrix, thirdX, thirdY),
+                ];
+                console.log(triangeX1, triangeY1, triangeX2, triangeY2, triangleX3, triangleY3);
+                this.printTriangle(triangeX1, triangeY1, triangeX2, triangeY2, triangleX3, triangleY3);
+                //END "Triangle"
+
+                //START Rect
+                [firstX, firstY, secondX, secondY] = [...datas.rectangle];
+                const [rectX1, rectY1, rectX2, rectY2] = [
+                    ...this.multiMatrix(eventMatrix, firstX, firstY),
+                    ...this.multiMatrix(eventMatrix, secondX, secondY),
+                ];
+                this.printRectangle(rectX1, rectY1, rectX2, rectY2);
+                //END Rect
+
+                //START Circle
+                // const [x, y, radius] = [...datas.circle];
+                // const [circleX, circleY, rectX2, rectY2] = [
+                //     ...this.multiMatrix(eventMatrix, firstX, firstY),
+                //     ...this.multiMatrix(eventMatrix, secondX, secondY),
+                // ];
+                // this.printRectangle(rectX1, rectY1, rectX2, rectY2);
+                //END Circle
+
+            }
+            // END 무브 메소드드
+
+
+            event() {
+                window.addEventListener('click', (event) => {
+                    let datas = null;
+                    (event.target.tagName === "BUTTON") && (datas = this.getValues());
+                    switch (event.target.id) {
+                        case "printBtn":
+                            this.printDiagram(datas);
+                            break;
+                        case "moveBtn":
+                            this.printEventDiagram(datas, "move");
+                            break;
+                        case "scaleBtn":
+                            console.log("scaleBtn");
+                            this.printEventDiagram(datas, "scale");
+                            break;
+                    }
+                })
+            }
+            run() {
+                this.init();
+                this.initLine();
+                this.event();
+                // this.getValues("Line");
+            }
+        }
+        const canvas = new Canvas("canvas");
+        canvas.run();  
+    </script>
+
+</body>
+
+</html>
