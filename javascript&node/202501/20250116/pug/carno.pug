@@ -1,0 +1,17 @@
+doctype
+html
+    head
+        title carno
+        link(rel="stylesheet", href="../css/carno.css")
+    body
+    div#container.container
+        div#topArea.topArea
+            div#x0y0Box(data-row="0",data-col="0").box
+            div#x0y1Box(data-row="0",data-col="1").box
+        div#bottomArea.bottomArea
+            div#x1y0Box(dataset="10").box
+            div#x1y1Box(dataset="11").box
+        div#resultArea.resultArea
+            span 결과값
+            input#resultValue.resultValue
+    script(src="../js/carno.js") 

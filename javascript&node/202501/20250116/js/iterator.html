@@ -1,0 +1,60 @@
+<script>
+const array = [1,2,3];
+
+console.log(  Symbol.iterator in array);
+//메소드 있어? 물어볼때도 사용가능하네
+
+const iterator = array[Symbol.iterator]();
+console.log(iterator);
+console.log(iterator.next());
+console.log(iterator);
+// {
+//     next: function(){
+//         return {value:, done: }
+//     }
+// }
+
+const iterator2 = {
+    currentIndex: 0,
+    array:[1,2,3],
+    next: function(){
+        if(this.currentIndex < this.array.length){
+            return { value: this.array[this.currentIndex++],done:false }
+        }else{
+            return {value: undefined, done: true}
+        }
+    }
+}
+
+const myO = {
+    data1: [10,20,30,40],
+    data2: 50,
+    data3: [
+        [60,70,80],
+        [90,100,110]
+    ],
+    [Symbol.iterator](){
+        const allValues = [
+            ...this.data1,
+            this.data2,
+            ...this.data3.flat()
+        ];
+        let index = 0;
+
+        return {
+            next(){
+                if(index<allValues.length){
+                    return { value: allValues[index++],done:false }
+                }else{
+                    return{ value: undefined, done:true }
+                }
+            }
+        }
+    }
+}
+
+// for(const value of myO){
+//     document.
+// }
+</script>
+
