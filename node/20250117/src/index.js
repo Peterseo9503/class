@@ -10,8 +10,8 @@ app.get('/template', (req,res)=>{
 });
 
 app.get('/option',(req,res)=>{
-    console.log("들어와?")
-    res.send( req.query.select );
+    let nameList = ['kkms4001', 'SyntaxerJs', 'smith Paul Matingu'];
+    res.send( nameList[req.query.select] );
 })
 
 app.get("/",(req ,res)=>{
