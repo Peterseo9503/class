@@ -1,0 +1,16 @@
+FROM node:22.13-alpine
+
+WORKDIR /bodyparser
+
+COPY package*.json .
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 3001
+
+CMD ["npm","start"]
+
+# 환경변수 설정하는법, 
+# nginx와 연동해서 사용하는법 

@@ -1,0 +1,17 @@
+html
+     head
+          title Hi!
+     body
+          h1 JADE Template
+          ul
+                - for(var i=0; i<5; i++)
+                  li THERE!
+          div= time
+          <h1>로그인 
+          form(action="/login" method="POST")
+            p 
+                input(type="text" name="id")
+            p
+                input(type="text" name="pw")
+            p
+                input(type="submit")

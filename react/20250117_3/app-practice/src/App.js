@@ -53,7 +53,7 @@ function App() {
       .then((response) => {
         console.log("Post 성공");
         const newTopics = [...topics];
-        newTopics.push({id:Number(topic.id),title:topic.title, body:topic.body });
+        newTopics.push({ id: Number(topic.id), title: topic.title, body: topic.body });
         setTopics(newTopics);
 
         setLoading(false);
@@ -79,10 +79,10 @@ function App() {
       .then((response) => {
         console.log("Put성공!");
         const newTopics = topics.map((v) => {
-          return v.id != topic.id ? v : {id:Number(topic.id), title:topic.title,body:topic.body}
+          return v.id != topic.id ? v : { id: Number(topic.id), title: topic.title, body: topic.body }
         });
         console.log(newTopics);
-        setTopics( newTopics );
+        setTopics(newTopics);
         setLoading(false);
         setMode("read");
       })
@@ -93,22 +93,22 @@ function App() {
   // END "PUT" 구문(UPDATE)
 
   // START "DELETE" 구문
-  const requestDelete = (deleteId)=>{
+  const requestDelete = (deleteId) => {
     setLoading(true);
     setError(null);
 
     const deleleUrl = url + `/${String(deleteId)}`;
     axios.delete(deleleUrl)
-    .then( (response)=>{
-      console.log("delete성공!!");
-      const newTopics = topics.filter( v=>{ return v.id !== deleteId} );
-      setTopics(newTopics);
-      setMode("welcome");
-      setLoading(false);
-    } )
-    .catch( (error)=>{
-      setError(error);
-    } );
+      .then((response) => {
+        console.log("delete성공!!");
+        const newTopics = topics.filter(v => { return v.id !== deleteId });
+        setTopics(newTopics);
+        setMode("welcome");
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error);
+      });
   }
   // END "DELETE" 구문
 
@@ -180,7 +180,7 @@ function App() {
         title={topic.title}
         body={topic.body}
         onUpdate={(title, body) => {
-          requestPut( { id: String(id), title: title, body: body } );
+          requestPut({ id: String(id), title: title, body: body });
         }}
       ></Update>
     );

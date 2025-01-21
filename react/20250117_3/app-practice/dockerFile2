@@ -1,0 +1,19 @@
+FROM node:16 as build
+
+WORKDIR /app
+
+COPY pakage*.json ./
+
+RUN npm install
+
+#dockerignore에서 node_modules랑 등등 필요없는 파일 안불러오게함
+COPY . .
+
+RUN npm run build
+
+FROM nginx:1.23
+
+COPY --from=build /app/build /usr/share/nginx/html
+
+EXPOSE 8080
+CMD ["nginx","-g","daemon off;"]
