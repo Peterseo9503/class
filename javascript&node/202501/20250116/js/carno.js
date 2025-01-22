@@ -12,16 +12,17 @@ class Carno {
         containerElem.addEventListener('click', (event) => {
             const regExp = /Box/;
             const targetElem = event.target;
-            // console.log("TEST")
-            // console.log(targetElem.id);
             if (regExp.test(targetElem.id)) {
-                console.log(targetElem);
-                console.log(targetElem.id);
+                // console.log(targetElem)
+                // console.log(targetElem.id);
                 targetElem.classList.toggle("clicked");
+                console.log(targetElem.dataset);
+                this.setValue();
             }
         });
     }
     setValue() {
+        
     }
     getValue() {
         return [];

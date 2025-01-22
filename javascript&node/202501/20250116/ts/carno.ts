@@ -22,20 +22,19 @@ class Carno implements XYValues{
         containerElem.addEventListener('click', (event) => {
             const regExp: RegExp = /Box/;
             const targetElem = event.target as HTMLElement;
-            // console.log("TEST")
-            // console.log(targetElem.id);
             if (regExp.test(targetElem.id)) {
-                console.log(targetElem)
-                console.log(targetElem.id);
+                // console.log(targetElem)
+                // console.log(targetElem.id);
                 targetElem.classList.toggle("clicked");
+                console.log(targetElem.dataset);
+                this.setValue()
             }
         })
     }
     setValue(): void {
-
+        
     }
     getValue(): number[][] {
-
         return []
     }
     run(): void {
