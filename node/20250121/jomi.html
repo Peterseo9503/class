@@ -1,0 +1,764 @@
+
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <title>MATRIX CALCULATOR</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
+    <link rel="icon" href="http://kkms4001.iptime.org/~c20st17/jomimi/favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: "Cabin", sans-serif;
+        }
+
+        body {
+            background-color: #edede9;
+            width: 100%;
+            height: 100%;
+        }
+
+        header {
+            letter-spacing: 0.5rem;
+            padding: 15px;
+            padding-top: 40px;
+            width: 1800px;
+            height: 100px;
+            margin: auto;
+        }
+
+        main {
+            width: 1800px;
+            height: 100%;
+            margin: auto;
+            margin-top: 2%;
+        }
+
+        h1 {
+            width: 100%;
+            text-shadow: 3px 5px #c6c5b9;
+            height: 100px;
+            text-align: center;
+            line-height: 100px;
+            font-size: 6.5rem;
+            color: #1c1c1c;
+        }
+
+
+
+
+        section[class*="matrix"] {
+            box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+            width: 30%;
+            height: 670px;
+            float: left;
+            margin: auto;
+            margin-left: 2.5%;
+        }
+
+        .matrix1,
+        .matrix2,
+        .matrix3 {
+            position: relative;
+            top: 5%;
+            width: 90%;
+            border: 3px solid #4d4e54;
+            height: 70%;
+            margin: auto;
+        }
+
+        article {
+            position: relative;
+            top: 9%;
+            height: 20%;
+            width: 100%;
+            left: 6%;
+        }
+
+        i {
+            font-size: 40px;
+            margin-right: 2%;
+            margin-left: 2%;
+        }
+
+        i:hover {
+            cursor: pointer;
+            transition: 0.1s linear;
+            transform: scale(1.3);
+        }
+
+        .xi-pen-o,
+        .xi-close:active {
+            transform: rotate(70deg);
+        }
+
+        .instagramBox1,
+        .instagramBox2,
+        .instagramBox3,
+        .instagramBox6,
+        .instagramBox7 {
+            display: none;
+            height: 50px;
+            width: 100%;
+            line-height: 55px;
+            font-size: 1.2rem;
+        }
+
+        span {
+            font-weight: bold;
+        }
+
+        .xi-heart {
+            display: none;
+            color: #c1121f;
+        }
+
+        .xi-plus-circle,
+        .xi-minus-circle,
+        .xi-close-circle {
+            display: none;
+            color: #c1121f;
+            margin-left: 14%;
+            font-size: 3em;
+        }
+
+        .xi-plus-circle-o,
+        .xi-minus-circle-o,
+        .xi-close-circle-o {
+            color: #1c1c1c;
+            margin-left: 14%;
+            font-size: 3em;
+        }
+
+        input {
+            text-align: center;
+            font-size: 1rem;
+            width: 48px;
+            height: 48px;
+            text-align: center;
+            position: relative;
+            box-sizing: border-box;
+            background-color: #edede9;
+            border: 1px solid #4d4e54;
+            border-radius: 5%;
+        }
+
+        .getValue {
+            font-size: 40px;
+            width: 13%;
+            height: 40px;
+            text-align: center;
+            position: relative;
+            margin-left: 3%;
+            margin-right: 3%;
+            background-color: #edede9;
+            border: 3px solid #1c1c1c;
+        }
+
+        .real1,
+        .real2,
+        .real3 {
+            position: relative;
+            border: none;
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+        }
+
+        .xi-warning {
+            margin: auto;
+            font-size: 10rem;
+            color: #c1121f;
+            margin-top: 10%;
+            margin-bottom: 5%;
+        }
+
+        .fontsmall {
+            text-align: center;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header id="helloMatrixWorld">
+        <h1>MATRIX CALCULATOR</h1>
+    </header>
+    <main>
+        <section class="matrixBox1" id="matrixBox1">
+            <div id=matrix1 class="matrix1">
+                <div class="real1" id="real1"></div>
+            </div>
+            <article>
+                <input type="number" id="row1" class="row1 getValue" value="1" max="10" min="1" pattern="\[0-9]\"
+                    maxlength="2" autofocus oninput='matrix.handleOnInput(this, 1)'>
+                <i class="xi-close"></i>
+                <input type="number" id="column1" class="column1 getValue" value="1" max="10" min="1" pattern="\[0-9]\"
+                    maxlength="2" oninput='matrix.handleOnInput(this, 1)'>
+                <i class="xi-pen-o" id="makeMatrixBtn1"></i>
+                <i class="xi-heart-o" id="xi-heart-o1"></i>
+                <i class="xi-heart" id="xi-heart1"></i>
+                <i class="xi-speech-o" id="xi-speech-o1"></i>
+
+                <aside class="instagramBox1" id="instagramBox1">
+                    <span>Ran_dom_Number </span> liked your post.
+                </aside>
+                <aside class="instagramBox6" id="instagramBox6">
+                    <span>Reset_ </span> liked your post.
+                </aside>
+
+            </article>
+        </section>
+
+        <section class="matrixBox2" id="matrixBox2">
+            <div id=matrix2 class="matrix2">
+                <div class="real2" id="real2"></div>
+            </div>
+            <article>
+                <input type="number" id="row2" class="row2 getValue" value="1" max="10" min="1" pattern="\[0-9]\"
+                    maxlength="2" oninput='matrix.handleOnInput(this, 1)'>
+                <i class="xi-close"></i>
+                <input type="number" id="column2" class="column2 getValue" value="1" max="10" min="1" pattern="\[0-9]\"
+                    maxlength="2" oninput='matrix.handleOnInput(this, 1)'>
+                <i class="xi-pen-o" id="makeMatrixBtn2"></i>
+                <i class="xi-heart-o" id="xi-heart-o2"></i>
+                <i class="xi-heart" id="xi-heart2"></i>
+                <i class="xi-speech-o" id="xi-speech-o2"></i>
+                <aside class="instagramBox2" id="instagramBox2">
+                    <span>Ran_dom_Number </span> liked your post.
+                </aside>
+                <aside class="instagramBox7" id="instagramBox7">
+                    <span>Reset_ </span> liked your post.
+                </aside>
+            </article>
+        </section>
+        <section class="matrixBox3" id="matrixBox3">
+            <div id=matrix3 class="matrix3">
+                <div class="real3" id="real3"></div>
+            </div>
+            <article>
+                <i class="xi-plus-circle-o" id="xi-plus-circle-o"></i>
+                <i class="xi-plus-circle" id="xi-plus-circle"></i>
+                <i class="xi-minus-circle-o" id="xi-minus-circle-o"></i>
+                <i class="xi-minus-circle" id="xi-minus-circle"></i>
+                <i class="xi-close-circle-o" id="xi-close-circle-o"></i>
+                <i class="xi-close-circle" id="xi-close-circle"></i>
+                <aside class="instagramBox3 " id="instagramBox3"> <span>PLUS_ </span> liked your post. </aside>
+                <aside class="instagramBox3" id="instagramBox4"> <span>MINUS_ </span> liked your post. </aside>
+                <aside class="instagramBox3" id="instagramBox5"> <span>TIMES_ </span> liked your post. </aside>
+            </article>
+        </section>
+    </main>
+
+    <script>
+        const matrix = {
+            row1: 0,
+            row2: 0,
+            row3: 0,
+            column1: 0,
+            column2: 0,
+            column3: 0,
+            tempA: [],
+            tempB: [],
+            tempSumArea: [],
+            tempMinusArea: [],
+            tempTimesArea: [],
+            makeMatrixBtn1: document.querySelector('#makeMatrixBtn1'),
+            makeMatrixBtn2: document.querySelector('#makeMatrixBtn2'),
+            randomBtn1: document.querySelector('#xi-heart-o1'),
+            randomBtn2: document.querySelector('#xi-heart-o2'),
+            resetBtn1: document.querySelector('#xi-speech-o1'),
+            resetBtn2: document.querySelector('#xi-speech-o2'),
+            PlusBtn: document.querySelector('#xi-plus-circle-o'),
+            MinusBtn: document.querySelector('#xi-minus-circle-o'),
+            TimesBtn: document.querySelector('#xi-close-circle-o'),
+            inputValue: function () {
+                this.row1 = document.querySelector('#row1').value;
+                this.column1 = document.querySelector('#column1').value;
+                this.row2 = document.querySelector('#row2').value;
+                this.column2 = document.querySelector('#column2').value;
+            },
+            handleOnInput: function (el, maxlength) {
+                if (el.value == "0") {
+                    el.value = "";
+                }
+                if (el.value[0] == "-") {
+                    el.value = el.value.substr(0, maxlength + 1);
+                }
+                else if (el.value.length > maxlength) {
+                    el.value = el.value.substr(0, maxlength);
+                }
+            },
+            matrixArea1:
+                function () {
+                    matrix.makeMatrixBtn1.addEventListener(
+                        'click', function () {
+                            matrix.inputValue();
+                            document.querySelector('#real1').innerHTML = "";
+                            for (let i = 0; i < matrix.row1; i++) {
+                                for (let j = 0; j < matrix.column1; j++) {
+                                    document.querySelector('#real1').innerHTML += `<input type="number" max="99" pattern="\[0-9]\" min="-99" maxlength="2" oninput='matrix.handleOnInput(this, 2)' id="m1${i}${j}">`;
+                                    document.getElementById('real1').style.width = (48 * matrix.column1) + 'px';
+                                }
+                            }
+                        }
+                    );
+                },
+            matrixArray1:
+                function () {
+                    matrix.tempA = [];
+                    let tempM1 = [];
+                    for (let i = 0; i < matrix.row1; i++) {
+                        for (let j = 0; j < matrix.column1; j++) {
+                            let m1 = document.querySelector(`#m1${i}${j}`).value;
+                            tempM1[j] = m1;
+                        }
+                        matrix.tempA[i] = tempM1;
+                        tempM1 = [];
+                    } console.log(matrix.tempA);
+                },
+            matrixArea2:
+                function () {
+                    matrix.makeMatrixBtn2.addEventListener(
+                        'click', function () {
+                            matrix.inputValue();
+                            document.querySelector('#real2').innerHTML = "";
+                            for (let i = 0; i < matrix.row2; i++) {
+                                for (let j = 0; j < matrix.column2; j++) {
+                                    document.querySelector('#real2').innerHTML += `<input type="number" max="99" pattern="\[0-9]\" min="-99" maxlength="2" oninput='matrix.handleOnInput(this, 2)' id="m2${i}${j}">`;
+                                    document.getElementById('real2').style.width = (48 * matrix.column2) + 'px';
+                                }
+                            }
+
+                        }
+                    );
+                },
+            matrixArray2:
+                function () {
+                    matrix.tempB = [];
+                    let tempM2 = [];
+                    for (let i = 0; i < matrix.row2; i++) {
+                        for (let j = 0; j < matrix.column2; j++) {
+                            let m2 = document.querySelector(`#m2${i}${j}`).value;
+                            tempM2[j] = m2;
+                        }
+                        matrix.tempB[i] = tempM2;
+                        tempM2 = [];
+                    } console.log(matrix.tempB);
+
+                },
+
+            random1: function () {
+                this.randomBtn1.addEventListener(
+                    'click',
+                    function () {
+                        document.querySelector('#xi-heart-o1').style.display = "none";
+                        document.querySelector('#xi-heart1').style.display = "inline-block";
+                        document.querySelector('#instagramBox1').style.display = "block";
+                        document.querySelector('#instagramBox6').style.display = "none";
+                        for (let i = 0; i < matrix.row1; i++) {
+                            for (let j = 0; j < matrix.column1; j++) {
+                                document.querySelector(`#m1${i}${j}`).value = (Math.floor(Math.random() * 101) - 50);
+                            }
+                        }
+                        matrix.matrixArray1();
+                    }
+                );
+                document.querySelector('#xi-heart1').addEventListener('click', function () {
+                    document.querySelector('#xi-heart-o1').style.display = "none";
+                    document.querySelector('#xi-heart1').style.display = "inline-block";
+                    document.querySelector('#instagramBox1').style.display = "block";
+                    document.querySelector('#instagramBox6').style.display = "none";
+                    for (let i = 0; i < matrix.row1; i++) {
+                        for (let j = 0; j < matrix.column1; j++) {
+                            document.querySelector(`#m1${i}${j}`).value = (Math.floor(Math.random() * 101) - 50);
+                        }
+                    }
+                    matrix.matrixArray1();
+                }
+                );
+
+            },
+            random2: function () {
+                this.randomBtn2.addEventListener(
+                    'click',
+                    function () {
+                        document.querySelector('#xi-heart-o2').style.display = "none";
+                        document.querySelector('#xi-heart2').style.display = "inline-block";
+                        document.querySelector('#instagramBox2').style.display = "block";
+                        document.querySelector('#instagramBox7').style.display = "none";
+                        for (let i = 0; i < matrix.row2; i++) {
+                            for (let j = 0; j < matrix.column2; j++) {
+                                document.querySelector(`#m2${i}${j}`).value = (Math.floor(Math.random() * 101) - 50);
+                            }
+                        }
+                        matrix.matrixArray2();
+                    }
+                );
+                document.querySelector('#xi-heart2').addEventListener('click', function () {
+                    document.querySelector('#xi-heart-o2').style.display = "none";
+                    document.querySelector('#xi-heart2').style.display = "inline-block";
+                    document.querySelector('#instagramBox2').style.display = "block";
+                    document.querySelector('#instagramBox7').style.display = "none";
+
+                    for (let i = 0; i < matrix.row2; i++) {
+                        for (let j = 0; j < matrix.column2; j++) {
+                            document.querySelector(`#m2${i}${j}`).value = (Math.floor(Math.random() * 101) - 50);
+                        }
+                    }
+                    matrix.matrixArray2();
+                }
+                )
+            },
+            reset: function () {
+                document.querySelector('#xi-speech-o1').addEventListener(
+                    'click',
+                    function () {
+                        document.querySelector('#instagramBox6').style.display = "block";
+                        document.querySelector('#instagramBox1').style.display = "none";
+                        for (let i = 0; i < matrix.row1; i++) {
+                            for (let j = 0; j < matrix.column1; j++) {
+                                document.querySelector(`#m1${i}${j}`).value = '0';
+                            }
+                        }
+                    });
+            },
+            reset2: function () {
+                document.querySelector('#xi-speech-o2').addEventListener(
+                    'click',
+                    function () {
+                        document.querySelector('#instagramBox7').style.display = "block";
+                        document.querySelector('#instagramBox2').style.display = "none";
+                        for (let i = 0; i < matrix.row2; i++) {
+                            for (let j = 0; j < matrix.column2; j++) {
+                                document.querySelector(`#m2${i}${j}`).value = '0';
+                            }
+                        }
+                    });
+            },
+            plus: function () {
+                document.querySelector('#xi-plus-circle-o').addEventListener(
+                    'click',
+                    () => {
+                        document.querySelector('#xi-plus-circle-o').style.display = "none";
+                        document.querySelector('#xi-plus-circle').style.display = "inline-block";
+                        document.querySelector('#xi-minus-circle-o').style.display = "inline-block";
+                        document.querySelector('#xi-minus-circle').style.display = "none";
+                        document.querySelector('#xi-close-circle-o').style.display = "inline-block";
+                        document.querySelector('#xi-close-circle').style.display = "none";
+                        document.querySelector('#xi-plus-circle').classList.add('xi-spin');
+                        document.querySelector('#instagramBox3').style.display = "inline-block";
+                        document.querySelector('#instagramBox4').style.display = "none";
+                        document.querySelector('#xi-minus-circle').classList.remove('xi-spin');
+                        document.querySelector('#instagramBox5').style.display = "none";
+                        document.querySelector('#xi-close-circle').classList.remove('xi-spin');
+                        document.querySelector('#real3').innerHTML = "";
+                        document.getElementById('real3').style.width = '100%';
+                        let tempSum = [];
+                        let Sum1 = [];
+                        let Sum2 = [];
+                        matrix.matrixArray1();
+                        matrix.matrixArray2();
+                        if (matrix.row1 === matrix.row2 && matrix.column1 === matrix.column2) {
+                            SUM();
+                        } if (matrix.row1 !== matrix.row2 || matrix.column1 !== matrix.column2) {
+                            document.querySelector('#real3').innerHTML = `<i class="xi-warning"></i><br>Row and column are different...`;
+                        }
+                        function SUM() {
+                            for (let i = 0; i < matrix.row1; i++) {
+                                for (let j = 0; j < matrix.column1; j++) {
+                                    let Sum1 = Number(matrix.tempA[i][j]);
+                                    let Sum2 = Number(matrix.tempB[i][j]);
+                                    tempSum[j] = Number(Sum1 + Sum2);
+                                    document.querySelector('#real3').innerHTML += `<input type="text" id="m3${i}${j}" readonly>`;
+                                    document.getElementById('real3').style.width = (48 * matrix.column2) + 'px';
+                                }
+                                matrix.tempSumArea[i] = tempSum;
+                                tempSum = [];
+                            } console.log(matrix.tempSumArea);
+                            for (let i = 0; i < matrix.row1; i++) {
+                                for (let j = 0; j < matrix.column1; j++) {
+                                    document.getElementById(`m3${i}${j}`).value = matrix.tempSumArea[i][j];
+                                }
+                            }
+                        }
+                    });
+                document.querySelector('#xi-plus-circle').addEventListener(
+                    'click',
+                    () => {
+                        document.querySelector('#xi-plus-circle-o').style.display = "none";
+                        document.querySelector('#xi-plus-circle').style.display = "inline-block";
+                        document.querySelector('#xi-minus-circle-o').style.display = "inline-block";
+                        document.querySelector('#xi-minus-circle').style.display = "none";
+                        document.querySelector('#xi-close-circle-o').style.display = "inline-block";
+                        document.querySelector('#xi-close-circle').style.display = "none";
+                        document.querySelector('#xi-plus-circle').classList.add('xi-spin');
+                        document.querySelector('#instagramBox3').style.display = "inline-block";
+                        document.querySelector('#instagramBox4').style.display = "none";
+                        document.querySelector('#xi-minus-circle').classList.remove('xi-spin');
+                        document.querySelector('#instagramBox5').style.display = "none";
+                        document.querySelector('#xi-close-circle').classList.remove('xi-spin');
+                        document.querySelector('#real3').innerHTML = "";
+                        let tempSum = [];
+                        let Sum1 = [];
+                        let Sum2 = [];
+                        matrix.matrixArray1();
+                        matrix.matrixArray2();
+                        document.getElementById('real3').style.width = '100%';
+                        if (matrix.row1 === matrix.row2 && matrix.column1 === matrix.column2) {
+                            SUM();
+                        } if (matrix.row1 !== matrix.row2 || matrix.column1 !== matrix.column2) {
+                            document.querySelector('#real3').innerHTML = `<i class="xi-warning"></i><br>Row and column are different...`;
+
+                        }
+
+                        function SUM() {
+                            for (let i = 0; i < matrix.row1; i++) {
+                                for (let j = 0; j < matrix.column1; j++) {
+                                    let Sum1 = Number(matrix.tempA[i][j]);
+                                    let Sum2 = Number(matrix.tempB[i][j]);
+                                    tempSum[j] = Number(Sum1 + Sum2);
+                                    document.querySelector('#real3').innerHTML += `<input type="text" id="m3${i}${j}" readonly>`;
+                                    document.getElementById('real3').style.width = (48 * matrix.column2) + 'px';
+                                }
+                                matrix.tempSumArea[i] = tempSum;
+                                tempSum = [];
+                            } console.log(matrix.tempSumArea);
+                            for (let i = 0; i < matrix.row1; i++) {
+                                for (let j = 0; j < matrix.column1; j++) {
+                                    document.getElementById(`m3${i}${j}`).value = matrix.tempSumArea[i][j];
+                                }
+                            }
+                        }
+                    });
+            },
+            minus: function () {
+                document.querySelector('#xi-minus-circle-o').addEventListener(
+                    'click',
+                    () => {
+                        document.querySelector('#xi-minus-circle-o').style.display = "none";
+                        document.querySelector('#xi-minus-circle').style.display = "inline-block";
+                        document.querySelector('#xi-plus-circle-o').style.display = "inline-block";
+                        document.querySelector('#xi-plus-circle').style.display = "none";
+                        document.querySelector('#xi-close-circle-o').style.display = "inline-block";
+                        document.querySelector('#xi-close-circle').style.display = "none";
+                        document.querySelector('#xi-minus-circle').classList.add('xi-spin');
+                        document.querySelector('#instagramBox3').style.display = "none";
+                        document.querySelector('#instagramBox4').style.display = "inline-block";
+                        document.querySelector('#xi-plus-circle').classList.remove('xi-spin');
+                        document.querySelector('#instagramBox5').style.display = "none";
+                        document.querySelector('#xi-close-circle').classList.remove('xi-spin');
+                        document.querySelector('#real3').innerHTML = "";
+                        document.getElementById('real3').style.width = '100%';
+                        matrix.matrixArray1();
+                        matrix.matrixArray2();
+
+                        let tempMinus = [];
+                        let Minus1 = [];
+                        let Minus2 = [];
+                        if (matrix.row1 === matrix.row2 && matrix.column1 === matrix.column2) {
+                            MINUS();
+                        } if (matrix.row1 !== matrix.row2 || matrix.column1 !== matrix.column2) {
+                            document.getElementById('real3').style.width = '100%';
+                            document.querySelector('#real3').innerHTML = `<i class="xi-warning"></i> <br> Row and column are different...`;
+                        }
+                        function MINUS() {
+                            matrix.matrixArray1();
+                            for (let i = 0; i < matrix.row1; i++) {
+                                for (let j = 0; j < matrix.column1; j++) {
+                                    let Minus1 = Number(matrix.tempA[i][j]);
+                                    let Minus2 = Number(matrix.tempB[i][j]);
+                                    tempMinus[j] = Number(Minus1 - Minus2);
+                                    document.querySelector('#real3').innerHTML += `<input type="text" id="m3${i}${j}" readonly>`;
+                                    document.getElementById('real3').style.width = (48 * matrix.column1) + 'px';
+
+                                }
+                                matrix.tempMinusArea[i] = tempMinus;
+                                tempMinus = [];
+                            } console.log(matrix.tempMinusArea);
+
+                            for (let i = 0; i < matrix.row1; i++) {
+                                for (let j = 0; j < matrix.column1; j++) {
+                                    matrix.matrixArray1();
+                                    document.getElementById(`m3${i}${j}`).value = matrix.tempMinusArea[i][j];
+                                }
+                            }
+                        }
+                    });
+                document.querySelector('#xi-minus-circle').addEventListener(
+                    'click',
+                    () => {
+                        document.querySelector('#xi-minus-circle-o').style.display = "none";
+                        document.querySelector('#xi-minus-circle').style.display = "inline-block";
+                        document.querySelector('#xi-plus-circle-o').style.display = "inline-block";
+                        document.querySelector('#xi-plus-circle').style.display = "none";
+                        document.querySelector('#xi-close-circle-o').style.display = "inline-block";
+                        document.querySelector('#xi-close-circle').style.display = "none";
+                        document.querySelector('#xi-minus-circle').classList.add('xi-spin');
+                        document.querySelector('#instagramBox3').style.display = "none";
+                        document.querySelector('#instagramBox4').style.display = "inline-block";
+                        document.querySelector('#xi-plus-circle').classList.remove('xi-spin');
+                        document.querySelector('#instagramBox5').style.display = "none";
+                        document.querySelector('#xi-close-circle').classList.remove('xi-spin');
+                        document.querySelector('#real3').innerHTML = "";
+                        document.getElementById('real3').style.width = '100%';
+                        matrix.matrixArray1();
+                        matrix.matrixArray2();
+                        let tempMinus = [];
+                        let Minus1 = [];
+                        let Minus2 = [];
+                        if (matrix.row1 === matrix.row2 && matrix.column1 === matrix.column2) {
+                            MINUS();
+                        } if (matrix.row1 !== matrix.row2 || matrix.column1 !== matrix.column2) {
+
+                            document.querySelector('#real3').innerHTML = `<i class="xi-warning"></i><br>Row and column are different...`;
+                        }
+                        function MINUS() {
+
+                            for (let i = 0; i < matrix.row1; i++) {
+                                for (let j = 0; j < matrix.column1; j++) {
+                                    let Minus1 = Number(matrix.tempA[i][j]);
+                                    let Minus2 = Number(matrix.tempB[i][j]);
+                                    tempMinus[j] = Number(Minus1 - Minus2);
+                                    document.querySelector('#real3').innerHTML += `<input type="text" id="m3${i}${j}" readonly>`;
+                                    document.getElementById('real3').style.width = (48 * matrix.column1) + 'px';
+
+                                }
+                                matrix.tempMinusArea[i] = tempMinus;
+                                tempMinus = [];
+                                //document.getElementById(`m3${i}${j}`).value=matrix.tempSumArea[i];
+                            } console.log(matrix.tempMinusArea);
+                            for (let i = 0; i < matrix.row1; i++) {
+                                for (let j = 0; j < matrix.column1; j++) {
+                                    matrix.matrixArray1();
+                                    document.getElementById(`m3${i}${j}`).value = matrix.tempMinusArea[i][j];
+                                }
+                            }
+                        }
+                    });
+            },
+            times: function () {
+                document.querySelector('#xi-close-circle-o').addEventListener(
+                    'click',
+                    () => {
+                        document.querySelector('#xi-close-circle-o').style.display = "none";
+                        document.querySelector('#xi-close-circle').style.display = "inline-block";
+                        document.querySelector('#xi-minus-circle-o').style.display = "inline-block";
+                        document.querySelector('#xi-minus-circle').style.display = "none";
+                        document.querySelector('#xi-plus-circle-o').style.display = "inline-block";
+                        document.querySelector('#xi-plus-circle').style.display = "none";
+                        document.querySelector('#xi-close-circle').classList.add('xi-spin');
+                        document.querySelector('#instagramBox3').style.display = "none";
+                        document.querySelector('#instagramBox4').style.display = "none";
+                        document.querySelector('#xi-plus-circle').classList.remove('xi-spin');
+                        document.querySelector('#instagramBox5').style.display = "inline-block";
+                        document.querySelector('#xi-minus-circle').classList.remove('xi-spin');
+                        document.querySelector('#real3').innerHTML = "";
+                        document.getElementById('real3').style.width = '100%';
+                        matrix.matrixArray1();
+                        matrix.matrixArray2();
+                        console.log(matrix.tempA[0].length);
+                        console.log(matrix.tempB.length);
+                        let matrixA = matrix.tempA;
+                        let matrixB = matrix.tempB;
+
+                        if (matrixA[0].length == matrixB.length) {
+                            TIMES();
+                        } else {
+                            document.getElementById('real3').style.width = '100%';
+                            document.querySelector('#real3').innerHTML = `<i class="xi-warning"></i><br>Row and column are different...`;
+                        }
+
+                        function TIMES() {
+                            matrix.tempTimesArea = [];
+                            document.querySelector('#real3').innerHTML = "";
+                            for (let i = 0; i < matrixA.length; i++) {
+                                matrix.tempTimesArea[i] = [];
+                                for (let j = 0; j < matrixB[0].length; j++) {
+                                    matrix.tempTimesArea[i][j] = 0;
+                                    for (let k = 0; k < matrixA[0].length; k++) {
+                                        matrix.tempTimesArea[i][j] += (matrixA[i][k] * matrixB[k][j]);
+                                    }
+                                    console.log(matrix.tempTimesArea);
+                                }
+                            }
+                            document.querySelector('#real3').innerHTML = "";
+                            for (let i = 0; i < matrix.tempTimesArea.length; i++) {
+                                for (let j = 0; j < matrix.tempTimesArea[i].length; j++) {
+                                    document.getElementById('real3').style.width = (48 * matrix.tempTimesArea[i].length) + 'px';
+                                    let soptinValue = matrix.tempTimesArea[i][j].toLocaleString();
+                                    document.querySelector('#real3').innerHTML += `<input type="text" class="fontsmall" id="m3${i}${j}" value="${soptinValue}" readonly>`;
+                                }
+                            }
+                        }
+                    }
+                );
+                document.querySelector('#xi-close-circle').addEventListener(
+                    'click',
+                    () => {
+
+                        document.querySelector('#real3').innerHTML = "";
+                        document.getElementById('real3').style.width = '100%';
+                        matrix.matrixArray1();
+                        matrix.matrixArray2();
+                        console.log(matrix.tempA[0].length);
+                        console.log(matrix.tempB.length);
+                        let matrixA = matrix.tempA;
+                        let matrixB = matrix.tempB;
+
+                        if (matrixA[0].length == matrixB.length) {
+                            TIMES();
+                        } else {
+                            document.getElementById('real3').style.width = '100%';
+                            document.querySelector('#real3').innerHTML = `<i class="xi-warning"></i><br>Row and column are different...`;
+                        }
+
+                        function TIMES() {
+                            matrix.tempTimesArea = [];
+                            document.querySelector('#real3').innerHTML = "";
+                            for (let i = 0; i < matrixA.length; i++) {
+                                matrix.tempTimesArea[i] = [];
+                                for (let j = 0; j < matrixB[0].length; j++) {
+                                    matrix.tempTimesArea[i][j] = 0;
+                                    for (let k = 0; k < matrixA[0].length; k++) {
+                                        matrix.tempTimesArea[i][j] += (matrixA[i][k] * matrixB[k][j]);
+                                    }
+                                    console.log(matrix.tempTimesArea);
+                                }
+                            }
+                            document.querySelector('#real3').innerHTML = "";
+                            for (let i = 0; i < matrix.tempTimesArea.length; i++) {
+                                for (let j = 0; j < matrix.tempTimesArea[i].length; j++) {
+                                    document.getElementById('real3').style.width = (48 * matrix.tempTimesArea[i].length) + 'px';
+                                    let soptinValue = matrix.tempTimesArea[i][j].toLocaleString();
+                                    document.querySelector('#real3').innerHTML += `<input type="text" class="fontsmall" id="m3${i}${j}" value="${soptinValue}" readonly>`;
+                                }
+                            }
+                        }
+                    }
+                );
+            }
+        }
+
+
+        matrix.matrixArea1();
+        matrix.matrixArea2();
+        matrix.random1();
+        matrix.random2();
+        matrix.plus();
+        matrix.minus();
+        matrix.times();
+        matrix.reset();
+        matrix.reset2();
+    </script>
+</body>
+
+</html>

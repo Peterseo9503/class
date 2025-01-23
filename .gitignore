@@ -32,3 +32,7 @@ media/
 # 기타
 .DS_Store
 Thumbs.db
+*.dll
+*.jmod
+
+#이거 나중에 지워 이상있으면

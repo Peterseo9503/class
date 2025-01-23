@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas</title>
+    <style>
+        canvas {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+
+
+    </div>
+    <script>
+
+        fetch('./data.json')
+        .then( (response)=> response.json() )
+        .then( (data)=>{
+            const { freemem, totalmem } = data;
+            console.log(freemem, totalmem);
+         } )
+         .catch( err=>console.log(err) )
+
+        class Canvas {
+            constructor(id) {
+                this.id = id;
+                this.canvas = null;
+                this.pen = null;
+                this.width = 0;
+                this.height = 0;
+                this.halfWidth = 0;
+                this.halfHeight = 0;
+                this.scale = 10;
+            }
+            // getValue() {
+            //     const [firstX, firstY, secondX, secondY] = [
+            //         Number(document.getElementById("firstX").value),
+            //         Number(document.getElementById("firstY").value),
+            //         Number(document.getElementById("secondX").value),
+            //         Number(document.getElementById("secondY").value),
+            //     ]
+            //     return [firstX, firstY, secondX, secondY]
+            // }
+            init() {
+                document.getElementById("container").innerHTML = `
+                <canvas id ="canvas" width="500" height="500"></canvas>
+                `
+                this.canvas = document.getElementById('canvas');
+                this.pen = this.canvas.getContext('2d');
+                this.width = this.canvas.width;
+                this.height = this.canvas.height;
+                this.halfWidth = this.width / 2;
+                this.halfHeight = this.height / 2;
+            }
+            initLine() {
+                //가로선
+                for (let x = 0; x < this.width; x++) {
+                    this.pen.fillRect(x, this.halfHeight, 1, 1);
+                }
+                //세로선
+                for (let y = 0; y < this.height; y++) {
+                    this.pen.fillRect(this.halfWidth, y, 1, 1);
+                }
+
+                //스케일 팩터 가로선
+                for(let x=-this.halfWidth; x<this.halfWidth; x++){
+                    if(x % this.scale === 0){
+                        for(let y=-3; y<=3; y++){
+                            this.printDot( x,y )
+                        }
+                    }
+                }
+                //스케일 팩터 세로선
+                for(let y=-this.halfHeight; y<this.halfHeight; y++){
+                    if(y % this.scale === 0){
+                        for(let x=-3; x<=3; x++){
+                            this.printDot(x,y);
+                        }
+                    }
+                }
+            }
+            printLine(firstX, firstY, secondX, secondY) {
+                if (firstX != secondX) {
+                    const small = firstX <= secondX ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+                    const big = firstX >= secondX ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+
+                    
+                    //1. 기울기를 구합니다.
+                    const slope = (big.y - small.y) / (big.x - small.x);
+                    console.log("slope : " + slope)
+
+                    //2. y절편을 구합니다다.
+                    const plusY = ( (slope * small.x) * -1) + small.y
+                    console.log("plusY : " + plusY)
+
+                    for (let x = small.x; x <= big.x; x = x + 0.01) {
+                        const y = (slope===0 ? 1 : slope * x) + plusY;
+                        this.printDot(x, y)
+                    }
+                } else if (firstX === secondX) {
+                    const small = firstY <= secondY ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+                    const big = firstY >= secondY ? { x: firstX, y: firstY } : { x: secondX, y: secondY };
+
+                    for (let y = small.y; y <= big.y; y = y + 0.01) {
+                        this.printDot(small.x, y);
+                    }
+                }
+            } 
+
+            printDotWithScale(x, y) {
+                this.pen.fillRect((x*this.scale) + this.halfWidth, ((y*this.scale) * -1) + this.halfHeight, 1, 1)
+            }
+            printDot(x, y) {
+                this.pen.fillRect(x + this.halfWidth, (y * -1) + this.halfHeight, 1, 1)
+            }
+            
+            printCircle(freemem, totalmem){
+                for(let i=0; i<=360;i++){
+                    
+                }
+                printDotWithScale()
+            }
+            event(){
+                window.addEventListener( 'click',(event)=>{
+                    switch( event.target.id ){
+                        case "drawRectBtm":
+                            this.printRect( ...this.getValue() )
+                    }
+                } )
+            }
+            run() {
+                this.init();
+                this.initLine();
+                this.event();
+            }
+        }
+        const canvas = new Canvas("canvas");
+        canvas.run();  
+    </script>
+
+</body>
+
+</html>
