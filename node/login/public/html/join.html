@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <h1>회원가입</h1>
+        <p>id : <input id="joinID" type="text"></p>
+        <p>pw : <input id="joinPW" type="text"></p>
+        <p><button id="joinBtn">회원가입</button></p>
+        <p><span id="warnningMessage"></span></p>
+    </div>
+    <!-- fetch('https://example.com/api', {
+        method: 'POST', // 요청 메서드 설정
+        headers: {
+          'Content-Type': 'application/json', // 보낼 데이터 형식 명시
+        },
+        body: JSON.stringify({ // JSON 데이터로 변환해서 body에 넣기
+          name: 'Donghyun',
+          age: 30
+        }),
+      }) -->
+    <script>
+        const url = "http://localhost:3002/join"
+        const fetchData = () => {
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    'Content-Type': "application/json",
+                },
+                body: JSON.stringify({
+                    id: document.getElementById("joinID").value,
+                    pw: document.getElementById("joinPW").value
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    console.log(data.message);
+                    if( data.message === "complited" ){
+                        location.href= "/login"
+                    }else {
+                        document.getElementById("warnningMessage").innerHTML = data.message;
+                    }
+                    console.log(data)
+
+                })
+                .catch(err => console.log(err))
+        }
+
+        window.addEventListener('click', (event) => {
+            if (event.target.id == "joinBtn") {
+                console.log("joinBtn");
+                fetchData();
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <h1>Login page</h1>
+        <p>id : <input id="id"></p>
+        <p>pw : <input id="pw"></p>
+        <p><button id="loginBtn">Login</button></p>
+        <p><span id="resultArea"></span></p>
+        <script>
+            const url = "http://localhost:3002/login"
+            window.addEventListener('click', (event) => {
+                console.log(document.getElementById("id").value, document.getElementById("pw").value)
+                switch (event.target.id) {
+                    case "loginBtn":
+                        fetch(url, {
+                            method: "POST",
+                            headers: {'content-Type':"application/json"},
+                            body: JSON.stringify({
+                                id: document.getElementById("id").value,
+                                pw: document.getElementById("pw").value
+                            })
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                switch (data.message) {
+                                    case "succeed":
+                                        console.log("로그인성공!")
+                                        document.getElementById("resultArea").innerHTML = data.message;
+                                        break;
+                                    default:
+                                        console.log("로그인실패!")
+                                        document.getElementById("resultArea").innerHTML = data.message;
+                                        break;
+                                }
+                                console.log(data)
+                            })
+                            .catch(err => console.log(err))
+                        break;
+                }
+            })
+        </script>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,86 @@
+<script>
+    class Buffer {
+        constructor(id) {
+            this.id = id;
+            this.storage = [];
+        }
+        push(item) { 
+            this.storage.push(item); 
+        }
+        shift() { 
+            return this.storage.shift(); 
+        }
+        setValue(selector, item) {
+            const node = this.storage.find(node => node.id === selector);
+            if (node) {
+                node.value = item; // 값 업데이트
+            } else {
+                console.error(`Node with id "${selector}" not found.`);
+            }
+        }
+        getValue(selector) {
+            const node = this.storage.find(node => node.id === selector);
+            if (node) {
+                return node.value; // 해당 노드의 값 반환
+            } else {
+                console.error(`Node with id "${selector}" not found.`);
+                return null;
+            }
+        }
+        setNext(startSelector, nextSelector) {
+            const startNode = this.storage.find(node => node.id === startSelector);
+            const nextNode = this.storage.find(node => node.id === nextSelector);
+            if (startNode && nextNode) {
+                startNode.next = nextNode; // 노드 참조 연결
+            } else {
+                console.error(`Invalid setNext: "${startSelector}" or "${nextSelector}" not found.`);
+            }
+        }
+        getLinkedValues(startSelector) {
+            const startNode = this.storage.find(node => node.id === startSelector);
+            if (!startNode) {
+                console.error(`Start node with id "${startSelector}" not found.`);
+                return [];
+            }
+            let result = [];
+            let currentNode = startNode;
+            while (currentNode) {
+                result.push(currentNode.value); // 값 수집
+                currentNode = currentNode.next; // 다음 노드로 이동
+            }
+            return result;
+        }
+    }
+
+    class LinkedList {
+        constructor(id, value = null) {
+            this.id = id;
+            this._value = value;
+            this._next = null;
+        }
+        set value(item) { this._value = item; }
+        get value() { return this._value; }
+        set next(nextItem) { this._next = nextItem; }
+        get next() { return this._next; }
+    }
+
+    // 샘플 데이터
+    const myLinkedValue = ["ZARD", "CDR", "LOVE"];
+    const myBuffer = new Buffer("myBuffer");
+
+    // LinkedList 생성 후 Buffer에 추가
+    myLinkedValue.forEach((v) => {
+        const tempList = new LinkedList(v, v); // id와 value를 동시에 설정
+        myBuffer.push(tempList);
+    });
+
+    // 연결 설정
+    myBuffer.setNext("ZARD", "CDR");
+    myBuffer.setNext("CDR", "LOVE");
+
+    // 특정 노드 값 가져오기
+    console.log(myBuffer.getValue("CDR")); // "CDR" 출력
+
+    // 연결 리스트 전체 값 가져오기
+    console.log(myBuffer.getLinkedValues("ZARD")); // ["ZARD", "CDR", "LOVE"] 출력
+</script>

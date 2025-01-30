@@ -1,0 +1,79 @@
+<script>
+
+    class Buffer {
+        constructor(id) {
+            this.id = id;
+            this.storage = [];
+        }
+        push(item) { this.storage.push(item) }
+        shift() { return this.storage.shift() }
+        setValue(selector, item) {
+            for (let i = 0; i < this.storage.length; i++) {
+                if (this.storage[i].id == selector) {
+                    this.storage[i].value = item;
+                    break;
+                }
+            }
+        }
+        getValue(selector) {
+            for (let i = 0; i < this.storage.length; i++) {
+                if (this.storage[i].id == selector) {
+                    return this.storage[i].value;
+                    break;
+                }
+            }
+        }
+        setNext(startNode, nextNode) {
+            let tempLink = null;
+            const startLinked = this.storage.find( value => value.id === startNode );
+            const nextLinked = this.storage.find( value => value.id === nextNode );
+            startLinked.next = nextLinked;
+            // for (let i = 0; i < this.storage.length; i++) {
+            //     if (this.storage[i].id == nextNode) {
+            //         tempLink = this.storage[i];
+            //         break;
+            //     }
+            // }
+            // for (let i = 0; i < this.storage.length; i++) {
+            //     if (this.storage[i].id == startNode) {
+            //         this.storage[i].next = tempLink;
+            //         break;
+            //     }
+            // }
+        }
+    }
+
+    class LinkedList {
+        constructor(id) {
+            this.id = id;
+            this._value = null;
+            this._next = null;
+        }
+        set value(item) { this._value = item; }
+        get value() { return this._value; }
+        set next(nextItem) { this._next = nextItem; }
+        get next() { return this._next; }
+    }
+
+    const myLinkedValue = ["a", "b", "c"];
+    const myBuffer = new Buffer("myBuffer");
+
+    myLinkedValue.forEach(v => {
+        let tempList = new LinkedList(v);
+        tempList.value = v;
+        myBuffer.push(tempList);
+    });
+
+    // myLinkedValue.forEach( (v,i)=>{
+    for (let i = 0; i < myLinkedValue.length; i++) {
+        if (myLinkedValue[i + 1] == undefined) {
+            break;
+        }
+        myBuffer.setNext( myLinkedValue[i], myLinkedValue[i+1] );
+    }
+
+    document.write( myBuffer.getValue('a') );
+    console.log( myBuffer );
+    // } )
+
+</script>
