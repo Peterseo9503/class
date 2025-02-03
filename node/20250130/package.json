@@ -1,0 +1,14 @@
+{
+  "name": "20250130",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "supervisor ./app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "supervisor": "^0.12.0"
+  }
+}
